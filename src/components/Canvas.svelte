@@ -1,98 +1,112 @@
 <script>
-	let canvas;
-	let context;
-	let canvas2;
-	let context2;
+	import { writable } from "svelte/store";
+	import { browser } from "$app/environment";
+	// import previous from "$stores/previous.js";
+
 	let drawing = false;
 	let attempt = 0;
 	let coordinates = [];
+	let pathAnimate = "";
+	let pathSubmit = "";
+	let v = "";
 
-	const startDrawing = (e) => {
-		clearCanvas();
+	// const pathSubmit = writable("");
+	// const pathPrevious = previous(pathSubmit);
+
+	function point(e) {
+		// const x = Math.round(e.offsetX);
+		// const y = Math.round(e.offsetY);
+		const x = e.offsetX.toFixed(1);
+		const y = e.offsetY.toFixed(1);
+		return [x, y];
+	}
+
+	function startDrawing(e) {
 		drawing = true;
-		context.beginPath();
 		coordinates.push([]);
-		attempt = coordinates.length - 1;
-		const d = [Math.round(e.offsetX), Math.round(e.offsetY)];
+		const d = point(e);
 		coordinates[attempt].push(d);
-		context.moveTo(d[0] * 2, d[1] * 2);
-	};
+	}
 
-	const drawLine = (e) => {
+	function drawLine(e) {
 		if (!drawing) return;
-		const d = [Math.round(e.offsetX), Math.round(e.offsetY)];
+		const d = point(e);
 		coordinates[attempt].push(d);
-		context.lineTo(d[0] * 2, d[1] * 2);
-		context.stroke();
-	};
+		coordinates = [...coordinates];
+	}
 
-	const stopDrawing = () => {
+	function stopDrawing() {
 		drawing = false;
-		context.closePath();
-	};
+	}
 
-	const clearCanvas = () => {
-		context.clearRect(0, 0, canvas.width, canvas.height);
-	};
-
-	const animate = (prev = 0) => {
-		let v = prev + 1;
+	function animate(prev = 0) {
+		v = prev + 1;
 		if (v > attempt - 1) v = 0;
 		if (!coordinates[v]?.length) setTimeout(animate, 1000);
 		else {
-			context2.clearRect(0, 0, canvas2.width, canvas2.height);
-			context2.beginPath();
-			context2.moveTo(coordinates[v][0][0] * 2, coordinates[v][0][1] * 2);
-			for (let i = 1; i < coordinates[v].length; i++) {
-				context2.lineTo(coordinates[v][i][0] * 2, coordinates[v][i][1] * 2);
-			}
-			context2.stroke();
+			let p = "M ";
+			const c = coordinates[v].map((d) => d.join(" ")).join(" L ");
+			pathAnimate = `${p}${c}`;
 			setTimeout(() => {
 				animate(v);
 			}, 1000 / 12);
 		}
-	};
-
-	$: if (canvas) {
-		context = canvas.getContext("2d");
-		context.lineWidth = 1;
-
-		context2 = canvas2.getContext("2d");
-		context2.lineWidth = 1;
-		animate();
 	}
+
+	function submit() {
+		pathSubmit = pathCurrent;
+		coordsCurrent = [];
+		attempt += 1;
+	}
+
+	$: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join(" L ");
+	$: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
+	$: if (browser) animate();
 </script>
 
-<div>
-	<canvas
-		bind:this={canvas}
-		width="600"
-		height="600"
-		on:pointerdown={startDrawing}
-		on:pointermove={drawLine}
-		on:pointerup={stopDrawing}
-		on:pointerleave={stopDrawing}
-	/>
-</div>
-
-<canvas
-	bind:this={canvas2}
-	width="600"
-	height="600"
+<div
 	on:pointerdown={startDrawing}
 	on:pointermove={drawLine}
 	on:pointerup={stopDrawing}
 	on:pointerleave={stopDrawing}
-/>
+	class:first={attempt === 0}
+>
+	<svg>
+		<g>
+			{#if pathSubmit}
+				<path class="prev" d={pathSubmit} />
+			{/if}
+			<path d={pathCurrent} />
+		</g>
+	</svg>
+	<p>{attempt}</p>
+</div>
+
+<p><button on:click={submit}>submit</button></p>
+
+<div>
+	<svg>
+		<g>
+			<path d={pathAnimate} />
+		</g>
+	</svg>
+	<p>{v}</p>
+</div>
 
 <style>
+	p {
+		text-align: center;
+	}
+
 	div {
 		position: relative;
 		width: 300px;
-		margin: 0 auto;
+		height: 300px;
+		margin: 16px auto;
+		touch-action: none;
 	}
 
-	div:after {
+	div.first:first-of-type:after {
 		position: absolute;
 		content: "trace red the line";
 		font-size: 12px;
@@ -102,19 +116,40 @@
 		width: calc(100% - 40px);
 		left: 20px;
 		top: 50%;
-		height: 1px;
+		transform: translateY(-1px);
+		height: 2px;
 		background: red;
 		opacity: 0.5;
 		pointer-events: none;
 	}
 
-	canvas {
+	svg {
 		display: block;
 		background: #efefef;
-		width: 300px;
-		height: 300px;
-		user-select: none;
-		margin: 16px auto;
-		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	svg path {
+		fill: none;
+		stroke: #000;
+		stroke-width: 2px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	path.prev {
+		stroke-opacity: 0.5;
+		stroke: red;
+	}
+
+	div p {
+		text-align: right;
+		position: absolute;
+		top: 4px;
+		right: 4px;
+		margin: 0 0;
+		line-height: 1;
+		font-family: var(--mono);
 	}
 </style>
