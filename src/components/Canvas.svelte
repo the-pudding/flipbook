@@ -99,6 +99,7 @@
 	}
 
 	div {
+		font-family: var(--mono);
 		position: relative;
 		width: 300px;
 		height: 300px;
@@ -121,6 +122,7 @@
 		background: red;
 		opacity: 0.5;
 		pointer-events: none;
+		font-family: var(--mono);
 	}
 
 	svg {
