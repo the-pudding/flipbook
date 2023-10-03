@@ -1,7 +1,8 @@
 <script>
-	import { writable } from "svelte/store";
 	import { browser } from "$app/environment";
-	// import previous from "$stores/previous.js";
+	import dtw from "$utils/dtwDistance.js";
+
+	const FPS = 12;
 
 	let drawing = false;
 	let attempt = 0;
@@ -10,12 +11,15 @@
 	let pathSubmit = "";
 	let v = "";
 
-	// const pathSubmit = writable("");
-	// const pathPrevious = previous(pathSubmit);
+	function flattenArray(arr) {
+		let flat = [];
+		for (let segment of arr) {
+			flat.push(...segment);
+		}
+		return flat;
+	}
 
 	function point(e) {
-		// const x = Math.round(e.offsetX);
-		// const y = Math.round(e.offsetY);
 		const x = e.offsetX.toFixed(1);
 		const y = e.offsetY.toFixed(1);
 		return [x, y];
@@ -23,15 +27,19 @@
 
 	function startDrawing(e) {
 		drawing = true;
-		coordinates.push([]);
 		const d = point(e);
-		coordinates[attempt].push(d);
+		// coordinates[attempt] = [];
+		// coordinates[attempt].push(d);
+
+		if (!coordinates[attempt]) coordinates[attempt] = [];
+		coordinates[attempt].push([d]);
 	}
 
 	function drawLine(e) {
 		if (!drawing) return;
 		const d = point(e);
-		coordinates[attempt].push(d);
+		// coordinates[attempt].push(d);
+		coordinates[attempt][coordinates[attempt].length - 1].push(d);
 		coordinates = [...coordinates];
 	}
 
@@ -39,17 +47,31 @@
 		drawing = false;
 	}
 
+	// function animate(prev = 0) {
+	// 	v = prev + 1;
+	// 	if (v > attempt - 1) v = 0;
+	// 	if (!coordinates[v]?.length) setTimeout(animate, 1000);
+	// 	else {
+	// 		const c = coordinates[v].map((d) => d.join(" ")).join(" L ");
+	// 		pathAnimate = `M ${c}`;
+	// 		setTimeout(() => {
+	// 			animate(v);
+	// 		}, 1000 / FPS);
+	// 	}
+	// }
+
 	function animate(prev = 0) {
 		v = prev + 1;
 		if (v > attempt - 1) v = 0;
 		if (!coordinates[v]?.length) setTimeout(animate, 1000);
 		else {
-			let p = "M ";
-			const c = coordinates[v].map((d) => d.join(" ")).join(" L ");
-			pathAnimate = `${p}${c}`;
+			const c = coordinates[v]
+				.map((strokes) => strokes.map((s) => s.join(" ")).join(" L "))
+				.join(" M ");
+			pathAnimate = `M ${c}`;
 			setTimeout(() => {
 				animate(v);
-			}, 1000 / 12);
+			}, 1000 / FPS);
 		}
 	}
 
@@ -59,8 +81,18 @@
 		attempt += 1;
 	}
 
-	$: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join(" L ");
+	function reset() {
+		coordinates[attempt] = [];
+	}
+
+	$: coordsCurrent = coordinates[attempt]
+		?.map((stroke) => stroke.map((s) => s.join(" ")).join(" L "))
+		.join(" M ");
+
 	$: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
+
+	// $: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join(" L ");
+	// $: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
 	$: if (browser) animate();
 </script>
 
@@ -82,7 +114,11 @@
 	<p>{attempt}</p>
 </div>
 
-<p><button on:click={submit}>submit</button></p>
+<div class="ui">
+	<button on:click={submit}>submit</button><button on:click={reset}
+		>reset</button
+	>
+</div>
 
 <div>
 	<svg>
@@ -94,8 +130,16 @@
 </div>
 
 <style>
-	p {
-		text-align: center;
+	.ui {
+		display: flex;
+		justify-content: center;
+		max-width: 300px;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.ui button {
+		margin: 0 8px;
 	}
 
 	div {
@@ -109,7 +153,7 @@
 
 	div.first:first-of-type:after {
 		position: absolute;
-		content: "trace red the line";
+		content: "trace the red line";
 		font-size: 12px;
 		text-align: center;
 		line-height: 2;
