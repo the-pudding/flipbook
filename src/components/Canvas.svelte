@@ -1,6 +1,7 @@
 <script>
 	import { browser } from "$app/environment";
-	import dtw from "$utils/dtwDistance.js";
+	import dtwDistance from "$utils/dtwDistance.js";
+	import lineLength from "$utils/lineLength.js";
 
 	const FPS = 12;
 
@@ -10,6 +11,7 @@
 	let pathAnimate = "";
 	let pathSubmit = "";
 	let v = "";
+	let passed;
 
 	function flattenArray(arr) {
 		let flat = [];
@@ -28,18 +30,21 @@
 	function startDrawing(e) {
 		drawing = true;
 		const d = point(e);
-		// coordinates[attempt] = [];
-		// coordinates[attempt].push(d);
 
-		if (!coordinates[attempt]) coordinates[attempt] = [];
-		coordinates[attempt].push([d]);
+		coordinates[attempt] = [];
+		coordinates[attempt].push(d);
+
+		// if (!coordinates[attempt]) coordinates[attempt] = [];
+		// coordinates[attempt].push([d]);
 	}
 
 	function drawLine(e) {
 		if (!drawing) return;
 		const d = point(e);
-		// coordinates[attempt].push(d);
-		coordinates[attempt][coordinates[attempt].length - 1].push(d);
+
+		coordinates[attempt].push(d);
+		// coordinates[attempt][coordinates[attempt].length - 1].push(d);
+
 		coordinates = [...coordinates];
 	}
 
@@ -47,27 +52,12 @@
 		drawing = false;
 	}
 
-	// function animate(prev = 0) {
-	// 	v = prev + 1;
-	// 	if (v > attempt - 1) v = 0;
-	// 	if (!coordinates[v]?.length) setTimeout(animate, 1000);
-	// 	else {
-	// 		const c = coordinates[v].map((d) => d.join(" ")).join(" L ");
-	// 		pathAnimate = `M ${c}`;
-	// 		setTimeout(() => {
-	// 			animate(v);
-	// 		}, 1000 / FPS);
-	// 	}
-	// }
-
 	function animate(prev = 0) {
 		v = prev + 1;
 		if (v > attempt - 1) v = 0;
 		if (!coordinates[v]?.length) setTimeout(animate, 1000);
 		else {
-			const c = coordinates[v]
-				.map((strokes) => strokes.map((s) => s.join(" ")).join(" L "))
-				.join(" M ");
+			const c = coordinates[v].map((d) => d.join(" ")).join(" L ");
 			pathAnimate = `M ${c}`;
 			setTimeout(() => {
 				animate(v);
@@ -75,8 +65,40 @@
 		}
 	}
 
+	// function animate(prev = 0) {
+	// 	v = prev + 1;
+	// 	if (v > attempt - 1) v = 0;
+	// 	if (!coordinates[v]?.length) setTimeout(animate, 1000);
+	// 	else {
+	// 		const c = coordinates[v]
+	// 			.map((strokes) => strokes.map((s) => s.join(" ")).join(" L "))
+	// 			.join(" M ");
+	// 		pathAnimate = `M ${c}`;
+	// 		setTimeout(() => {
+	// 			animate(v);
+	// 		}, 1000 / FPS);
+	// 	}
+	// }
+
 	function submit() {
 		pathSubmit = pathCurrent;
+		if (attempt > 0) {
+			// const flatCur = flattenArray(coordinates[attempt]);
+			// const flatPrev = flattenArray(coordinates[attempt - 1]);
+
+			const flatCur = [...coordinates[attempt]];
+			const flatPrev = [...coordinates[attempt - 1]];
+			const flatPrevReverse = [...flatPrev].reverse();
+
+			const d1 = dtwDistance(flatPrev, flatCur);
+			const d2 = dtwDistance(flatPrevReverse, flatCur);
+			const distance = Math.min(d1, d2);
+			const len = lineLength(flatCur);
+			const score = Math.round(distance / len);
+			const score2 = `${Math.floor(Math.min(1, len / distance) * 100)}%`;
+			passed = score < 10;
+		}
+
 		coordsCurrent = [];
 		attempt += 1;
 	}
@@ -85,14 +107,14 @@
 		coordinates[attempt] = [];
 	}
 
-	$: coordsCurrent = coordinates[attempt]
-		?.map((stroke) => stroke.map((s) => s.join(" ")).join(" L "))
-		.join(" M ");
+	// $: coordsCurrent = coordinates[attempt]
+	// 	?.map((stroke) => stroke.map((s) => s.join(" ")).join(" L "))
+	// 	.join(" M ");
+	// $: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
 
+	$: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join(" L ");
 	$: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
 
-	// $: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join(" L ");
-	// $: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
 	$: if (browser) animate();
 </script>
 
