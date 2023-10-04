@@ -1,5 +1,5 @@
 <script>
-	import { browser } from "$app/environment";
+	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
 	import dtwDistance from "$utils/dtwDistance.js";
 	import lineLength from "$utils/lineLength.js";
@@ -7,16 +7,30 @@
 	import getPointDistance from "$utils/getPointDistance.js";
 
 	const FPS = 12;
+	const preset = [
+		[
+			[50, 150],
+			[250, 150]
+		],
+		[
+			[50, 225],
+			[150, 75],
+			[250, 225],
+			[50, 225]
+		],
+		[
+			[50, 50],
+			[250, 50],
+			[250, 250],
+			[50, 250],
+			[50, 50]
+		]
+	];
 
 	let drawing = false;
 	let attempt = 1;
-	let coordinates = [
-		[
-			[20, 150],
-			[280, 150]
-		]
-	];
-	let pathSubmit = "M 20 150 L 280 150";
+	let coordinates = [];
+	let pathSubmit = "";
 	let pathAnimate = "";
 	let v = "";
 	let failed;
@@ -32,6 +46,8 @@
 	function point(e) {
 		const x = +e.offsetX.toFixed(1);
 		const y = +e.offsetY.toFixed(1);
+		// const x = Math.round(e.offsetX);
+		// const y = Math.round(e.offsetY);
 		return [x, y];
 	}
 
@@ -115,14 +131,16 @@
 			const d2 = dtwDistance(linePrevReverse, lineCur);
 			const distance = Math.min(d1, d2);
 			const len = lineLength(flatCur);
+
+			// TODO this only works when they start/end near similar places
 			const score = Math.round(distance / len);
 			const score2 = `${Math.floor(Math.min(1, len / distance) * 100)}%`;
 
-			// TODO add a second test of the start and end point comparisons
+			// TODO this only works for line
 			const pointDistance = getPointDistance(flatPrev, flatCur);
 
-			failed = score >= 10 || pointDistance >= 30;
-			console.log({ score, distance, len, pointDistance, failed });
+			failed = score > 5 || pointDistance > 30;
+			// console.log({ score, distance, len, pointDistance, failed });
 			if (failed) {
 				setTimeout(() => {
 					failed = undefined;
@@ -147,7 +165,12 @@
 	$: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join(" L ");
 	$: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
 
-	$: if (browser) animate();
+	onMount(() => {
+		const r = Math.floor(Math.random() * preset.length);
+		coordinates = [preset[0]];
+		pathSubmit = `M ${coordinates[0].map((d) => d.join(" ")).join(" L ")}`;
+		animate();
+	});
 </script>
 
 <div
@@ -206,19 +229,21 @@
 		height: 300px;
 		margin: 16px auto;
 		touch-action: none;
+		user-select: none;
 	}
 
 	svg {
 		display: block;
-		background: #efefef;
 		width: 100%;
 		height: 100%;
+		box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+		border-radius: 4px;
 	}
 
 	svg path {
 		fill: none;
 		stroke: #000;
-		stroke-width: 2px;
+		stroke-width: 4px;
 		stroke-linecap: round;
 		stroke-linejoin: round;
 	}
@@ -247,5 +272,7 @@
 		padding: 8px;
 		z-index: 1;
 		text-align: center;
+		font-size: 14px;
+		font-weight: bold;
 	}
 </style>

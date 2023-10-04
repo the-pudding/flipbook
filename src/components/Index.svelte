@@ -6,9 +6,20 @@
 </script>
 
 <p>
-	This is the telephone game, but visual. Copy the <mark
-		>last person’s drawing</mark
-	> as best you can.
+	This is the basically the <a
+		target="_blank"
+		rel="noreferrer"
+		href="https://en.wikipedia.org/wiki/Chinese_whispers">telephone game</a
+	>, but visual and massively collaborative.
+</p>
+
+<p>
+	Copy the <mark>last person’s drawing</mark> as best you can.
+</p>
+
+<p>
+	(since this is testing you just can keep submitting new ones to see a little
+	animation develop)
 </p>
 
 <Canvas />
@@ -20,6 +31,6 @@
 	}
 
 	mark {
-		background: pink;
+		background: rgba(255, 0, 0, 0.5);
 	}
 </style>
