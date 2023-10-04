@@ -238,6 +238,7 @@
 		height: 100%;
 		box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
 		border-radius: 4px;
+		cursor: crosshair;
 	}
 
 	svg path {
