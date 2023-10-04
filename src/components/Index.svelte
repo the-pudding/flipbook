@@ -6,8 +6,9 @@
 </script>
 
 <p>
-	This is the telephone game, but visual. Copy the last person’s drawing as best
-	you can.
+	This is the telephone game, but visual. Copy the <mark
+		>last person’s drawing</mark
+	> as best you can.
 </p>
 
 <Canvas />
@@ -16,5 +17,9 @@
 	p {
 		max-width: 300px;
 		margin: 16px auto;
+	}
+
+	mark {
+		background: pink;
 	}
 </style>
