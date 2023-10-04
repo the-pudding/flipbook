@@ -20,6 +20,9 @@ devDependencies:
   autoprefixer:
     specifier: ^10.4.15
     version: 10.4.16(postcss@8.4.31)
+  curve-matcher:
+    specifier: ^1.1.1
+    version: 1.1.1
   d3:
     specifier: ^7.8.5
     version: 7.8.5
@@ -604,6 +607,11 @@ packages:
     dependencies:
       mdn-data: 2.0.30
       source-map-js: 1.0.2
+    dev: true
+
+  /curve-matcher@1.1.1:
+    resolution: {integrity: sha512-dVjbB4izZ+nkxU5oq15ElZk2IFpR1oTb1wEfMolOADse8veTn+iwF6wXejS4ll9DZRtO0/s95BDiIz6QXuE5bA==}
+    engines: {node: '>=6.0.0'}
     dev: true
 
   /d3-array@3.2.4:

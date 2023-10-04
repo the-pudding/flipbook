@@ -1,6 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
+	import { shapeSimilarity, frechetDistance } from "curve-matcher";
 	import dtwDistance from "$utils/dtwDistance.js";
 	import lineLength from "$utils/lineLength.js";
 	import resampleLine from "$utils/resampleLine.js";
@@ -34,6 +35,7 @@
 	let pathAnimate = "";
 	let v = "";
 	let failed;
+	let debug = {};
 
 	function flattenArray(arr) {
 		let flat = [];
@@ -139,8 +141,19 @@
 			// TODO this only works for line
 			const pointDistance = getPointDistance(flatPrev, flatCur);
 
+			const curvePrev = flatPrev.map(([x, y]) => ({ x, y }));
+			const curveCur = flatCur.map(([x, y]) => ({ x, y }));
+			const similarity = shapeSimilarity(curvePrev, curveCur);
+			const frechet = frechetDistance(curvePrev, curveCur);
+
 			failed = score > 5 || pointDistance > 30;
-			// console.log({ score, distance, len, pointDistance, failed });
+			debug = {
+				score,
+				length: +len.toFixed(1),
+				similarity: +similarity.toFixed(3),
+				frechet: +frechet.toFixed(1)
+			};
+
 			if (failed) {
 				setTimeout(() => {
 					failed = undefined;
@@ -194,6 +207,9 @@
 	{/if}
 </div>
 
+<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+	debug: {JSON.stringify(debug)}
+</p>
 <div class="ui">
 	<button on:click={submit}>submit</button><button on:click={reset}
 		>reset</button
