@@ -1,17 +1,25 @@
 <script>
 	import { browser } from "$app/environment";
+	import { fade } from "svelte/transition";
 	import dtwDistance from "$utils/dtwDistance.js";
 	import lineLength from "$utils/lineLength.js";
+	import resampleLine from "$utils/resampleLine.js";
+	import getPointDistance from "$utils/getPointDistance.js";
 
 	const FPS = 12;
 
 	let drawing = false;
-	let attempt = 0;
-	let coordinates = [];
+	let attempt = 1;
+	let coordinates = [
+		[
+			[20, 150],
+			[280, 150]
+		]
+	];
+	let pathSubmit = "M 20 150 L 280 150";
 	let pathAnimate = "";
-	let pathSubmit = "";
 	let v = "";
-	let passed;
+	let failed;
 
 	function flattenArray(arr) {
 		let flat = [];
@@ -22,8 +30,8 @@
 	}
 
 	function point(e) {
-		const x = e.offsetX.toFixed(1);
-		const y = e.offsetY.toFixed(1);
+		const x = +e.offsetX.toFixed(1);
+		const y = +e.offsetY.toFixed(1);
 		return [x, y];
 	}
 
@@ -81,7 +89,6 @@
 	// }
 
 	function submit() {
-		pathSubmit = pathCurrent;
 		if (attempt > 0) {
 			// const flatCur = flattenArray(coordinates[attempt]);
 			// const flatPrev = flattenArray(coordinates[attempt - 1]);
@@ -90,17 +97,42 @@
 			const flatPrev = [...coordinates[attempt - 1]];
 			const flatPrevReverse = [...flatPrev].reverse();
 
-			const d1 = dtwDistance(flatPrev, flatCur);
-			const d2 = dtwDistance(flatPrevReverse, flatCur);
+			const numPoints = Math.max(flatPrev.length, flatCur.length);
+			const linePrev =
+				numPoints > flatPrev.length
+					? resampleLine(flatPrev, numPoints)
+					: flatPrev;
+
+			const linePrevReverse =
+				numPoints > flatPrev.length
+					? resampleLine(flatPrevReverse, numPoints)
+					: flatPrevReverse;
+
+			const lineCur =
+				numPoints > flatCur.length ? resampleLine(flatCur, numPoints) : flatCur;
+
+			const d1 = dtwDistance(linePrev, lineCur);
+			const d2 = dtwDistance(linePrevReverse, lineCur);
 			const distance = Math.min(d1, d2);
 			const len = lineLength(flatCur);
 			const score = Math.round(distance / len);
 			const score2 = `${Math.floor(Math.min(1, len / distance) * 100)}%`;
-			passed = score < 10;
-		}
 
-		coordsCurrent = [];
-		attempt += 1;
+			// TODO add a second test of the start and end point comparisons
+			const pointDistance = getPointDistance(flatPrev, flatCur);
+
+			failed = score >= 10 || pointDistance >= 30;
+			console.log({ score, distance, len, pointDistance, failed });
+			if (failed) {
+				setTimeout(() => {
+					failed = undefined;
+				}, 2000);
+			} else {
+				pathSubmit = pathCurrent;
+				attempt += 1;
+			}
+			coordsCurrent = [];
+		}
 	}
 
 	function reset() {
@@ -134,6 +166,9 @@
 		</g>
 	</svg>
 	<p>{attempt}</p>
+	{#if failed}
+		<p transition:fade class="fail">I think you can do better!</p>
+	{/if}
 </div>
 
 <div class="ui">
@@ -173,24 +208,6 @@
 		touch-action: none;
 	}
 
-	div.first:first-of-type:after {
-		position: absolute;
-		content: "trace the red line";
-		font-size: 12px;
-		text-align: center;
-		line-height: 2;
-		display: block;
-		width: calc(100% - 40px);
-		left: 20px;
-		top: 50%;
-		transform: translateY(-1px);
-		height: 2px;
-		background: red;
-		opacity: 0.5;
-		pointer-events: none;
-		font-family: var(--mono);
-	}
-
 	svg {
 		display: block;
 		background: #efefef;
@@ -219,5 +236,16 @@
 		margin: 0 0;
 		line-height: 1;
 		font-family: var(--mono);
+	}
+
+	p.fail {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		margin: 0;
+		padding: 8px;
+		z-index: 1;
+		text-align: center;
 	}
 </style>
