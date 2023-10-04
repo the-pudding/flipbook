@@ -146,7 +146,7 @@
 			const similarity = shapeSimilarity(curvePrev, curveCur);
 			const frechet = frechetDistance(curvePrev, curveCur);
 
-			failed = score > 5 || pointDistance > 30;
+			failed = score > 5 || pointDistance > 30 || similarity < 0.75;
 			debug = {
 				score,
 				length: +len.toFixed(1),
