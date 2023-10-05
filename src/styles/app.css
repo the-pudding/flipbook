@@ -68,26 +68,20 @@
 	}
 }
 
-h1 {
-	font-size: var(--48px, 48px);
+h1, h2, h3, h4, h5, h6, p, li, button {
+	font-size: var(--16px, 16px);
 }
 
-h2 {
-	font-size: var(--36px, 36px);
+section {
+	max-width: calc(300px + 32px);
+	padding: 0 16px;
+	margin: 0 auto;
 }
 
-h3 {
-	font-size: var(--28px, 28px);
+.shadow {
+	box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
 }
 
-h4 {
-	font-size: var(--24px, 24px);
-}
-
-h5 {
-	font-size: var(--22px, 22px);
-}
-
-h6 {
-	font-size: var(--20px, 20px);
-}
+mark {
+		background: rgba(255, 0, 0, 0.5);
+	}

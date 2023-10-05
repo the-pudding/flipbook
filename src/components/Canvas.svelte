@@ -168,7 +168,7 @@
 	on:pointerleave={stopDrawing}
 	class:first={attempt === 0}
 >
-	<svg>
+	<svg class="shadow">
 		<g>
 			{#if pathSubmit}
 				<path class="prev" d={pathSubmit} />
@@ -202,7 +202,7 @@
 </div>
 
 <div class="c">
-	<svg>
+	<svg class="shadow">
 		<g>
 			<path d={pathAnimate} />
 		</g>
@@ -236,7 +236,6 @@
 		display: block;
 		width: 100%;
 		height: 100%;
-		box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
 		border-radius: 4px;
 		cursor: crosshair;
 	}

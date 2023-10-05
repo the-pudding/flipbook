@@ -1,35 +1,86 @@
 <script>
 	import { getContext } from "svelte";
-	import Canvas from "$components/Canvas.svelte";
 	const copy = getContext("copy");
 	const data = getContext("data");
 </script>
 
-<p>
-	<strong>Help make the world’s most collaborative animated film.</strong> This
-	is basically the
-	<a
-		target="_blank"
-		rel="noreferrer"
-		href="https://en.wikipedia.org/wiki/Chinese_whispers">telephone game</a
-	>, but visual.
-</p>
+<section>
+	<h1>
+		<strong>{@html copy.cta}</strong>
+	</h1>
+	<p>
+		{@html copy.definition}
+	</p>
+</section>
 
-<p>
-	Your task is to trace the <br /><mark
-		><strong>last person’s drawing</strong></mark
-	> as best you can.
-</p>
+<section>
+	<form class="shadow">
+		<p class="prompt">{@html copy.prompt}</p>
+		<fieldset>
+			<div>
+				<label for="email">Email</label>
+				<input
+					type="email"
+					id="email"
+					name="email"
+					placeholder="example@email.com"
+				/>
+			</div>
+			<!-- <p>OR</p> -->
+			<div>
+				<label for="phone">Text message</label>
+				<input type="tel" id="phone" name="phone" placeholder="123-456-7890" />
+			</div>
+		</fieldset>
 
-<Canvas />
+		<p><input type="submit" value="Submit" /></p>
+
+		<div class="info">
+			<p>{@html copy.messageP}:</p>
+			<ul>
+				{#each copy.messageLi as li}
+					<li>{@html li}</li>
+				{/each}
+			</ul>
+		</div>
+	</form>
+</section>
 
 <style>
-	p {
-		max-width: 300px;
-		margin: 16px auto;
+	form {
+		padding: 16px;
+		margin: 32px auto;
 	}
 
-	mark {
-		background: rgba(255, 0, 0, 0.5);
+	.prompt,
+	form > div p {
+		margin-top: 0;
+	}
+
+	fieldset {
+		border: none;
+		padding: 0;
+	}
+
+	fieldset div {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 8px;
+	}
+
+	label {
+		font-size: var(--12px);
+		margin-bottom: 4px;
+	}
+
+	.info {
+		background: #efefef;
+		padding: 16px;
+		margin-top: 32px;
+	}
+
+	.info p,
+	li {
+		font-size: var(--12px);
 	}
 </style>
