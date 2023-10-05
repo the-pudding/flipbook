@@ -161,6 +161,7 @@
 </script>
 
 <div
+	class="c"
 	on:pointerdown={startDrawing}
 	on:pointermove={drawLine}
 	on:pointerup={stopDrawing}
@@ -177,27 +178,30 @@
 	</svg>
 	<p>{attempt}</p>
 	{#if valid === false}
-		<p transition:fade class="fail">I think you can do better!</p>
+		<p transition:fade class="invalid">I think you can do better!</p>
 	{/if}
 </div>
 
-<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
-	debug1: {JSON.stringify(debug1)}
-</p>
-<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
-	debug2: {JSON.stringify(debug2)}
-</p>
-<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
-	target: similarity &gt;= 0.9 &amp;&amp; (diag &lt;= 0.2 || len &lt;= 0.5)
-</p>
-
-<div class="ui">
+<div class="c ui">
 	<button on:click={submit}>submit</button><button on:click={reset}
 		>reset</button
 	>
 </div>
 
-<div>
+<div class="debug">
+	<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+		target: ll &lt; ~0.1 && sim &gt; 0.9 &amp;&amp; (diag &lt; 0.2 || len &lt;
+		0.2)
+	</p>
+	<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+		debug1: {JSON.stringify(debug1)}
+	</p>
+	<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+		debug2: {JSON.stringify(debug2)}
+	</p>
+</div>
+
+<div class="c">
 	<svg>
 		<g>
 			<path d={pathAnimate} />
@@ -207,26 +211,25 @@
 </div>
 
 <style>
-	.ui {
-		display: flex;
-		justify-content: center;
-		max-width: 300px;
-		height: auto;
-		margin: 0 auto;
-	}
-
 	.ui button {
 		margin: 0 8px;
 	}
 
-	div {
-		font-family: var(--mono);
+	.c {
 		position: relative;
 		width: 300px;
 		height: 300px;
 		margin: 16px auto;
 		touch-action: none;
 		user-select: none;
+	}
+
+	.ui {
+		display: flex;
+		justify-content: center;
+		max-width: 300px;
+		height: auto;
+		margin: 0 auto;
 	}
 
 	svg {
@@ -251,7 +254,7 @@
 		stroke: red;
 	}
 
-	div p {
+	.c p {
 		text-align: right;
 		position: absolute;
 		top: 4px;
@@ -259,9 +262,12 @@
 		margin: 0 0;
 		line-height: 1;
 		font-family: var(--mono);
+		pointer-events: none;
+		opacity: 0.5;
+		font-size: 12px;
 	}
 
-	p.fail {
+	p.invalid {
 		position: absolute;
 		bottom: 0;
 		left: 0;
@@ -272,11 +278,5 @@
 		text-align: center;
 		font-size: 14px;
 		font-weight: bold;
-	}
-
-	path.debug {
-		stroke: green;
-		stroke-width: 2px;
-		stroke-opacity: 0.5;
 	}
 </style>
