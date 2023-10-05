@@ -1,12 +1,13 @@
 <script>
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
-	import { shapeSimilarity, frechetDistance } from "curve-matcher";
-	import dtwDistance from "$utils/dtwDistance.js";
-	import lineLength from "$utils/lineLength.js";
-	import resampleLine from "$utils/resampleLine.js";
-	import getPointDistance from "$utils/getPointDistance.js";
+	// import dtwDistance from "$utils/dtwDistance.js";
+	// import resampleLine from "$utils/resampleLine.js";
+	// import getPointDistance from "$utils/getPointDistance.js";
+	import validateLine from "$utils/validateLine.js";
 
+	const W = 300;
+	const H = W;
 	const FPS = 12;
 	const preset = [
 		[
@@ -34,8 +35,15 @@
 	let pathSubmit = "";
 	let pathAnimate = "";
 	let v = "";
-	let failed;
-	let debug = {};
+	let valid;
+	let debug1 = {};
+	let debug2 = {};
+
+	let pathDebug = "";
+
+	function normalizeFrechet(frechet) {
+		return frechet / DIAGONAL;
+	}
 
 	function flattenArray(arr) {
 		let flat = [];
@@ -108,59 +116,25 @@
 
 	function submit() {
 		if (attempt > 0) {
-			// const flatCur = flattenArray(coordinates[attempt]);
-			// const flatPrev = flattenArray(coordinates[attempt - 1]);
+			const cur = [...coordinates[attempt]].map(([x, y]) => ({ x, y }));
+			const prev = [...coordinates[attempt - 1]].map(([x, y]) => ({
+				x,
+				y
+			}));
+			const diagonal = Math.sqrt(W ** 2 + H ** 2);
 
-			const flatCur = [...coordinates[attempt]];
-			const flatPrev = [...coordinates[attempt - 1]];
-			const flatPrevReverse = [...flatPrev].reverse();
+			const response = validateLine({ cur, prev, diagonal });
+			valid = response.valid;
+			debug1 = response.debug1;
+			debug2 = response.debug2;
 
-			const numPoints = Math.max(flatPrev.length, flatCur.length);
-			const linePrev =
-				numPoints > flatPrev.length
-					? resampleLine(flatPrev, numPoints)
-					: flatPrev;
-
-			const linePrevReverse =
-				numPoints > flatPrev.length
-					? resampleLine(flatPrevReverse, numPoints)
-					: flatPrevReverse;
-
-			const lineCur =
-				numPoints > flatCur.length ? resampleLine(flatCur, numPoints) : flatCur;
-
-			const d1 = dtwDistance(linePrev, lineCur);
-			const d2 = dtwDistance(linePrevReverse, lineCur);
-			const distance = Math.min(d1, d2);
-			const len = lineLength(flatCur);
-
-			// TODO this only works when they start/end near similar places
-			const score = Math.round(distance / len);
-			const score2 = `${Math.floor(Math.min(1, len / distance) * 100)}%`;
-
-			// TODO this only works for line
-			const pointDistance = getPointDistance(flatPrev, flatCur);
-
-			const curvePrev = flatPrev.map(([x, y]) => ({ x, y }));
-			const curveCur = flatCur.map(([x, y]) => ({ x, y }));
-			const similarity = shapeSimilarity(curvePrev, curveCur);
-			const frechet = frechetDistance(curvePrev, curveCur);
-
-			failed = score > 5 || pointDistance > 30 || similarity < 0.75;
-			debug = {
-				score,
-				length: +len.toFixed(1),
-				similarity: +similarity.toFixed(3),
-				frechet: +frechet.toFixed(1)
-			};
-
-			if (failed) {
-				setTimeout(() => {
-					failed = undefined;
-				}, 2000);
-			} else {
+			if (valid) {
 				pathSubmit = pathCurrent;
 				attempt += 1;
+			} else {
+				setTimeout(() => {
+					valid = undefined;
+				}, 2000);
 			}
 			coordsCurrent = [];
 		}
@@ -180,7 +154,7 @@
 
 	onMount(() => {
 		const r = Math.floor(Math.random() * preset.length);
-		coordinates = [preset[0]];
+		coordinates = [preset[2]];
 		pathSubmit = `M ${coordinates[0].map((d) => d.join(" ")).join(" L ")}`;
 		animate();
 	});
@@ -202,14 +176,21 @@
 		</g>
 	</svg>
 	<p>{attempt}</p>
-	{#if failed}
+	{#if valid === false}
 		<p transition:fade class="fail">I think you can do better!</p>
 	{/if}
 </div>
 
 <p style="text-align: center; font-family: var(--mono); font-size: 12px;">
-	debug: {JSON.stringify(debug)}
+	debug1: {JSON.stringify(debug1)}
 </p>
+<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+	debug2: {JSON.stringify(debug2)}
+</p>
+<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+	target: similarity &gt;= 0.9 &amp;&amp; (diag &lt;= 0.2 || len &lt;= 0.5)
+</p>
+
 <div class="ui">
 	<button on:click={submit}>submit</button><button on:click={reset}
 		>reset</button
@@ -291,5 +272,11 @@
 		text-align: center;
 		font-size: 14px;
 		font-weight: bold;
+	}
+
+	path.debug {
+		stroke: green;
+		stroke-width: 2px;
+		stroke-opacity: 0.5;
 	}
 </style>
