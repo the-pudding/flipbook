@@ -6,8 +6,8 @@
 /* colors defined in variables.css */
 :root {
 	/* font */
-	--sans: "National 2 Web", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
-	--serif: "Tiempos Text Web", Iowan Old Style, Times New Roman, Times, serif;
+	--sans: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+	--serif: "Atkinson", Iowan Old Style, Times New Roman, Times, serif;
 	--mono: Menlo, Consolas, Monaco, monospace;
 
 	/* z-index */
@@ -18,7 +18,7 @@
 
 	/* presets (used in reset.css) */
 	--border-radius: 2px;
-	--font-body: var(--mono);
+	--font-body: var(--serif);
 	--font-form: var(--sans);
 	--color-bg: var(--color-white);
 	--color-fg: var(--color-gray-900);
@@ -37,6 +37,7 @@
 
 	/* "1" second duration */
 	--1s: 1ms;
+	--canvas-size: 300px;
 }
 
 /* dark theme */
@@ -69,11 +70,16 @@
 }
 
 h1, h2, h3, h4, h5, h6, p, li, button {
-	font-size: var(--16px, 16px);
+	font-size: var(--16px);
+	line-height: 1.325;
+}
+
+h1 {
+	font-size: var(--22px);
 }
 
 section {
-	max-width: calc(300px + 32px);
+	max-width: calc(var(--canvas-size) + 64px);
 	padding: 0 16px;
 	margin: 0 auto;
 }
@@ -83,5 +89,9 @@ section {
 }
 
 mark {
-		background: rgba(255, 0, 0, 0.5);
-	}
+	background: rgba(255, 0, 0, 0.5);
+}
+
+button, [type="button"], [type="submit"] {
+	font-weight: 700;
+}

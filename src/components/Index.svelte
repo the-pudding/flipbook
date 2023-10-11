@@ -1,7 +1,10 @@
 <script>
 	import { getContext } from "svelte";
+	import Canvas from "$components/Canvas.svelte";
 	const copy = getContext("copy");
 	const data = getContext("data");
+
+	let isNotRobot;
 </script>
 
 <section>
@@ -30,6 +33,18 @@
 			<div>
 				<label for="phone">Text message</label>
 				<input type="tel" id="phone" name="phone" placeholder="123-456-7890" />
+			</div>
+			<div>
+				<label for="robot">I’m not a robot</label>
+				<input
+					type="checkbox"
+					id="robot"
+					name="robot"
+					bind:checked={isNotRobot}
+				/>
+				<div class="robot" class:visible={isNotRobot}>
+					<Canvas robot={true} />
+				</div>
 			</div>
 		</fieldset>
 
@@ -65,6 +80,7 @@
 	fieldset div {
 		display: flex;
 		flex-direction: column;
+		align-items: flex-start;
 		margin-bottom: 8px;
 	}
 
@@ -79,8 +95,20 @@
 		margin-top: 32px;
 	}
 
+	.info p {
+		margin-bottom: 8px;
+	}
+
 	.info p,
 	li {
-		font-size: var(--12px);
+		font-size: var(--14px);
+	}
+
+	.robot {
+		display: none;
+	}
+
+	.robot.visible {
+		display: block;
 	}
 </style>

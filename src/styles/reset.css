@@ -39,7 +39,7 @@ video {
 	height: auto;
 }
 
-input, textarea {
+input:not([type="checkbox"]) , textarea {
 	-webkit-appearance: none;
 	appearance: none;
 	background-color: var(--color-input-bg, whitesmoke);

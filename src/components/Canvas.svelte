@@ -6,6 +6,8 @@
 	// import getPointDistance from "$utils/getPointDistance.js";
 	import validateLine from "$utils/validateLine.js";
 
+	export let robot;
+
 	const W = 300;
 	const H = W;
 	const FPS = 12;
@@ -56,8 +58,6 @@
 	function point(e) {
 		const x = +e.offsetX.toFixed(1);
 		const y = +e.offsetY.toFixed(1);
-		// const x = Math.round(e.offsetX);
-		// const y = Math.round(e.offsetY);
 		return [x, y];
 	}
 
@@ -182,33 +182,35 @@
 	{/if}
 </div>
 
-<div class="c ui">
-	<button on:click={submit}>submit</button><button on:click={reset}
-		>reset</button
-	>
-</div>
+{#if !robot}
+	<div class="c ui">
+		<button on:click={submit}>submit</button><button on:click={reset}
+			>reset</button
+		>
+	</div>
 
-<div class="debug">
-	<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
-		target: ll &lt; ~0.1 && sim &gt; 0.9 &amp;&amp; (diag &lt; 0.2 || len &lt;
-		0.2)
-	</p>
-	<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
-		debug1: {JSON.stringify(debug1)}
-	</p>
-	<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
-		debug2: {JSON.stringify(debug2)}
-	</p>
-</div>
+	<div class="debug">
+		<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+			target: ll &lt; ~0.1 && sim &gt; 0.9 &amp;&amp; (diag &lt; 0.2 || len &lt;
+			0.2)
+		</p>
+		<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+			debug1: {JSON.stringify(debug1)}
+		</p>
+		<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+			debug2: {JSON.stringify(debug2)}
+		</p>
+	</div>
 
-<div class="c">
-	<svg class="shadow">
-		<g>
-			<path d={pathAnimate} />
-		</g>
-	</svg>
-	<p>{v}</p>
-</div>
+	<div class="c">
+		<svg class="shadow">
+			<g>
+				<path d={pathAnimate} />
+			</g>
+		</svg>
+		<p>{v}</p>
+	</div>
+{/if}
 
 <style>
 	.ui button {
@@ -217,8 +219,8 @@
 
 	.c {
 		position: relative;
-		width: 300px;
-		height: 300px;
+		width: var(--canvas-size);
+		height: var(--canvas-size);
 		margin: 16px auto;
 		touch-action: none;
 		user-select: none;
@@ -227,7 +229,7 @@
 	.ui {
 		display: flex;
 		justify-content: center;
-		max-width: 300px;
+		max-width: var(--canvas-size);
 		height: auto;
 		margin: 0 auto;
 	}
