@@ -221,9 +221,10 @@
 		position: relative;
 		width: var(--canvas-size);
 		height: var(--canvas-size);
-		margin: 16px auto;
 		touch-action: none;
 		user-select: none;
+		background: var(--color-1);
+		margin: 0 auto;
 	}
 
 	.ui {
@@ -232,6 +233,8 @@
 		max-width: var(--canvas-size);
 		height: auto;
 		margin: 0 auto;
+		background: var(--color-bg);
+		padding: 8px 0;
 	}
 
 	svg {

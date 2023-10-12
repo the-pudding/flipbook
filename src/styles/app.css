@@ -35,6 +35,10 @@
 	--color-input-fg: var(--color-gray-900);
 	--color-placeholder: var(--color-gray-500);
 
+	--color-1: var(--color-gray-100);
+	--color-2: var(--color-gray-200);
+	--color-3: var(--color-gray-300);
+
 	/* "1" second duration */
 	--1s: 1ms;
 	--canvas-size: 300px;
@@ -90,13 +94,12 @@ h1 {
 section {
 	/* max-width: calc(var(--canvas-size) + 64px); */
 	max-width: 360px;
-	padding: 0 16px;
+	padding: 16px;
 	margin: 0 auto;
 }
 
 .shadow {
 	/* box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1); */
-	/* outline: 4px solid currentColor; */
 }
 
 mark {

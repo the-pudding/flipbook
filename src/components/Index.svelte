@@ -36,7 +36,6 @@
 					bind:value={email}
 				/>
 			</div>
-			<!-- <p>OR</p> -->
 			<div>
 				<label for="phone">Text message</label>
 				<input
@@ -47,7 +46,7 @@
 					bind:value={phone}
 				/>
 			</div>
-			<div>
+			<div class="robot">
 				<div>
 					<label for="robot">I’m not a robot</label>
 					<input
@@ -57,7 +56,7 @@
 						bind:checked={isNotRobot}
 					/>
 				</div>
-				<div class="robot" class:visible={isNotRobot}>
+				<div class="draw" class:visible={isNotRobot}>
 					<p>{@html copy.robot}</p>
 					<Canvas robot={true} />
 				</div>
@@ -78,9 +77,12 @@
 </section>
 
 <style>
-	form {
-		padding: 16px;
-		margin: 32px auto;
+	section:nth-of-type(1) {
+		/* background: var(--color-3); */
+	}
+
+	section:nth-of-type(2) {
+		/* background: var(--color-2); */
 	}
 
 	.prompt,
@@ -106,8 +108,9 @@
 	}
 
 	.info {
-		padding: 16px;
-		margin-top: 32px;
+		padding: 16px 0;
+		/* margin-top: 32px; */
+		/* border-top: 2px solid currentColor; */
 	}
 
 	.info p {
@@ -120,10 +123,15 @@
 	}
 
 	.robot {
-		display: none;
+		margin: 0;
 	}
 
-	.robot.visible {
+	.draw {
+		display: none;
+		margin: 0;
+	}
+
+	.draw.visible {
 		display: block;
 	}
 

@@ -21,7 +21,13 @@
 
 	mark {
 		background: none;
-		border-bottom: 4px solid rgba(255, 0, 0, 0.5);
 		padding: 0;
+		background-image: linear-gradient(
+			rgba(255, 0, 0, 0.5),
+			rgba(255, 0, 0, 0.5)
+		);
+		background-size: 100% 0.3em;
+		background-position: 0 100%;
+		background-repeat: no-repeat;
 	}
 </style>
