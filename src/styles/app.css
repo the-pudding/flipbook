@@ -75,17 +75,28 @@ h1, h2, h3, h4, h5, h6, p, li, button {
 }
 
 h1 {
-	font-size: var(--22px);
+	line-height: 1;
+	font-size: var(--24px);
 }
 
+/*
+@media screen and (min-width: 480px) {
+	h1 {
+		font-size: var(--64px);
+	}
+} */
+
+
 section {
-	max-width: calc(var(--canvas-size) + 64px);
+	/* max-width: calc(var(--canvas-size) + 64px); */
+	max-width: 360px;
 	padding: 0 16px;
 	margin: 0 auto;
 }
 
 .shadow {
-	box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1);
+	/* box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1); */
+	/* outline: 4px solid currentColor; */
 }
 
 mark {

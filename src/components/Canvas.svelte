@@ -7,11 +7,12 @@
 	import validateLine from "$utils/validateLine.js";
 
 	export let robot;
+	export let preset;
 
 	const W = 300;
 	const H = W;
 	const FPS = 12;
-	const preset = [
+	const presets = [
 		[
 			[50, 150],
 			[250, 150]
@@ -153,8 +154,7 @@
 	$: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
 
 	onMount(() => {
-		const r = Math.floor(Math.random() * preset.length);
-		coordinates = [preset[2]];
+		coordinates = [presets[preset] || [[0, 0]]];
 		pathSubmit = `M ${coordinates[0].map((d) => d.join(" ")).join(" L ")}`;
 		animate();
 	});
@@ -238,7 +238,6 @@
 		display: block;
 		width: 100%;
 		height: 100%;
-		border-radius: 4px;
 		cursor: crosshair;
 	}
 

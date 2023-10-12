@@ -8,12 +8,21 @@
 			>{@html wordmark}</a
 		>
 	</div>
+	<div class="faq">
+		<button>FAQ</button>
+	</div>
 </header>
 
 <style>
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 16px;
+	}
+
 	.wordmark {
-		max-width: 10em;
-		padding: 1em;
+		width: 8em;
 	}
 
 	.wordmark a {
