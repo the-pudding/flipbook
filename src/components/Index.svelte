@@ -1,16 +1,35 @@
 <script>
-	import { getContext } from "svelte";
-	import Canvas from "$components/Canvas.svelte";
+	import { onMount, getContext } from "svelte";
+	import Notify from "$components/Join.Notify.svelte";
+	import Robot from "$components/Join.Robot.svelte";
 	const copy = getContext("copy");
 	const data = getContext("data");
 
+	let formSteps = [Notify, Robot];
+	let step = 0;
 	let isNotRobot;
 	let email;
 	let phone;
+	let utcOffset;
 
 	function onSubmit() {
-		console.log({ email, phone });
+		console.log({ email, phone, isNotRobot, utcOffset });
 	}
+
+	function onUpdate({ detail }) {
+		if (detail.phone) phone = detail.phone;
+		if (detail.email) email = detail.email;
+		if (detail.isNotRobot) isNotRobot = detail.isNotRobot;
+	}
+
+	onMount(() => {
+		const offsetInMinutes = new Date().getTimezoneOffset();
+		utcOffset = offsetInMinutes / 60;
+
+		const reversed = Math.random() < 0.5;
+		if (reversed) formSteps.reverse();
+		formSteps = [...formSteps];
+	});
 </script>
 
 <section>
@@ -24,119 +43,29 @@
 
 <section>
 	<form class="shadow" on:submit|preventDefault={onSubmit}>
-		<p class="prompt">{@html copy.prompt}</p>
-		<fieldset>
-			<div>
-				<label for="email">Email</label>
-				<input
-					type="email"
-					id="email"
-					name="email"
-					placeholder="example@email.com"
-					bind:value={email}
-				/>
-			</div>
-			<div>
-				<label for="phone">Text message</label>
-				<input
-					type="tel"
-					id="phone"
-					name="phone"
-					placeholder="123-456-7890"
-					bind:value={phone}
-				/>
-			</div>
-			<div class="robot">
-				<div>
-					<label for="robot">I’m not a robot</label>
-					<input
-						type="checkbox"
-						id="robot"
-						name="robot"
-						bind:checked={isNotRobot}
-					/>
-				</div>
-				<div class="draw" class:visible={isNotRobot}>
-					<p>{@html copy.robot}</p>
-					<Canvas robot={true} />
-				</div>
-			</div>
-		</fieldset>
+		<p class="prompt"><strong>{@html copy.prompt}</strong></p>
 
-		<p><input type="submit" value="Submit" /></p>
-
-		<div class="info">
-			<p>{@html copy.messageP}:</p>
-			<ul>
-				{#each copy.messageLi as li}
-					<li>{@html li}</li>
-				{/each}
-			</ul>
+		<div class="steps">
+			<svelte:component this={formSteps[step]} on:update={onUpdate} />
 		</div>
+		<p>
+			{#if step === 0}
+				<button on:click={() => (step = 1)}>Next</button>
+			{:else}
+				<input type="submit" value="Submit" />
+			{/if}
+		</p>
 	</form>
 </section>
 
 <style>
-	section:nth-of-type(1) {
-		/* background: var(--color-3); */
-	}
-
-	section:nth-of-type(2) {
-		/* background: var(--color-2); */
-	}
-
 	.prompt,
 	form > div p {
 		margin-top: 0;
 	}
 
-	fieldset {
-		border: none;
-		padding: 0;
-	}
-
-	fieldset div {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		margin-bottom: 8px;
-	}
-
-	label {
-		font-size: var(--14px);
-		margin-bottom: 4px;
-	}
-
-	.info {
-		padding: 16px 0;
-		/* margin-top: 32px; */
-		/* border-top: 2px solid currentColor; */
-	}
-
-	.info p {
-		margin-bottom: 8px;
-	}
-
-	.info p,
-	li {
-		font-size: var(--14px);
-	}
-
-	.robot {
+	.step p {
 		margin: 0;
-	}
-
-	.draw {
-		display: none;
-		margin: 0;
-	}
-
-	.draw.visible {
-		display: block;
-	}
-
-	input[type="checkbox"] {
-		width: 1.5em;
-		height: 1.5em;
+		margin-bottom: 16px;
 	}
 </style>
