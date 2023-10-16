@@ -4,9 +4,17 @@
 	const copy = getContext("copy");
 
 	const dispatch = createEventDispatcher();
-	let isNotRobot;
 
-	$: dispatch("update", { isNotRobot });
+	export let value;
+
+	let invalid;
+	let isNotRobot;
+	let path;
+
+	function onSubmit() {
+		if (path.length) dispatch("update", { isNotRobot });
+		else invalid = "You must draw a circle";
+	}
 </script>
 
 <fieldset>
@@ -23,10 +31,17 @@
 		</div>
 		<div class="draw" class:visible={isNotRobot}>
 			<p>{@html copy.robot}</p>
-			<Canvas robot={true} />
+			<Canvas robot={true} bind:path />
 		</div>
 	</div>
 </fieldset>
+
+{#if isNotRobot}
+	<button on:click|preventDefault={onSubmit}>{value}</button>
+{/if}
+{#if invalid}
+	<p class="invalid">{invalid}</p>
+{/if}
 
 <style>
 	.robot {

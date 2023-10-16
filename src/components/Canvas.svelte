@@ -8,6 +8,7 @@
 
 	export let robot;
 	export let preset;
+	export let path;
 
 	const W = 300;
 	const H = W;
@@ -152,6 +153,7 @@
 
 	$: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join(" L ");
 	$: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
+	$: path = pathCurrent;
 
 	onMount(() => {
 		coordinates = [presets[preset] || [[0, 0]]];

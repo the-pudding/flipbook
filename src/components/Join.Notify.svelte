@@ -3,11 +3,14 @@
 	const copy = getContext("copy");
 
 	const dispatch = createEventDispatcher();
+
+	export let value;
+
 	let phone;
 	let email;
+	let invalid;
 
 	function invalidate() {
-		// replace all non numbers
 		const validPhone = phone
 			? phone?.replace(/\D/g, "").trim().length === 10
 			: true;
@@ -19,8 +22,12 @@
 		return false;
 	}
 
-	$: invalid = invalidate(phone, email);
-	$: dispatch("update", { phone, email, invalid });
+	function onSubmit() {
+		invalid =
+			email || phone ? invalidate() : "Enter a phone number or email address";
+
+		if (!invalid) dispatch("update", { phone, email });
+	}
 </script>
 
 <fieldset>
@@ -57,6 +64,11 @@
 		</ul>
 	</div>
 </fieldset>
+
+<button on:click|preventDefault={onSubmit}>{value}</button>
+{#if invalid}
+	<p class="invalid">{invalid}</p>
+{/if}
 
 <style>
 	.info {

@@ -7,7 +7,6 @@
 
 	let formSteps = [Notify, Robot];
 	let step = 0;
-	let nextDisabled;
 	let isNotRobot;
 	let email;
 	let phone;
@@ -17,14 +16,9 @@
 	let reversed;
 	let statsEl;
 
-	function onSubmit() {
-		if (step === 0) {
-			step = 1;
-			if (!reversed) nextDisabled = true;
-		} else {
-			console.log({ email, phone, isNotRobot, utcOffset });
-			showForm = false;
-		}
+	function join() {
+		console.log({ email, phone, isNotRobot, utcOffset });
+		showForm = false;
 	}
 
 	function onUpdate({ detail }) {
@@ -33,7 +27,8 @@
 		isNotRobot = detail?.isNotRobot;
 		invalid = detail?.invalid;
 
-		nextDisabled = !isNotRobot;
+		if (step === 0) step += 1;
+		else join();
 	}
 
 	onMount(() => {
@@ -44,8 +39,6 @@
 		if (reversed) formSteps.reverse();
 
 		formSteps = [...formSteps];
-
-		nextDisabled = !!reversed;
 
 		statsEl.querySelector(".count-frames").textContent = "9,999";
 		statsEl.querySelector(".count-people").textContent = "123";
@@ -68,21 +61,16 @@
 	<div class="bg" />
 	<section class="fg">
 		<button on:click={() => (showForm = false)}>Close</button>
-		<form class="shadow" on:submit|preventDefault={onSubmit}>
+		<form class="shadow" on:submit|preventDefault>
 			<p class="prompt"><strong>{@html copy.prompt}</strong></p>
 
 			<div class="steps">
-				<svelte:component this={formSteps[step]} on:update={onUpdate} />
+				<svelte:component
+					this={formSteps[step]}
+					on:update={onUpdate}
+					value={step === 0 ? "Next" : "Submit"}
+				/>
 			</div>
-			<p>
-				<!-- {#if step === 0}
-					<button disabled={nextDisabled} on:click={onNext}>Next</button>
-				{:else} -->
-				{#if !nextDisabled}
-					<input type="submit" value={step === 0 ? "Next" : "Submit"} />
-				{/if}
-				<!-- {/if} -->
-			</p>
 		</form>
 	</section>
 </div>
