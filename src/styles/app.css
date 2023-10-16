@@ -16,6 +16,16 @@
 	--z-top: 100;
 	--z-overlay: 1000;
 
+	--c1: #ffddcc;
+	--c2: #3252f4;
+	--c2b: #0b2dd5;
+	/* --c2: #b63d00; */
+	--c1: var(--color-gray-100);
+	--c2: var(--color-black);
+	--c2b: var(--color-gray-700);
+
+
+	
 	/* presets (used in reset.css) */
 	--border-radius: 2px;
 	--font-body: var(--serif);

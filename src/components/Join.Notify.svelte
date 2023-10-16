@@ -6,14 +6,28 @@
 	let phone;
 	let email;
 
-	$: dispatch("update", { phone, email });
+	function invalidate() {
+		// replace all non numbers
+		const validPhone = phone
+			? phone?.replace(/\D/g, "").trim().length === 10
+			: true;
+		const validEmail = email
+			? email?.includes("@") && email?.includes(".")
+			: true;
+		if (!validPhone) return "Invalid phone number";
+		if (!validEmail) return "Invalid email address";
+		return false;
+	}
+
+	$: invalid = invalidate(phone, email);
+	$: dispatch("update", { phone, email, invalid });
 </script>
 
 <fieldset>
 	<div class="step notify">
 		<p>{@html copy.stepNotify}</p>
 		<div>
-			<label for="phone">Text message</label>
+			<label for="phone">Text message (US number)</label>
 			<input
 				type="tel"
 				id="phone"
