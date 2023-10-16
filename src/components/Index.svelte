@@ -60,7 +60,9 @@
 <div id="join" class:visible={showForm}>
 	<div class="bg" />
 	<section class="fg">
-		<button on:click={() => (showForm = false)}>Close</button>
+		<button aria-label="close" class="close" on:click={() => (showForm = false)}
+			>X</button
+		>
 		<form class="shadow" on:submit|preventDefault>
 			<p class="prompt"><strong>{@html copy.prompt}</strong></p>
 
@@ -103,5 +105,11 @@
 	.fg {
 		position: relative;
 		background: var(--color-bg);
+	}
+
+	.close {
+		position: absolute;
+		top: 16px;
+		right: 16px;
 	}
 </style>

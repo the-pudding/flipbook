@@ -225,7 +225,7 @@
 		height: var(--canvas-size);
 		touch-action: none;
 		user-select: none;
-		background: var(--color-1);
+		background: var(--c2);
 		margin: 0 auto;
 	}
 

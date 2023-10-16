@@ -16,13 +16,13 @@
 	--z-top: 100;
 	--z-overlay: 1000;
 
-	--c1: #ffddcc;
+	/* --c1: #ffddcc;
 	--c2: #3252f4;
-	--c2b: #0b2dd5;
-	/* --c2: #b63d00; */
+	--c3: #0b2dd5; */
 	--c1: var(--color-gray-100);
-	--c2: var(--color-black);
-	--c2b: var(--color-gray-700);
+	--c2: var(--color-gray-300);
+	--c3: var(--color-gray-700);
+	--c4: var(--color-gray-900);
 
 
 	
@@ -30,20 +30,20 @@
 	--border-radius: 2px;
 	--font-body: var(--serif);
 	--font-form: var(--sans);
-	--color-bg: var(--color-white);
-	--color-fg: var(--color-gray-900);
-	--color-primary: var(--color-black);
-	--color-link: var(--color-black);
-	--color-focus: var(--color-red);
-	--color-mark: var(--color-yellow);
-	--color-selection: var(--color-gray-300);
-	--color-border: var(--color-gray-300);
-	--color-button-bg: var(--color-gray-300);
-	--color-button-fg: var(--color-gray-900);
-	--color-button-hover: var(--color-gray-400);
-	--color-input-bg: var(--color-gray-50);
-	--color-input-fg: var(--color-gray-900);
-	--color-placeholder: var(--color-gray-500);
+	--color-bg: var(--c1);
+	--color-fg: var(--c4);
+	--color-primary: var(--c4);
+	--color-link: var(--c4);
+	--color-focus: var(--c2);
+	--color-mark: var(--c2);
+	--color-selection: var(--c2);
+	--color-border: var(--c2);
+	--color-button-bg: var(--c4);
+	--color-button-fg: var(--c1);
+	--color-button-hover: var(--c3);
+	--color-input-bg: var(--c2);
+	--color-input-fg: var(--c4);
+	--color-placeholder: var(--c3);
 
 	--color-1: var(--color-gray-100);
 	--color-2: var(--color-gray-200);
