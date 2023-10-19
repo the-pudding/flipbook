@@ -76,11 +76,15 @@
 	}
 
 	.info p {
-		margin-bottom: 8px;
+		margin: 0;
 	}
 
 	.info p,
 	li {
 		font-size: var(--14px);
+	}
+
+	.invalid {
+		color: red;
 	}
 </style>

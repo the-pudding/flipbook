@@ -19,9 +19,8 @@
 
 <fieldset>
 	<div class="step robot">
-		<p>{@html copy.stepRobot}</p>
 		<div>
-			<label for="robot">I’m not a robot</label>
+			<label for="robot">Are you a human?</label>
 			<input
 				type="checkbox"
 				id="robot"
@@ -60,5 +59,9 @@
 
 	.draw.visible {
 		display: block;
+	}
+
+	.invalid {
+		color: red;
 	}
 </style>

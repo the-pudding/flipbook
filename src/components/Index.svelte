@@ -14,7 +14,8 @@
 	let utcOffset;
 	let showForm;
 	let reversed;
-	let statsEl;
+	let frameCount;
+	let waitingCount;
 
 	function join() {
 		console.log({ email, phone, isNotRobot, utcOffset });
@@ -40,8 +41,8 @@
 
 		formSteps = [...formSteps];
 
-		statsEl.querySelector(".count-frames").textContent = "9,999";
-		statsEl.querySelector(".count-people").textContent = "123";
+		frameCount = "9,999";
+		waitingCount = "123";
 	});
 </script>
 
@@ -53,8 +54,13 @@
 		{@html copy.definition}
 	</p>
 
-	<p class="stats" bind:this={statsEl}>{@html copy.stats}</p>
-	<button on:click={() => (showForm = true)}>Get in line</button>
+	<p class="stats">
+		<strong>{frameCount}</strong>
+		{copy.statsFrames}<br />
+		<strong>{waitingCount}</strong>
+		{copy.statsWaiting}
+	</p>
+	<button on:click={() => (showForm = true)}>Get in line!</button>
 </section>
 
 <div id="join" class:visible={showForm}>
