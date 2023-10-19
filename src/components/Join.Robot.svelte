@@ -8,12 +8,20 @@
 	export let value;
 
 	let invalid;
+	let review;
 	let isNotRobot;
 	let path;
 
 	function onSubmit() {
-		if (path.length) dispatch("update", { isNotRobot });
-		else invalid = "You must draw a circle";
+		if (review) return;
+
+		if (path.length) {
+			review = true;
+			setTimeout(() => {
+				review = false;
+				dispatch("update", { isNotRobot });
+			}, 2000);
+		} else invalid = "You must draw a circle";
 	}
 </script>
 
@@ -38,8 +46,13 @@
 {#if isNotRobot}
 	<button on:click|preventDefault={onSubmit}>{value}</button>
 {/if}
+
 {#if invalid}
 	<p class="invalid">{invalid}</p>
+{/if}
+
+{#if review}
+	<p class="review">Eh. Good enough.</p>
 {/if}
 
 <style>

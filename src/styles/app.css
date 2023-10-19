@@ -19,7 +19,7 @@
 	/* --c1: #ffddcc;
 	--c2: #3252f4;
 	--c3: #0b2dd5; */
-	--c1: var(--color-gray-100);
+	--c1: var(--color-white);
 	--c2: var(--color-gray-300);
 	--c3: var(--color-gray-700);
 	--c4: var(--color-gray-900);
@@ -44,10 +44,6 @@
 	--color-input-bg: var(--c2);
 	--color-input-fg: var(--c4);
 	--color-placeholder: var(--c3);
-
-	--color-1: var(--color-gray-100);
-	--color-2: var(--color-gray-200);
-	--color-3: var(--color-gray-300);
 
 	/* "1" second duration */
 	--1s: 1ms;
@@ -103,7 +99,7 @@ h1 {
 
 section {
 	/* max-width: calc(var(--canvas-size) + 64px); */
-	max-width: 360px;
+	/* max-width: 360px; */
 	padding: 16px;
 	margin: 0 auto;
 }
