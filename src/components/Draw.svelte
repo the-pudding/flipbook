@@ -5,20 +5,17 @@
 	const data = getContext("data");
 </script>
 
-<p>
-	<!-- {@html copy.task} -->
-	Your task is to trace the
-	<mark><strong>last person’s drawing</strong></mark> as best you can.
-</p>
+<section>
+	<p>
+		<!-- {@html copy.task} -->
+		Your task is to trace the
+		<mark><strong>last person’s drawing</strong></mark> as best you can.
+	</p>
 
-<Canvas />
+	<Canvas />
+</section>
 
 <style>
-	p {
-		max-width: 300px;
-		margin: 16px auto;
-	}
-
 	mark {
 		background: none;
 		padding: 0;

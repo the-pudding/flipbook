@@ -192,14 +192,14 @@
 	</div>
 
 	<div class="debug">
-		<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+		<p style="font-family: var(--mono); font-size: 12px;">
 			target: ll &lt; ~0.1 && sim &gt; 0.9 &amp;&amp; (diag &lt; 0.2 || len &lt;
 			0.2)
 		</p>
-		<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+		<p style="font-family: var(--mono); font-size: 12px;">
 			debug1: {JSON.stringify(debug1)}
 		</p>
-		<p style="text-align: center; font-family: var(--mono); font-size: 12px;">
+		<p style="font-family: var(--mono); font-size: 12px;">
 			debug2: {JSON.stringify(debug2)}
 		</p>
 	</div>
@@ -215,10 +215,6 @@
 {/if}
 
 <style>
-	.ui button {
-		margin: 0 8px;
-	}
-
 	.c {
 		position: relative;
 		width: var(--canvas-size);
@@ -226,7 +222,6 @@
 		touch-action: none;
 		user-select: none;
 		background: var(--c2);
-		margin: 0 auto;
 	}
 
 	.ui {
@@ -234,9 +229,12 @@
 		justify-content: center;
 		max-width: var(--canvas-size);
 		height: auto;
-		margin: 0 auto;
 		background: var(--color-bg);
 		padding: 8px 0;
+	}
+
+	.ui button {
+		margin: 0 8px;
 	}
 
 	svg {
