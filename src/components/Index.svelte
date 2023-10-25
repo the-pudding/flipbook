@@ -2,39 +2,54 @@
 	import { onMount, getContext } from "svelte";
 	import Notify from "$components/Join.Notify.svelte";
 	import Robot from "$components/Join.Robot.svelte";
+	import submit from "$utils/submit.js";
 	const copy = getContext("copy");
 	const data = getContext("data");
 
 	let formSteps = [Notify, Robot];
 	let step = 0;
-	let isNotRobot;
+	let isHuman;
 	let email;
 	let phone;
-	let invalid;
-	let utcOffset;
+	let timezone;
 	let showForm;
 	let reversed;
 	let frameCount;
 	let waitingCount;
+	let submitting;
+	let response;
 
-	function join() {
-		console.log({ email, phone, isNotRobot, utcOffset });
-		showForm = false;
+	async function join() {
+		if (isHuman) {
+			submitting = true;
+			try {
+				response = await submit("pool", { email, phone, timezone });
+				isHuman = undefined;
+				email = undefined;
+				phone = undefined;
+				step = 0;
+			} catch (err) {
+				response = err;
+			} finally {
+				submitting = false;
+				showForm = false;
+			}
+		}
 	}
 
 	function onUpdate({ detail }) {
-		phone = detail?.phone;
-		email = detail?.email;
-		isNotRobot = detail?.isNotRobot;
-		invalid = detail?.invalid;
+		phone = detail?.phone || phone;
+		email = detail?.email || email;
+		isHuman = detail?.isHuman || isHuman;
 
 		if (step === 0) step += 1;
 		else join();
 	}
 
+	$: result = response ? JSON.stringify(response) : "";
 	onMount(() => {
 		const offsetInMinutes = new Date().getTimezoneOffset();
-		utcOffset = offsetInMinutes / 60;
+		timezone = offsetInMinutes / 60;
 
 		reversed = Math.random() < 0.5;
 		if (reversed) formSteps.reverse();
@@ -65,23 +80,37 @@
 
 <div id="join" class:visible={showForm}>
 	<div class="bg" />
-	<section class="fg">
-		<button aria-label="close" class="close" on:click={() => (showForm = false)}
-			>X</button
-		>
-		<form class="shadow" on:submit|preventDefault>
-			<p class="prompt"><strong>{@html copy.prompt}</strong></p>
+	{#if submitting}
+		<section class="submitting">
+			<p>Adding you to the line...</p>
+		</section>
+	{:else}
+		<section class="fg" class:submitting>
+			<button
+				aria-label="close"
+				class="close"
+				on:click={() => (showForm = false)}>X</button
+			>
+			<form class="shadow" on:submit|preventDefault>
+				<p class="prompt"><strong>{@html copy.prompt}</strong></p>
 
-			<div class="steps">
-				<svelte:component
-					this={formSteps[step]}
-					on:update={onUpdate}
-					value={step === 0 ? "Next" : "Submit"}
-				/>
-			</div>
-		</form>
-	</section>
+				<div class="steps">
+					<svelte:component
+						this={formSteps[step]}
+						on:update={onUpdate}
+						value={step === 0 ? "Next" : "Submit"}
+					/>
+				</div>
+			</form>
+		</section>
+	{/if}
 </div>
+
+{#if result}
+	<section class="result">
+		<p>{result}</p>
+	</section>
+{/if}
 
 <style>
 	#join {
@@ -108,9 +137,13 @@
 		opacity: 0.9;
 	}
 
-	.fg {
+	#join section {
 		position: relative;
 		background: var(--color-bg);
+	}
+
+	.submitting {
+		padding-top: 64px;
 	}
 
 	.close {

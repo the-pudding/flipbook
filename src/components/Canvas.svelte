@@ -9,6 +9,7 @@
 	export let robot;
 	export let preset;
 	export let path;
+	export let disabled;
 
 	const W = 300;
 	const H = W;
@@ -169,6 +170,7 @@
 	on:pointerup={stopDrawing}
 	on:pointerleave={stopDrawing}
 	class:first={attempt === 0}
+	class:disabled
 >
 	<svg class="shadow">
 		<g>
@@ -222,6 +224,14 @@
 		touch-action: none;
 		user-select: none;
 		background: var(--c2);
+	}
+
+	.c.disabled {
+		pointer-events: none;
+	}
+
+	.c.disabled svg {
+		cursor: not-allowed;
 	}
 
 	.ui {
