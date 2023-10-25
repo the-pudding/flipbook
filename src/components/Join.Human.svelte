@@ -26,14 +26,14 @@
 </script>
 
 <fieldset>
-	<div class="step robot">
+	<div class="step human">
 		<div>
-			<label for="robot">Are you a human?</label>
-			<input type="checkbox" id="robot" name="robot" bind:checked={isHuman} />
+			<label for="human">Are you a human?</label>
+			<input type="checkbox" id="human" name="human" bind:checked={isHuman} />
 		</div>
 		<div class="draw" class:visible={isHuman}>
-			<p>{@html copy.robot}</p>
-			<Canvas robot={true} bind:path disabled={review} />
+			<p>{@html copy.humanPrompt}</p>
+			<Canvas human={true} bind:path disabled={review} />
 		</div>
 	</div>
 </fieldset>
@@ -47,11 +47,11 @@
 {/if}
 
 {#if review}
-	<p class="review">Eh. Good enough.</p>
+	<p class="review">{copy.humanReview}</p>
 {/if}
 
 <style>
-	.robot {
+	.human {
 		margin: 0;
 	}
 
@@ -71,5 +71,9 @@
 
 	.invalid {
 		color: red;
+	}
+
+	.review {
+		color: green;
 	}
 </style>

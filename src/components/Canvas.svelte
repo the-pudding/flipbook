@@ -6,7 +6,7 @@
 	// import getPointDistance from "$utils/getPointDistance.js";
 	import validateLine from "$utils/validateLine.js";
 
-	export let robot;
+	export let human;
 	export let preset;
 	export let path;
 	export let disabled;
@@ -186,7 +186,7 @@
 	{/if}
 </div>
 
-{#if !robot}
+{#if !human}
 	<div class="c ui">
 		<button on:click={submit}>submit</button><button on:click={reset}
 			>reset</button

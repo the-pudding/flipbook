@@ -1,12 +1,12 @@
 <script>
 	import { onMount, getContext } from "svelte";
 	import Notify from "$components/Join.Notify.svelte";
-	import Robot from "$components/Join.Robot.svelte";
+	import Human from "$components/Join.Human.svelte";
 	import submit from "$utils/submit.js";
 	const copy = getContext("copy");
 	const data = getContext("data");
 
-	let formSteps = [Notify, Robot];
+	let formSteps = [Notify, Human];
 	let step = 0;
 	let isHuman;
 	let email;
