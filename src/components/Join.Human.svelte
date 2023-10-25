@@ -19,7 +19,7 @@
 			review = true;
 			setTimeout(() => {
 				review = false;
-				dispatch("update", { isHuman });
+				dispatch("update", { isHuman, path });
 			}, 1500);
 		} else invalid = "You must draw a circle";
 	}

@@ -8,10 +8,14 @@
 
 	let formSteps = [Notify, Human];
 	let step = 0;
+
 	let isHuman;
 	let email;
 	let phone;
+	let path;
+
 	let timezone;
+
 	let showForm;
 	let reversed;
 	let frameCount;
@@ -41,6 +45,14 @@
 		phone = detail?.phone || phone;
 		email = detail?.email || email;
 		isHuman = detail?.isHuman || isHuman;
+		path = detail?.path || path;
+
+		if (path) console.log(path);
+		// submit("human", {
+		// 	drawing: path,
+		// 	has_phone: !!phone,
+		// 	has_email: !!email
+		// }).then(console.log);
 
 		if (step === 0) step += 1;
 		else join();

@@ -94,8 +94,8 @@
 		if (v > attempt - 1) v = 0;
 		if (!coordinates[v]?.length) setTimeout(animate, 1000);
 		else {
-			const c = coordinates[v].map((d) => d.join(" ")).join(" L ");
-			pathAnimate = `M ${c}`;
+			const c = coordinates[v].map((d) => d.join(" ")).join("L");
+			pathAnimate = `M${c}`;
 			setTimeout(() => {
 				animate(v);
 			}, 1000 / FPS);
@@ -152,8 +152,8 @@
 	// 	.join(" M ");
 	// $: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
 
-	$: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join(" L ");
-	$: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
+	$: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join("L");
+	$: pathCurrent = coordsCurrent?.length ? `M${coordsCurrent}` : "";
 	$: path = pathCurrent;
 
 	onMount(() => {
