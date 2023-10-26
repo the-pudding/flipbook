@@ -201,7 +201,9 @@
 	</div>
 </div>
 
-{#if !human}
+<slot name="ui" />
+
+<!-- {#if !human}
 	<div class="c ui">
 		<button on:click={submit}>submit</button><button on:click={reset}
 			>reset</button
@@ -229,7 +231,7 @@
 		</svg>
 		<p>{v}</p>
 	</div>
-{/if}
+{/if} -->
 
 <style>
 	.c {

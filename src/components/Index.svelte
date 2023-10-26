@@ -2,9 +2,15 @@
 	import { onMount, getContext } from "svelte";
 	import Notify from "$components/Join.Notify.svelte";
 	import Human from "$components/Join.Human.svelte";
+	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import submit from "$utils/submit.js";
+	import storage from "$utils/localStorage.js";
 	const copy = getContext("copy");
 	const data = getContext("data");
+
+	const buttonText = copy.spread;
+	const url = copy.url;
+	const title = copy.title;
 
 	let formSteps = [Notify, Human];
 	let step = 0;
@@ -21,20 +27,21 @@
 	let frameCount;
 	let waitingCount;
 	let submitting;
-	let response;
+	let poolResponse;
 
 	async function join() {
 		if (isHuman) {
 			submitting = true;
 			try {
-				response = await submit("pool", { email, phone, timezone });
+				poolResponse = await submit("pool", { email, phone, timezone });
 				isHuman = undefined;
 				email = undefined;
 				phone = undefined;
 				step = 0;
 			} catch (err) {
-				response = err;
+				poolResponse = { message: err.message };
 			} finally {
+				console.log(poolResponse);
 				submitting = false;
 				showForm = false;
 			}
@@ -47,18 +54,27 @@
 		isHuman = detail?.isHuman || isHuman;
 		path = detail?.path || path;
 
-		if (path) console.log(path);
-		// submit("human", {
-		// 	drawing: path,
-		// 	has_phone: !!phone,
-		// 	has_email: !!email
-		// }).then(console.log);
+		const humanInStorage = storage.get("pudding-trace-human");
+
+		if (path && !humanInStorage)
+			submit("human", {
+				drawing: path,
+				has_phone: !!phone,
+				has_email: !!email
+			})
+				.then(() => {
+					storage.set("pudding-trace-human", true);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 
 		if (step === 0) step += 1;
 		else join();
 	}
 
-	$: result = response ? JSON.stringify(response) : "";
+	$: joined = poolResponse?.status === "ok";
+
 	onMount(() => {
 		const offsetInMinutes = new Date().getTimezoneOffset();
 		timezone = offsetInMinutes / 60;
@@ -87,7 +103,16 @@
 		<strong>{waitingCount}</strong>
 		{copy.statsWaiting}
 	</p>
-	<button on:click={() => (showForm = true)}>Get in line!</button>
+
+	{#if joined}
+		<p>{copy.thanks}</p>
+		<p><ShareButton {buttonText} {title} {url} /></p>
+	{:else}
+		<button on:click={() => (showForm = true)}>Get in line!</button>
+		{#if poolResponse}
+			<p>{copy.issue}</p>
+		{/if}
+	{/if}
 </section>
 
 <div id="join" class:visible={showForm}>
@@ -117,12 +142,6 @@
 		</section>
 	{/if}
 </div>
-
-{#if result}
-	<section class="result">
-		<p>{result}</p>
-	</section>
-{/if}
 
 <style>
 	#join {
