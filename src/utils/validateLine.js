@@ -16,8 +16,8 @@ export default function validateLine({ cur, prev, diagonal }) {
 	const simF = shapeSimilarity(linePrevF, lineCur, opts);
 	const simR = shapeSimilarity(linePrevR, lineCur, opts);
 
-	const lineLengthCur = lineLength(lineCur);
-	const lineLengthPrev = lineLength(linePrevF);
+	const lineLengthCur = lineLength(lineCur, true);
+	const lineLengthPrev = lineLength(linePrevF, true);
 	const lineLengthMax = Math.max(lineLengthCur, lineLengthPrev);
 	const ll = Math.abs(lineLengthCur / lineLengthPrev - 1);
 

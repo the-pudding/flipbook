@@ -71,6 +71,21 @@
 {/if}
 
 <style>
+	fieldset {
+		border: none;
+		padding: 0;
+	}
+
+	label {
+		margin-bottom: 4px;
+	}
+
+	fieldset div {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		margin-bottom: 8px;
+	}
 	.info {
 		padding: 16px 0;
 	}

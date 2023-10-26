@@ -1,9 +1,7 @@
 <script>
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
-	// import dtwDistance from "$utils/dtwDistance.js";
-	// import resampleLine from "$utils/resampleLine.js";
-	// import getPointDistance from "$utils/getPointDistance.js";
+	import lineLength from "$utils/lineLength.js";
 	import validateLine from "$utils/validateLine.js";
 
 	export let human;
@@ -12,6 +10,7 @@
 	export let disabled;
 
 	const W = 300;
+	const MAX_LENGTH = W * 5;
 	const H = W;
 	const FPS = 12;
 	const presets = [
@@ -34,6 +33,8 @@
 		]
 	];
 
+	let inkRem = 1;
+	let noInk = false;
 	let drawing = false;
 	let attempt = 1;
 	let coordinates = [];
@@ -65,6 +66,8 @@
 	}
 
 	function startDrawing(e) {
+		noInk = false;
+		inkRem = 1;
 		drawing = true;
 		const d = point(e);
 
@@ -76,12 +79,15 @@
 	}
 
 	function drawLine(e) {
-		if (!drawing) return;
+		if (!drawing || noInk) return;
 		const d = point(e);
 
 		coordinates[attempt].push(d);
-		// coordinates[attempt][coordinates[attempt].length - 1].push(d);
-
+		const len = lineLength(coordinates[attempt]);
+		if (len > MAX_LENGTH) {
+			noInk = true;
+		}
+		inkRem = Math.max(0, (MAX_LENGTH - len) / MAX_LENGTH);
 		coordinates = [...coordinates];
 	}
 
@@ -172,18 +178,27 @@
 	class:first={attempt === 0}
 	class:disabled
 >
-	<svg class="shadow">
-		<g>
-			{#if pathSubmit}
-				<path class="prev" d={pathSubmit} />
-			{/if}
-			<path d={pathCurrent} />
-		</g>
-	</svg>
-	<p>{attempt}</p>
-	{#if valid === false}
-		<p transition:fade class="invalid">I think you can do better!</p>
-	{/if}
+	<div class="canvas">
+		<svg class="shadow">
+			<g>
+				{#if pathSubmit}
+					<path class="prev" d={pathSubmit} />
+				{/if}
+				<path d={pathCurrent} />
+			</g>
+		</svg>
+		<p>{attempt}</p>
+		{#if valid === false}
+			<p transition:fade class="invalid">I think you can do better!</p>
+		{/if}
+	</div>
+	<div class="ink">
+		{#if noInk}
+			<span>no ink left!</span>
+		{:else}
+			<span class="bar" style:width="{inkRem * 100}%" />
+		{/if}
+	</div>
 </div>
 
 {#if !human}
@@ -218,6 +233,10 @@
 
 <style>
 	.c {
+		padding: 16px 0;
+	}
+
+	.canvas {
 		position: relative;
 		width: var(--canvas-size);
 		height: var(--canvas-size);
@@ -291,5 +310,16 @@
 		text-align: center;
 		font-size: 14px;
 		font-weight: bold;
+	}
+
+	.ink {
+		background: var(--c2);
+		height: 4px;
+	}
+
+	.ink .bar {
+		display: block;
+		background: var(--c4);
+		height: 100%;
 	}
 </style>
