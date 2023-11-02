@@ -62,7 +62,8 @@
 				has_phone: !!phone,
 				has_email: !!email
 			})
-				.then(() => {
+				.then(({ duration, message }) => {
+					console.log(duration, message);
 					storage.set("pudding-trace-human", true);
 				})
 				.catch((err) => {
@@ -107,12 +108,34 @@
 	{#if joined}
 		<p>{copy.thanks}</p>
 		<p><ShareButton {buttonText} {title} {url} /></p>
-	{:else}
-		<button on:click={() => (showForm = true)}>Get in line!</button>
-		{#if poolResponse}
-			<p>{copy.issue}</p>
-		{/if}
+	{:else if poolResponse}
+		<div class="issue">
+			<p class="issue">{copy.issue}</p>
+		</div>
 	{/if}
+</section>
+
+<section id="sell">
+	<div class="nothing">
+		<button on:click={() => (showForm = true)}>Get in line!</button>
+	</div>
+
+	<div class="hard">
+		<p>{@html copy.hard}</p>
+		<img src="assets/demo/test.jpg" alt="test" />
+		<p>{@html copy.hard2}</p>
+		<button on:click={() => (showForm = true)}>Get in line!</button>
+	</div>
+
+	<div class="harder">
+		<p>{@html copy.harder}</p>
+		<ul>
+			{#each copy.harderLi as item}
+				<li>{@html item}</li>
+			{/each}
+		</ul>
+		<button on:click={() => (showForm = true)}>Get in line!</button>
+	</div>
 </section>
 
 <div id="join" class:visible={showForm}>
@@ -181,5 +204,17 @@
 		position: absolute;
 		top: 16px;
 		right: 16px;
+	}
+
+	.issue {
+		color: red;
+	}
+
+	#sell > div {
+		margin-bottom: 128px;
+	}
+
+	ul {
+		margin: 16px 0;
 	}
 </style>
