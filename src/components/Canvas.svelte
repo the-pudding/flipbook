@@ -3,49 +3,38 @@
 	import { fade } from "svelte/transition";
 	import lineLength from "$utils/lineLength.js";
 	import validateLine from "$utils/validateLine.js";
+	import presets from "$data/presets.json";
 
-	export let human;
+	export let debug;
 	export let preset;
 	export let path;
+	export let paths;
 	export let disabled;
+	export let validate;
 
 	const W = 300;
-	const MAX_LENGTH = W * 5;
 	const H = W;
+	const MAX_LINE_LENGTH = W * 5;
 	const FPS = 12;
-	const presets = [
-		[
-			[50, 150],
-			[250, 150]
-		],
-		[
-			[50, 225],
-			[150, 75],
-			[250, 225],
-			[50, 225]
-		],
-		[
-			[50, 50],
-			[250, 50],
-			[250, 250],
-			[50, 250],
-			[50, 50]
-		]
-	];
+	const MAX_FRAMES = FPS * 5;
 
 	let inkRem = 1;
 	let noInk = false;
 	let drawing = false;
-	let attempt = 1;
+	let frameIndex = 0;
 	let coordinates = [];
-	let pathSubmit = "";
-	let pathAnimate = "";
-	let v = "";
+	let pathPrevious = "";
+	let pathPreview = "";
 	let valid;
 	let debug1 = {};
 	let debug2 = {};
+	let previewing;
 
 	let pathDebug = "";
+
+	export const preview = togglePreview;
+	export const addFrame = add;
+	export const deleteFrame = del;
 
 	function normalizeFrechet(frechet) {
 		return frechet / DIAGONAL;
@@ -71,23 +60,20 @@
 		drawing = true;
 		const d = point(e);
 
-		coordinates[attempt] = [];
-		coordinates[attempt].push(d);
-
-		// if (!coordinates[attempt]) coordinates[attempt] = [];
-		// coordinates[attempt].push([d]);
+		coordinates[frameIndex] = [];
+		coordinates[frameIndex].push(d);
 	}
 
 	function drawLine(e) {
 		if (!drawing || noInk) return;
 		const d = point(e);
 
-		coordinates[attempt].push(d);
-		const len = lineLength(coordinates[attempt]);
-		if (len > MAX_LENGTH) {
+		coordinates[frameIndex].push(d);
+		const len = lineLength(coordinates[frameIndex]);
+		if (len > MAX_LINE_LENGTH) {
 			noInk = true;
 		}
-		inkRem = Math.max(0, (MAX_LENGTH - len) / MAX_LENGTH);
+		inkRem = Math.max(0, (MAX_LINE_LENGTH - len) / MAX_LINE_LENGTH);
 		coordinates = [...coordinates];
 	}
 
@@ -95,77 +81,71 @@
 		drawing = false;
 	}
 
-	function animate(prev = 0) {
-		v = prev + 1;
-		if (v > attempt - 1) v = 0;
-		if (!coordinates[v]?.length) setTimeout(animate, 1000);
-		else {
-			const c = coordinates[v].map((d) => d.join(" ")).join("L");
-			pathAnimate = `M${c}`;
-			setTimeout(() => {
-				animate(v);
-			}, 1000 / FPS);
-		}
-	}
-
-	// function animate(prev = 0) {
-	// 	v = prev + 1;
-	// 	if (v > attempt - 1) v = 0;
-	// 	if (!coordinates[v]?.length) setTimeout(animate, 1000);
-	// 	else {
-	// 		const c = coordinates[v]
-	// 			.map((strokes) => strokes.map((s) => s.join(" ")).join(" L "))
-	// 			.join(" M ");
-	// 		pathAnimate = `M ${c}`;
-	// 		setTimeout(() => {
-	// 			animate(v);
-	// 		}, 1000 / FPS);
-	// 	}
-	// }
-
 	function submit() {
-		if (attempt > 0) {
-			const cur = [...coordinates[attempt]].map(([x, y]) => ({ x, y }));
-			const prev = [...coordinates[attempt - 1]].map(([x, y]) => ({
+		if (frameIndex > 0) {
+			const cur = [...coordinates[frameIndex]].map(([x, y]) => ({ x, y }));
+			const prev = [...coordinates[frameIndex - 1]].map(([x, y]) => ({
 				x,
 				y
 			}));
 			const diagonal = Math.sqrt(W ** 2 + H ** 2);
 
-			const response = validateLine({ cur, prev, diagonal });
+			const response = validate
+				? validateLine({ cur, prev, diagonal })
+				: { valid: true };
 			valid = response.valid;
 			debug1 = response.debug1;
 			debug2 = response.debug2;
-
-			if (valid) {
-				pathSubmit = pathCurrent;
-				attempt += 1;
-			} else {
-				setTimeout(() => {
-					valid = undefined;
-				}, 2000);
-			}
-			coordsCurrent = [];
+		} else {
+			valid = !!coordinates[frameIndex].length;
 		}
+
+		if (valid) {
+			pathPrevious = pathCurrent;
+			frameIndex += 1;
+		} else {
+			setTimeout(() => {
+				valid = undefined;
+			}, 2000);
+		}
+		coordsCurrent = [];
 	}
 
 	function reset() {
-		coordinates[attempt] = [];
+		coordinates[frameIndex] = [];
+		pathPreview = "";
 	}
 
-	// $: coordsCurrent = coordinates[attempt]
-	// 	?.map((stroke) => stroke.map((s) => s.join(" ")).join(" L "))
-	// 	.join(" M ");
-	// $: pathCurrent = coordsCurrent?.length ? `M ${coordsCurrent}` : "";
+	function animatePreview(index = 0) {
+		const str = coordinates[index].map((d) => d.join(" ")).join("L");
+		pathPreview = previewing ? `M${str}` : "";
+		setTimeout(() => {
+			let next = index + 1;
+			if (next > frameIndex - 1) next = 0;
+			if (previewing) animatePreview(next);
+		}, 1000 / FPS);
+	}
 
-	$: coordsCurrent = coordinates[attempt]?.map((d) => d.join(" ")).join("L");
+	function add() {
+		submit();
+	}
+
+	function del() {}
+
+	function togglePreview() {
+		previewing = !previewing;
+		if (previewing) animatePreview();
+		else pathPreview = "";
+	}
+
+	$: coordsCurrent = coordinates[frameIndex]?.map((d) => d.join(" ")).join("L");
 	$: pathCurrent = coordsCurrent?.length ? `M${coordsCurrent}` : "";
+	$: paths = coordinates.map((c) => `M${c.map((d) => d.join(" ")).join("L")}`);
 	$: path = pathCurrent;
 
 	onMount(() => {
 		coordinates = [presets[preset] || [[0, 0]]];
-		pathSubmit = `M ${coordinates[0].map((d) => d.join(" ")).join(" L ")}`;
-		animate();
+		pathPrevious = `M ${coordinates[0].map((d) => d.join(" ")).join(" L ")}`;
 	});
 </script>
 
@@ -175,19 +155,25 @@
 	on:pointermove={drawLine}
 	on:pointerup={stopDrawing}
 	on:pointerleave={stopDrawing}
-	class:first={attempt === 0}
 	class:disabled
 >
 	<div class="canvas">
-		<svg class="shadow">
+		<svg class="preview">
 			<g>
-				{#if pathSubmit}
-					<path class="prev" d={pathSubmit} />
+				<path d={pathPreview} />
+			</g>
+		</svg>
+
+		<svg class="draw shadow">
+			<g>
+				{#if pathPrevious && !previewing}
+					<path class="prev" d={pathPrevious} />
 				{/if}
 				<path d={pathCurrent} />
 			</g>
 		</svg>
-		<p>{attempt}</p>
+
+		<p>{frameIndex}</p>
 		{#if valid === false}
 			<p transition:fade class="invalid">I think you can do better!</p>
 		{/if}
@@ -203,13 +189,7 @@
 
 <slot name="ui" />
 
-<!-- {#if !human}
-	<div class="c ui">
-		<button on:click={submit}>submit</button><button on:click={reset}
-			>reset</button
-		>
-	</div>
-
+{#if debug}
 	<div class="debug">
 		<p style="font-family: var(--mono); font-size: 12px;">
 			target: ll &lt; ~0.1 && sim &gt; 0.9 &amp;&amp; (diag &lt; 0.2 || len &lt;
@@ -222,25 +202,16 @@
 			debug2: {JSON.stringify(debug2)}
 		</p>
 	</div>
-
-	<div class="c">
-		<svg class="shadow">
-			<g>
-				<path d={pathAnimate} />
-			</g>
-		</svg>
-		<p>{v}</p>
-	</div>
-{/if} -->
+{/if}
 
 <style>
 	.c {
 		padding: 16px 0;
+		width: var(--canvas-size);
 	}
 
 	.canvas {
 		position: relative;
-		width: var(--canvas-size);
 		height: var(--canvas-size);
 		touch-action: none;
 		user-select: none;
@@ -259,6 +230,7 @@
 		display: flex;
 		justify-content: center;
 		max-width: var(--canvas-size);
+		width: 100%;
 		height: auto;
 		background: var(--color-bg);
 		padding: 8px 0;
@@ -275,6 +247,12 @@
 		cursor: crosshair;
 	}
 
+	svg.preview {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
 	svg path {
 		fill: none;
 		stroke: #000;
@@ -284,8 +262,7 @@
 	}
 
 	path.prev {
-		stroke-opacity: 0.5;
-		stroke: red;
+		stroke-opacity: 0.33;
 	}
 
 	.c p {

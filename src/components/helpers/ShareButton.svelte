@@ -14,6 +14,8 @@
 	}
 
 	function onCopy() {
+		if (notified) return;
+
 		if (navigator.share) {
 			navigator
 				.share({ title, url })

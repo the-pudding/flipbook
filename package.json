@@ -18,6 +18,7 @@
 		"autoprefixer": "^10.4.15",
 		"curve-matcher": "^1.1.1",
 		"d3": "^7.8.5",
+		"gif.js": "^0.2.0",
 		"layercake": "^8.0.0",
 		"lodash.debounce": "^4.0.8",
 		"lucide-svelte": "^0.279.0",

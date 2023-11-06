@@ -26,6 +26,9 @@ devDependencies:
   d3:
     specifier: ^7.8.5
     version: 7.8.5
+  gif.js:
+    specifier: ^0.2.0
+    version: 0.2.0
   layercake:
     specifier: ^8.0.0
     version: 8.0.0(svelte@4.2.1)(typescript@5.2.2)
@@ -1000,6 +1003,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /gif.js@0.2.0:
+    resolution: {integrity: sha512-bYxCoT8OZKmbxY8RN4qDiYuj4nrQDTzgLRcFVovyona1PTWNePzI4nzOmotnlOFIzTk/ZxAHtv+TfVLiBWj/hw==}
+    dev: true
 
   /glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}

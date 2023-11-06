@@ -2,6 +2,7 @@
 	import { onMount, getContext } from "svelte";
 	import Notify from "$components/Join.Notify.svelte";
 	import Human from "$components/Join.Human.svelte";
+	import Playground from "$components/Join.Playground.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import submit from "$utils/submit.js";
 	import storage from "$utils/localStorage.js";
@@ -54,7 +55,7 @@
 		isHuman = detail?.isHuman || isHuman;
 		path = detail?.path || path;
 
-		const humanInStorage = storage.get("pudding-trace-human");
+		const humanInStorage = storage.get("pudding_trace_human");
 
 		if (path && !humanInStorage)
 			submit("human", {
@@ -64,7 +65,7 @@
 			})
 				.then(({ duration, message }) => {
 					console.log(duration, message);
-					storage.set("pudding-trace-human", true);
+					storage.set("pudding_trace_human", true);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -74,7 +75,7 @@
 		else join();
 	}
 
-	$: joined = poolResponse?.status === "ok";
+	$: joined = poolResponse?.status === "ok" || true;
 
 	onMount(() => {
 		const offsetInMinutes = new Date().getTimezoneOffset();
@@ -115,29 +116,34 @@
 	{/if}
 </section>
 
-<section id="sell">
-	<div class="nothing">
-		<button on:click={() => (showForm = true)}>Get in line!</button>
-	</div>
+{#if !joined}
+	<section id="sell">
+		<div class="nothing">
+			<button on:click={() => (showForm = true)}>Get in line!</button>
+		</div>
 
-	<div class="hard">
-		<p>{@html copy.hard}</p>
-		<img src="assets/demo/test.jpg" alt="test" />
-		<p>{@html copy.hard2}</p>
-		<button on:click={() => (showForm = true)}>Get in line!</button>
-	</div>
+		<div class="hard">
+			<p>{@html copy.hard}</p>
+			<img src="assets/demo/test.jpg" alt="test" />
+			<p>{@html copy.hard2}</p>
+			<button on:click={() => (showForm = true)}>Get in line!</button>
+		</div>
 
-	<div class="harder">
-		<p>{@html copy.harder}</p>
-		<ul>
-			{#each copy.harderLi as item}
-				<li>{@html item}</li>
-			{/each}
-		</ul>
-		<button on:click={() => (showForm = true)}>Get in line!</button>
-	</div>
-</section>
+		<div class="harder">
+			<p>{@html copy.harder}</p>
+			<ul>
+				{#each copy.harderLi as item}
+					<li>{@html item}</li>
+				{/each}
+			</ul>
+			<button on:click={() => (showForm = true)}>Get in line!</button>
+		</div>
+	</section>
+{/if}
 
+{#if joined}
+	<Playground />
+{/if}
 <div id="join" class:visible={showForm}>
 	<div class="bg" />
 	{#if submitting}
