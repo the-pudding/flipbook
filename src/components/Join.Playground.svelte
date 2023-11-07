@@ -8,6 +8,8 @@
 
 	let canvas;
 	let paths;
+	let gif;
+	let rendering;
 
 	function addFrame() {
 		canvas.addFrame();
@@ -21,8 +23,10 @@
 		canvas.preview();
 	}
 
-	function share() {
-		renderGif({ frames: paths, width: 300, height: 300 });
+	async function share() {
+		rendering = true;
+		gif = await renderGif({ frames: paths, width: 300, height: 300 });
+		rendering = false;
 	}
 </script>
 
@@ -35,5 +39,11 @@
 			<button on:click={preview}>Preview</button>
 		</div>
 	</Canvas>
-	<button on:click={share}>Share Animation</button>
+	<button disabled={rendering} on:click={share}
+		>{rendering ? "Rendering Animation" : "Share Animation"}</button
+	>
+	{#if gif}
+		<a class="btn" href={gif} download="animation.gif">Download</a>
+		<img src={gif} alt="animation" />
+	{/if}
 </section>

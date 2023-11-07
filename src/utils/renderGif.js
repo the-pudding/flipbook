@@ -12,43 +12,45 @@ async function drawPath(ctx, path) {
 }
 
 export default async function renderGif({ frames, width, height }) {
-	const navigatorCores = navigator.hardwareConcurrency || 4;
-	const workers = Math.max(2, navigatorCores / 2);
+	return new Promise(async (resolve, reject) => {
+		const navigatorCores = navigator.hardwareConcurrency || 4;
+		const workers = Math.max(2, navigatorCores / 2);
 
-	console.log(width, height);
-	const gif = new GIF({
-		workers,
-		workerScript: "assets/gif.worker.js",
-		quality: 1,
-		width,
-		height
+		const gif = new GIF({
+			workers,
+			workerScript: "assets/gif.worker.js",
+			quality: 1,
+			width,
+			height
+		});
+
+		const canvas = document.createElement("canvas");
+		const ctx = canvas.getContext("2d");
+		canvas.width = width;
+		canvas.height = height;
+
+		for (const frame of frames) {
+			ctx.clearRect(0, 0, width, height);
+			ctx.fillStyle = "#fff";
+			ctx.fillRect(0, 0, width, height);
+
+			await drawPath(ctx, frame);
+
+			// ctx.fillStyle = "red";
+			// ctx.fillRect(0, 0, width, height); // Fill the canvas with a red rectangle
+
+			gif.addFrame(ctx, { copy: true, delay });
+		}
+
+		gif.on("finished", (blob) => {
+			resolve(URL.createObjectURL(blob));
+		});
+
+		gif.on("error", () => {
+			console.log(error);
+			reject("Error rendering gif");
+		});
+
+		gif.render();
 	});
-
-	const canvas = document.createElement("canvas");
-	const ctx = canvas.getContext("2d");
-	canvas.width = width;
-	canvas.height = height;
-
-	for (const frame of frames) {
-		ctx.clearRect(0, 0, width, height);
-		ctx.fillStyle = "#fff";
-		ctx.fillRect(0, 0, width, height);
-
-		await drawPath(ctx, frame);
-
-		// ctx.fillStyle = "red";
-		// ctx.fillRect(0, 0, width, height); // Fill the canvas with a red rectangle
-
-		gif.addFrame(ctx, { copy: true, delay });
-	}
-
-	gif.on("finished", (blob) => {
-		window.open(URL.createObjectURL(blob));
-	});
-
-	gif.on("error", () => {
-		console.log(error);
-	});
-
-	gif.render();
 }
