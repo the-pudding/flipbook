@@ -13,9 +13,9 @@
 	let path;
 
 	function onSubmit() {
+		invalid = undefined;
 		if (review) return;
-
-		if (path.length) {
+		if (path.length > 4) {
 			review = true;
 			setTimeout(() => {
 				review = false;

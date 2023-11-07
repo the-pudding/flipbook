@@ -25,8 +25,8 @@
 
 	let showForm;
 	let reversed;
-	let frameCount;
-	let waitingCount;
+	let frameCount = "0";
+	let waitingCount = "0";
 	let submitting;
 	let poolResponse;
 
@@ -40,9 +40,8 @@
 				phone = undefined;
 				step = 0;
 			} catch (err) {
-				poolResponse = { message: err.message };
+				poolResponse = { error: err.message };
 			} finally {
-				console.log(poolResponse);
 				submitting = false;
 				showForm = false;
 			}
@@ -75,7 +74,7 @@
 		else join();
 	}
 
-	$: joined = poolResponse?.status === "ok" || true;
+	$: joined = poolResponse?.status === "ok";
 
 	onMount(() => {
 		const offsetInMinutes = new Date().getTimezoneOffset();
@@ -111,7 +110,10 @@
 		<p><ShareButton {buttonText} {title} {url} /></p>
 	{:else if poolResponse}
 		<div class="issue">
-			<p class="issue">{copy.issue}</p>
+			<details>
+				<summary>{copy.issue} </summary>
+				Error: {poolResponse.error}
+			</details>
 		</div>
 	{/if}
 </section>
