@@ -6,8 +6,8 @@
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import submit from "$utils/submit.js";
 	import storage from "$utils/localStorage.js";
+
 	const copy = getContext("copy");
-	const data = getContext("data");
 
 	const buttonText = copy.spread;
 	const url = copy.url;
@@ -74,7 +74,7 @@
 		else join();
 	}
 
-	$: joined = poolResponse?.status === "ok";
+	$: joined = poolResponse?.status === 200;
 
 	onMount(() => {
 		const offsetInMinutes = new Date().getTimezoneOffset();

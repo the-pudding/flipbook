@@ -36,6 +36,7 @@ export default function validateLine({ cur, prev, diagonal }) {
 	const passF = ll < targetLL && simF > 0.9 && (diagF < 0.2 || lenF < 0.2);
 	const passR = ll < targetLL && simR > 0.9 && (diagR < 0.2 || lenR < 0.2);
 	const valid = passF || passR;
+
 	return {
 		valid,
 		debug1: {

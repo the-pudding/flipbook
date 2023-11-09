@@ -1,12 +1,13 @@
 <script>
 	import { onMount } from "svelte";
+	import { createEventDispatcher } from "svelte";
 	import { fade } from "svelte/transition";
 	import lineLength from "$utils/lineLength.js";
 	import validateLine from "$utils/validateLine.js";
-	import presets from "$data/presets.json";
+	// import presets from "$data/presets.json";
 
-	export let debug;
 	export let preset;
+	export let debug;
 	export let path;
 	export let paths;
 	export let disabled;
@@ -17,6 +18,7 @@
 	const MAX_LINE_LENGTH = W * 5;
 	const FPS = 12;
 	const MAX_FRAMES = FPS * 5;
+	const dispatch = createEventDispatcher();
 
 	let inkRem = 1;
 	let noInk = false;
@@ -82,7 +84,7 @@
 	}
 
 	function submit() {
-		if (frameIndex > 0) {
+		if (validate && frameIndex > 0) {
 			const cur = [...coordinates[frameIndex]].map(([x, y]) => ({ x, y }));
 			const prev = [...coordinates[frameIndex - 1]].map(([x, y]) => ({
 				x,
@@ -90,15 +92,13 @@
 			}));
 			const diagonal = Math.sqrt(W ** 2 + H ** 2);
 
-			const response = validate
-				? validateLine({ cur, prev, diagonal })
-				: { valid: true };
+			const response = validateLine({ cur, prev, diagonal });
 			valid = response.valid;
 			debug1 = response.debug1;
 			debug2 = response.debug2;
-		} else {
-			valid = !!coordinates[frameIndex].length;
-		}
+
+			dispatch("validate", valid);
+		} else valid = true;
 
 		if (valid) {
 			pathPrevious = pathCurrent;
@@ -108,7 +108,9 @@
 				valid = undefined;
 			}, 2000);
 		}
+
 		coordsCurrent = [];
+		inkRem = 1;
 	}
 
 	function reset() {
@@ -138,15 +140,23 @@
 		else pathPreview = "";
 	}
 
+	onMount(() => {
+		pathPrevious = preset || "";
+		if (pathPrevious) {
+			frameIndex = 1;
+			coordinates[0] = flattenArray(
+				pathPrevious
+					.split("M")
+					.filter((d) => d)
+					.map((d) => d.split("L").map((d) => d.split(" ").map((d) => +d)))
+			);
+		}
+	});
+
 	$: coordsCurrent = coordinates[frameIndex]?.map((d) => d.join(" ")).join("L");
 	$: pathCurrent = coordsCurrent?.length ? `M${coordsCurrent}` : "";
 	$: paths = coordinates.map((c) => `M${c.map((d) => d.join(" ")).join("L")}`);
 	$: path = pathCurrent;
-
-	onMount(() => {
-		coordinates = [presets[preset] || [[0, 0]]];
-		pathPrevious = `M ${coordinates[0].map((d) => d.join(" ")).join(" L ")}`;
-	});
 </script>
 
 <div
