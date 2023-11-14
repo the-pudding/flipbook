@@ -93,6 +93,7 @@
 			const diagonal = Math.sqrt(W ** 2 + H ** 2);
 
 			const response = validateLine({ cur, prev, diagonal });
+
 			valid = response.valid;
 			debug1 = response.debug1;
 			debug2 = response.debug2;
@@ -290,8 +291,10 @@
 
 	p.invalid {
 		position: absolute;
-		bottom: 0;
-		left: 0;
+		top: 50%;
+		width: 90%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 		right: 0;
 		margin: 0;
 		padding: 8px;
@@ -299,6 +302,9 @@
 		text-align: center;
 		font-size: 14px;
 		font-weight: bold;
+		background: var(--color-bg);
+		color: var(--color-fg);
+		opacity: 0.9;
 	}
 
 	.ink {

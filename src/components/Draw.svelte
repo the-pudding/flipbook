@@ -16,22 +16,20 @@
 	async function onStart() {
 		loading = true;
 		try {
-			const result = await submit("checkin", { shortcode: "abcdefgh" });
+			const result = await submit("checkin", { shortcode: "abcdefgx" });
+			console.log(result);
 			if (result.status === 200) {
 				const { id, prev_shortcode } = result.data;
 				const response = await fetch(`${base}/${id}/${prev_shortcode}.txt`);
 				preset = await response.text();
-			} else if (result.status) {
-				if (result.data.message === "shortcode not found")
-					error = "Oh no! This turn has expired.";
-				else
-					error =
-						"It looks like you got a bad link or just made it up in hopes of skipping the line. Want to join?";
-			} else {
+			} else if (result.status === 404) error = "Oh no! This turn has expired.";
+			else {
 				error = result.message || "Oh no! Something went wrong.";
 			}
 		} catch (err) {
 			error = `Error: ${err.message}`;
+		} finally {
+			loading = false;
 		}
 	}
 
@@ -48,7 +46,7 @@
 <section>
 	<p>{@html copy.draw.thanks}</p>
 
-	{#if !preset}
+	{#if !preset && !error}
 		<button disabled={loading} on:click={onStart}
 			>{loading ? "Loading..." : "Start"}</button
 		>

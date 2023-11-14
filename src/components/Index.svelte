@@ -74,7 +74,7 @@
 		else join();
 	}
 
-	$: joined = poolResponse?.status === 200;
+	$: joined = poolResponse?.status === 200 || true;
 
 	onMount(() => {
 		const offsetInMinutes = new Date().getTimezoneOffset();

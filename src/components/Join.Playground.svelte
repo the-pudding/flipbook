@@ -10,6 +10,7 @@
 	let paths;
 	let gif;
 	let rendering;
+	let previewing;
 
 	function addFrame() {
 		canvas.addFrame();
@@ -21,6 +22,7 @@
 
 	function preview() {
 		canvas.preview();
+		previewing = !previewing;
 	}
 
 	async function share() {
@@ -36,7 +38,7 @@
 		<div slot="ui">
 			<button on:click={addFrame}>Add</button>
 			<button on:click={deleteFrame}>Delete</button>
-			<button on:click={preview}>Preview</button>
+			<button on:click={preview}>{previewing ? "Stop" : "Play"} Preview</button>
 		</div>
 	</Canvas>
 	<button disabled={rendering} on:click={share}

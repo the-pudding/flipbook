@@ -8,8 +8,8 @@ function getToken() {
 }
 
 export default async function submit(endpoint, data) {
-	const url = "https://pudding-server-utils.herokuapp.com/trace";
-	// const url = "http://localhost:5000/trace";
+	// const url = "https://pudding-server-utils.herokuapp.com/trace";
+	const url = "http://localhost:5000/trace";
 
 	const token = dev ? getToken() : "";
 
