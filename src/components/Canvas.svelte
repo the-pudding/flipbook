@@ -11,7 +11,6 @@
 	export let path;
 	export let paths;
 	export let disabled;
-	export let validate;
 
 	const W = 300;
 	const H = W;
@@ -19,6 +18,8 @@
 	const FPS = 12;
 	const MAX_FRAMES = FPS * 5;
 	const dispatch = createEventDispatcher();
+
+	const shouldValidate = !!preset;
 
 	let inkRem = 1;
 	let noInk = false;
@@ -84,7 +85,7 @@
 	}
 
 	function submit() {
-		if (validate && frameIndex > 0) {
+		if (shouldValidate && frameIndex > 0) {
 			const cur = [...coordinates[frameIndex]].map(([x, y]) => ({ x, y }));
 			const prev = [...coordinates[frameIndex - 1]].map(([x, y]) => ({
 				x,

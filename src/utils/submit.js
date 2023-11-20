@@ -1,17 +1,11 @@
 import { dev } from "$app/environment";
-import { page } from "$app/stores";
-import { get } from "svelte/store";
-
-function getToken() {
-	const obj = get(page);
-	return obj.url.search.split("token=")[1];
-}
+import getParam from "$utils/getParam.js";
 
 export default async function submit(endpoint, data) {
 	// const url = "https://pudding-server-utils.herokuapp.com/trace";
 	const url = "http://localhost:5000/trace";
 
-	const token = dev ? getToken() : "";
+	const token = dev ? getParam("token") : "";
 
 	try {
 		const start = Date.now();

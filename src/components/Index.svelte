@@ -2,7 +2,7 @@
 	import { onMount, getContext } from "svelte";
 	import Notify from "$components/Join.Notify.svelte";
 	import Human from "$components/Join.Human.svelte";
-	import Playground from "$components/Join.Playground.svelte";
+	import Playground from "$components/Playground.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import submit from "$utils/submit.js";
 	import storage from "$utils/localStorage.js";
@@ -74,7 +74,7 @@
 		else join();
 	}
 
-	$: joined = poolResponse?.status === 200 || true;
+	$: joined = poolResponse?.status === 200;
 
 	onMount(() => {
 		const offsetInMinutes = new Date().getTimezoneOffset();
@@ -144,7 +144,7 @@
 {/if}
 
 {#if joined}
-	<Playground />
+	<Playground text={copy.playground} />
 {/if}
 <div id="join" class:visible={showForm}>
 	<div class="bg" />

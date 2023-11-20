@@ -1,10 +1,9 @@
 <script>
-	import { getContext } from "svelte";
 	import Canvas from "$components/Canvas.svelte";
 	import { PlusCircle, MinusCircle, Clapperboard } from "lucide-svelte";
 	import renderGif from "$utils/renderGif.js";
 
-	const copy = getContext("copy");
+	export let text = "Make an animation!";
 
 	let canvas;
 	let paths;
@@ -33,7 +32,7 @@
 </script>
 
 <section id="playground">
-	<p>{@html copy.playground}</p>
+	<p>{@html text}</p>
 	<Canvas bind:this={canvas} bind:paths>
 		<div slot="ui">
 			<button on:click={addFrame}>Add</button>
