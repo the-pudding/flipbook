@@ -90,8 +90,8 @@
 		const url = "https://pudding.cool/projects/trace-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
 		const data = await response.json();
-		frameCount = format(",", data.frames) || 0;
-		waitingCount = format(",", data.waiting) || 0;
+		frameCount = format(",")(data.frames) || 0;
+		waitingCount = format(",")(data.waiting) || 0;
 		statsVisible = true;
 		console.log("updated", data.timestamp);
 	});
