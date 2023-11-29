@@ -16,6 +16,8 @@
 	let canvas;
 	let animationId;
 
+	let done;
+
 	async function onStart() {
 		shortcode = getParam("id");
 		loading = true;
@@ -48,7 +50,7 @@
 					shortcode,
 					drawing: path
 				});
-				console.log(response);
+				done = response?.data?.status === 200;
 			}
 		} catch (err) {
 			console.log(err);
@@ -57,30 +59,34 @@
 </script>
 
 <section>
-	<p>{@html copy.draw.thanks}</p>
+	{#if done}
+		<p>{@html copy.draw.done}</p>
+	{:else}
+		<p>{@html copy.draw.thanks}</p>
 
-	{#if !preset && !error}
-		<button disabled={loading} on:click={onStart}
-			>{loading ? "Loading..." : "Start"}</button
-		>
-	{/if}
+		{#if !preset && !error}
+			<button disabled={loading} on:click={onStart}
+				>{loading ? "Loading..." : "Start"}</button
+			>
+		{/if}
 
-	{#if preset}
-		<p>
-			{@html copy.draw.task}
-			<em>Note: {copy.draw.note}</em>
-		</p>
-	{/if}
+		{#if preset}
+			<p>
+				{@html copy.draw.task}
+				<em>Note: {copy.draw.note}</em>
+			</p>
+		{/if}
 
-	{#if error}
-		<p class="error">{error}</p>
-	{/if}
+		{#if error}
+			<p class="error">{error}</p>
+		{/if}
 
-	{#if preset}
-		<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
-			<div slot="ui">
-				<button on:click={onSubmit}>Submit</button>
-			</div>
-		</Canvas>
+		{#if preset}
+			<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
+				<div slot="ui">
+					<button on:click={onSubmit}>Submit</button>
+				</div>
+			</Canvas>
+		{/if}
 	{/if}
 </section>
