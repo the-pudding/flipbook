@@ -50,7 +50,8 @@
 					shortcode,
 					drawing: path
 				});
-				done = response?.data?.status === 200;
+				console.log(response);
+				done = true;
 			}
 		} catch (err) {
 			console.log(err);
