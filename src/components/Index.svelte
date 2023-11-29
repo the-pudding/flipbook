@@ -94,17 +94,6 @@
 	<h1>
 		{@html copy.cta}
 	</h1>
-	<p>
-		{@html copy.definition}
-	</p>
-
-	<p class="stats">
-		<strong>{frameCount}</strong>
-		{copy.statsFrames}<br />
-		<strong>{waitingCount}</strong>
-		{copy.statsWaiting}
-	</p>
-
 	{#if joined}
 		<p>{copy.thanks}</p>
 		<p><ShareButton {buttonText} {title} {url} /></p>
@@ -115,6 +104,17 @@
 				Error: {poolResponse.error}
 			</details>
 		</div>
+	{:else}
+		<p>
+			{@html copy.definition}
+		</p>
+
+		<p class="stats">
+			<strong>{frameCount}</strong>
+			{copy.statsFrames}<br />
+			<strong>{waitingCount}</strong>
+			{copy.statsWaiting}
+		</p>
 	{/if}
 </section>
 
