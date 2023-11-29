@@ -1,6 +1,9 @@
 <script>
 	import Canvas from "$components/Canvas.svelte";
-	import { PlusCircle, MinusCircle, Clapperboard } from "lucide-svelte";
+	// import PlusCircle from "lucide-svelte/icons/plus-circle";
+	// import MinusCircle  from "lucide-svelte/icons/minus-circle";
+	// impor Clapperboard  from "lucide-svelte/icons/clapperboard";
+
 	import renderGif from "$utils/renderGif.js";
 
 	export let text = "Make an animation!";
