@@ -86,9 +86,8 @@
 
 		formSteps = [...formSteps];
 
-		const response = await fetch(
-			"https://pudding.cool/projects/trace-data/meta.json"
-		);
+		const url = "https://pudding.cool/projects/trace-data/meta.json";
+		const response = await fetch(`${url}?version=${Date.now()}`);
 		const data = await response.json();
 		frameCount = data.frames;
 		waitingCount = data.waiting;
