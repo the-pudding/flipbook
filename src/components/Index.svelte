@@ -1,5 +1,6 @@
 <script>
 	import { onMount, getContext } from "svelte";
+	import { format } from "d3";
 	import Notify from "$components/Join.Notify.svelte";
 	import Human from "$components/Join.Human.svelte";
 	import Playground from "$components/Playground.svelte";
@@ -89,8 +90,8 @@
 		const url = "https://pudding.cool/projects/trace-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
 		const data = await response.json();
-		frameCount = data.frames;
-		waitingCount = data.waiting;
+		frameCount = format(",", data.frames) || 0;
+		waitingCount = format(",", data.waiting) || 0;
 		statsVisible = true;
 		console.log("updated", data.timestamp);
 	});
