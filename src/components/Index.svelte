@@ -15,6 +15,7 @@
 
 	let formSteps = [Notify, Human];
 	let step = 0;
+	let statsVisible;
 
 	let isHuman;
 	let email;
@@ -76,7 +77,7 @@
 
 	$: joined = poolResponse?.status === 200;
 
-	onMount(() => {
+	onMount(async () => {
 		const offsetInMinutes = new Date().getTimezoneOffset();
 		timezone = offsetInMinutes / 60;
 
@@ -85,8 +86,14 @@
 
 		formSteps = [...formSteps];
 
-		frameCount = "9,999";
-		waitingCount = "123";
+		const response = await fetch(
+			"https://pudding.cool/projects/trace-data/meta.json"
+		);
+		const data = await response.json();
+		frameCount = data.frames;
+		waitingCount = data.waiting;
+		statsVisible = true;
+		console.log("updated", data.timestamp);
 	});
 </script>
 
@@ -109,7 +116,7 @@
 			{@html copy.definition}
 		</p>
 
-		<p class="stats">
+		<p class="stats" class:visible={statsVisible}>
 			<strong>{frameCount}</strong>
 			{copy.statsFrames}<br />
 			<strong>{waitingCount}</strong>
@@ -224,5 +231,13 @@
 
 	ul {
 		margin: 16px 0;
+	}
+
+	.stats {
+		visibility: hidden;
+	}
+
+	.stats.visible {
+		visibility: visible;
 	}
 </style>
