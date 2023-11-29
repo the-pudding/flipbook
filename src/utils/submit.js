@@ -2,8 +2,8 @@ import { dev } from "$app/environment";
 import getParam from "$utils/getParam.js";
 
 export default async function submit(endpoint, data) {
-	// const url = "https://pudding-server-utils.herokuapp.com/trace";
-	const url = "http://localhost:5000/trace";
+	const url = "https://pudding-server-utils.herokuapp.com/trace";
+	// const url = "http://localhost:5000/trace";
 
 	const token = dev ? getParam("token") : "";
 
@@ -27,6 +27,7 @@ export default async function submit(endpoint, data) {
 		const duration = `${end - start}ms`;
 		return { ...result, duration };
 	} catch (err) {
+		console.log(err?.data?.message);
 		throw err;
 	}
 }
