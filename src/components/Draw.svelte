@@ -16,7 +16,7 @@
 	let canvas;
 	let animationId;
 
-	let done;
+	let complete;
 
 	async function onStart() {
 		shortcode = getParam("id");
@@ -25,9 +25,12 @@
 			const result = await submit("checkin", { shortcode });
 
 			if (result.status === 200) {
-				const { id, prev_shortcode } = result.data;
-				const response = await fetch(`${base}/${id}/${prev_shortcode}.txt`);
-				preset = await response.text();
+				const { id, prev_shortcode, done } = result.data;
+				if (done) complete = true;
+				else {
+					const response = await fetch(`${base}/${id}/${prev_shortcode}.txt`);
+					preset = await response.text();
+				}
 			} else if (result.status === 404) error = "Oh no! This turn has expired.";
 			else {
 				error = result.message || "Oh no! Something went wrong.";
@@ -51,7 +54,7 @@
 					drawing: path
 				});
 				console.log(response);
-				done = true;
+				complete = true;
 			}
 		} catch (err) {
 			console.log(err);
@@ -60,7 +63,7 @@
 </script>
 
 <section>
-	{#if done}
+	{#if complete}
 		<p>{@html copy.draw.done}</p>
 	{:else}
 		<p>{@html copy.draw.thanks}</p>
