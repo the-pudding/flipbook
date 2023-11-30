@@ -18,7 +18,7 @@ export default async function renderGif({ frames, width, height }) {
 
 		const gif = new GIF({
 			workers,
-			workerScript: "assets/gif.worker.js",
+			workerScript: "../assets/gif.worker.js",
 			quality: 1,
 			width,
 			height
