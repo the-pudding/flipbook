@@ -7,6 +7,7 @@
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import submit from "$utils/submit.js";
 	import storage from "$utils/localStorage.js";
+	import getParam from "$utils/getParam.js";
 
 	const copy = getContext("copy");
 
@@ -86,6 +87,7 @@
 		if (reversed) formSteps.reverse();
 
 		formSteps = [...formSteps];
+		showForm = getParam("signup");
 
 		const url = "https://pudding.cool/projects/trace-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);

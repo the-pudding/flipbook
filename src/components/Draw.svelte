@@ -46,6 +46,17 @@
 		canvas.addFrame();
 	}
 
+	async function onRejoin() {
+		try {
+			const response = await submit("rejoin", { shortcode });
+			console.log(response);
+			// TODO
+			alert("rejoined");
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
 	async function onValidate({ detail }) {
 		try {
 			if (detail) {
@@ -65,6 +76,7 @@
 <section>
 	{#if complete}
 		<p>{@html copy.draw.done}</p>
+		<p><button on:click={onRejoin}>Get in line again</button></p>
 	{:else}
 		<p>{@html copy.draw.thanks}</p>
 
@@ -83,6 +95,7 @@
 
 		{#if error}
 			<p class="error">{error}</p>
+			<p><a class="btn" href="/?signup=true">Get in line again</a></p>
 		{/if}
 
 		{#if preset}
