@@ -1,12 +1,17 @@
 <script>
 	import { getContext } from "svelte";
 	import Canvas from "$components/Canvas.svelte";
+	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import submit from "$utils/submit.js";
 	import getParam from "$utils/getParam.js";
 
 	const copy = getContext("copy");
 
 	const base = "https://pudding.cool/projects/trace-data/drawings";
+
+	const buttonText = copy.spread;
+	const url = copy.url;
+	const title = copy.title;
 
 	let shortcode;
 	let loading;
@@ -15,6 +20,8 @@
 	let error;
 	let canvas;
 	let animationId;
+	let rejoined;
+	let rejoinError;
 
 	let complete;
 
@@ -46,25 +53,31 @@
 		canvas.addFrame();
 	}
 
+	function onClear() {
+		canvas.resetFrame();
+	}
+
 	async function onRejoin() {
 		try {
 			const response = await submit("rejoin", { shortcode });
-			console.log(response);
-			// TODO
-			alert("rejoined");
+			rejoined = true;
+			rejoinError = response.status === 200 ? null : response.message;
 		} catch (err) {
 			console.log(err);
+			rejoined = true;
+			rejoinError = err.message;
 		}
 	}
 
 	async function onValidate({ detail }) {
 		try {
 			if (detail) {
-				const response = await submit("submit", {
-					shortcode,
-					drawing: path
-				});
-				console.log(response);
+				// const response = await submit("submit", {
+				// 	shortcode,
+				// 	drawing: path
+				// });
+				// console.log(response);
+				console.log("todo: submit");
 				complete = true;
 			}
 		} catch (err) {
@@ -76,7 +89,19 @@
 <section>
 	{#if complete}
 		<p>{@html copy.draw.done}</p>
-		<p><button on:click={onRejoin}>Get in line again</button></p>
+		{#if rejoinError}
+			<div class="issue">
+				<details>
+					<summary>{copy.issue} </summary>
+					Error: {rejoinError}
+				</details>
+			</div>
+		{:else if rejoined}
+			<p>{copy.rejoined}</p>
+			<p><ShareButton {buttonText} {title} {url} /></p>
+		{:else}
+			<p><button on:click={onRejoin}>Get in line again</button></p>
+		{/if}
 	{:else}
 		<p>{@html copy.draw.thanks}</p>
 
@@ -102,6 +127,7 @@
 			<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
 				<div slot="ui">
 					<button on:click={onSubmit}>Submit</button>
+					<button on:click={onClear}>Clear</button>
 				</div>
 			</Canvas>
 		{/if}

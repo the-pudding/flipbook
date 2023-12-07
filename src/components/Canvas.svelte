@@ -38,6 +38,7 @@
 	export const preview = togglePreview;
 	export const addFrame = add;
 	export const deleteFrame = del;
+	export const resetFrame = reset;
 
 	function normalizeFrechet(frechet) {
 		return frechet / DIAGONAL;
@@ -118,6 +119,7 @@
 	function reset() {
 		coordinates[frameIndex] = [];
 		pathPreview = "";
+		inkRem = 1;
 	}
 
 	function animatePreview(index = 0) {
@@ -134,7 +136,9 @@
 		submit();
 	}
 
-	function del() {}
+	function del() {
+		// TODO
+	}
 
 	function togglePreview() {
 		previewing = !previewing;

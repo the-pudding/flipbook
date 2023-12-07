@@ -14,15 +14,15 @@
 	let rendering;
 	let previewing;
 
-	function addFrame() {
+	function onAddFrame() {
 		canvas.addFrame();
 	}
 
-	function deleteFrame() {
+	function onDeleteFrame() {
 		canvas.deleteFrame();
 	}
 
-	function preview() {
+	function onPreview() {
 		canvas.preview();
 		previewing = !previewing;
 	}
@@ -38,9 +38,11 @@
 	<p>{@html text}</p>
 	<Canvas bind:this={canvas} bind:paths>
 		<div slot="ui">
-			<button on:click={addFrame}>Add</button>
-			<button on:click={deleteFrame}>Delete</button>
-			<button on:click={preview}>{previewing ? "Stop" : "Play"} Preview</button>
+			<button on:click={onAddFrame}>Add</button>
+			<button on:click={onDeleteFrame}>Delete</button>
+			<button on:click={onPreview}
+				>{previewing ? "Stop" : "Play"} Preview</button
+			>
 		</div>
 	</Canvas>
 	<button disabled={rendering} on:click={share}

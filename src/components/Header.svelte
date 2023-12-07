@@ -1,5 +1,6 @@
 <script>
 	import wordmark from "$svg/wordmark.svg";
+	import { showFaq } from "$stores/misc.js";
 </script>
 
 <header>
@@ -9,7 +10,7 @@
 		>
 	</div>
 	<div class="faq">
-		<button>FAQ</button>
+		<button on:click={() => ($showFaq = true)}>FAQ</button>
 	</div>
 </header>
 
