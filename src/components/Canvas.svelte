@@ -198,7 +198,7 @@
 		{#if noInk}
 			<span>no ink left!</span>
 		{:else}
-			<span class="bar" style:width="{inkRem * 100}%" />
+			<span class="bar" style="--ink: {inkRem * 100}%;" />
 		{/if}
 	</div>
 </div>
@@ -231,7 +231,7 @@
 		height: var(--canvas-size);
 		touch-action: none;
 		user-select: none;
-		background: var(--c2);
+		background: var(--color-fg);
 	}
 
 	.c.disabled {
@@ -271,7 +271,7 @@
 
 	svg path {
 		fill: none;
-		stroke: #000;
+		stroke: var(--color-bg);
 		stroke-width: 4px;
 		stroke-linecap: round;
 		stroke-linejoin: round;
@@ -313,13 +313,15 @@
 	}
 
 	.ink {
-		background: var(--c2);
-		height: 4px;
+		background: var(--color-secondary);
+		height: 12px;
 	}
 
 	.ink .bar {
 		display: block;
-		background: var(--c4);
-		height: 100%;
+		background: var(--color-bg);
+		height: 4px;
+		transform: translate(4px, 4px);
+		width: calc(var(--ink) - 8px);
 	}
 </style>

@@ -135,7 +135,7 @@
 
 		<div class="hard">
 			<p>{@html copy.hard}</p>
-			<img src="assets/demo/test.jpg" alt="test" />
+			<!-- <img src="assets/demo/test.jpg" alt="test" /> -->
 			<p>{@html copy.hard2}</p>
 			<button on:click={() => (showForm = true)}>Get in line!</button>
 		</div>
@@ -156,18 +156,15 @@
 	<Playground text={copy.playground} />
 {/if}
 <div id="join" class:visible={showForm}>
-	<div class="bg" />
+	<button aria-label="close" class="close" on:click={() => (showForm = false)}
+		>X</button
+	>
 	{#if submitting}
 		<section class="submitting">
 			<p>Adding you to the line...</p>
 		</section>
 	{:else}
 		<section class="fg" class:submitting>
-			<button
-				aria-label="close"
-				class="close"
-				on:click={() => (showForm = false)}>X</button
-			>
 			<form class="shadow" on:submit|preventDefault>
 				<p class="prompt"><strong>{@html copy.prompt}</strong></p>
 
@@ -190,22 +187,14 @@
 		top: 0;
 		left: 0;
 		z-index: var(--z-overlay);
-		width: 100vw;
+		width: 100%;
 		height: 100vh;
+		border: 2vw solid var(--color-fg);
+		background: var(--color-bg);
 	}
 
 	#join.visible {
 		display: block;
-	}
-
-	.bg {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: var(--color-bg);
-		opacity: 0.9;
 	}
 
 	#join section {
@@ -219,16 +208,19 @@
 
 	.close {
 		position: absolute;
+		width: 2em;
+		aspect-ratio: 1;
 		top: 16px;
 		right: 16px;
+		z-index: 1;
 	}
 
 	.issue {
-		color: red;
+		color: var(--color-secondary);
 	}
 
 	#sell > div {
-		margin-bottom: 128px;
+		margin-bottom: 15vh;
 	}
 
 	ul {
@@ -236,6 +228,7 @@
 	}
 
 	.stats {
+		margin-top: 15vh;
 		visibility: hidden;
 	}
 

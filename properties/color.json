@@ -53,6 +53,15 @@
 		},
 		"yellow": {
 			"value": "#e5e338"
+		},
+		"off-white": {
+			"value": "#fffaf5"
+		},
+		"warm-red": {
+			"value": "#d73700"
+		},
+		"off-black": {
+			"value": "#501400"
 		}
 	}
 }

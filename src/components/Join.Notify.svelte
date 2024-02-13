@@ -77,29 +77,25 @@
 	}
 
 	label {
-		margin-bottom: 4px;
+		margin-bottom: 8px;
 	}
 
 	fieldset div {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		margin-bottom: 8px;
+		margin-bottom: 32px;
 	}
+
 	.info {
-		padding: 16px 0;
+		/* padding: 16px 0; */
 	}
 
 	.info p {
 		margin: 0;
 	}
 
-	.info p,
-	li {
-		font-size: var(--14px);
-	}
-
 	.invalid {
-		color: red;
+		color: var(--color-secondary);
 	}
 </style>

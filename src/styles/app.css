@@ -16,34 +16,30 @@
 	--z-top: 100;
 	--z-overlay: 1000;
 
-	/* --c1: #ffddcc;
-	--c2: #3252f4;
-	--c3: #0b2dd5; */
-	--c1: var(--color-white);
-	--c2: var(--color-gray-300);
-	--c3: var(--color-gray-700);
-	--c4: var(--color-gray-900);
-
-
 	
 	/* presets (used in reset.css) */
 	--border-radius: 2px;
-	--font-body: var(--serif);
+	--font-body: var(--sans);
 	--font-form: var(--sans);
-	--color-bg: var(--c1);
-	--color-fg: var(--c4);
-	--color-primary: var(--c4);
-	--color-link: var(--c4);
-	--color-focus: var(--c2);
-	--color-mark: var(--c2);
-	--color-selection: var(--c2);
-	--color-border: var(--c2);
-	--color-button-bg: var(--c4);
-	--color-button-fg: var(--c1);
-	--color-button-hover: var(--c3);
-	--color-input-bg: var(--c2);
-	--color-input-fg: var(--c4);
-	--color-placeholder: var(--c3);
+	--color-bg: var(--color-off-white);
+	--color-fg: var(--color-warm-red);
+	--color-primary: var(--color-warm-red);
+	--color-secondary: var(--color-off-black);
+	--color-link: var(--color-warm-red);
+	--color-focus: var(--color-off-black);
+	--color-mark: var(--color-off-black);
+	--color-selection: var(--color-off-black);
+	--color-border: var(--color-warm-red);
+	--color-button-bg: var(--color-warm-red);
+	--color-button-fg: var(--color-off-white);
+	--color-button-hover: var(--color-warm-red);
+	--color-input-bg: var(--color-off-white);
+	--color-input-fg: var(--color-warm-red);
+	--color-placeholder: var(--color-warm-red);
+	--color-text-outline: var(--color-off-black);
+
+	--fw-normal: 400;
+	--fw-bold: 800;
 
 	/* "1" second duration */
 	--1s: 1ms;
@@ -79,14 +75,36 @@
 	}
 }
 
-h1, h2, h3, h4, h5, h6, p, li, button {
-	font-size: var(--16px);
-	line-height: 1.325;
+h1, h2, h3, h4, h5, h6, p, li, button, a, input, textarea, select, label, form {
+	font-size: 1em;
+	line-height: 1.25;
+	font-weight: var(--fw-normal);
 }
 
 h1 {
 	line-height: 1;
-	font-size: var(--24px);
+	font-size: clamp(32px, 8vw, 128px);
+	font-weight: 800;
+}
+
+h2 {
+	line-height: 1;
+	font-size: clamp(24px, 5vw, 64px);
+	font-weight: 800;
+	margin-bottom: 32px;
+}
+
+p, li, button, a, input, textarea, select, label, form {
+	font-size: clamp(16px, 3vw, 36px);
+}
+
+a {
+	border: none;
+	border-bottom: 0.1em dashed currentColor;
+}
+
+a:hover {
+	border-bottom: 0.1em solid currentColor;
 }
 
 /*
@@ -100,19 +118,33 @@ h1 {
 section {
 	/* max-width: calc(var(--canvas-size) + 64px); */
 	/* max-width: 360px; */
-	padding: 16px;
+	padding: 0 16px;
 	margin: 0 auto;
 }
 
-.shadow {
-	/* box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.1); */
+strong {
+font-weight: var(--fw-bold);
 }
 
 mark {
 	background: rgba(255, 0, 0, 0.5);
 }
 
-button, [type="button"], [type="submit"] {
-	font-weight: 700;
+ul {
+	padding-left: 16px;
+	list-style-type: square;
 }
 
+button, [type="button"], [type="submit"] {
+	font-weight: var(--fw-bold);
+}
+
+@media (min-width: 800px) {
+	section {
+		padding: 0 32px;
+	}
+	
+	ul {
+		padding-left: 32px;
+	}
+}

@@ -23,7 +23,7 @@
 	}
 
 	.wordmark {
-		width: 8em;
+		width: 10em;
 	}
 
 	.wordmark a {
@@ -38,5 +38,11 @@
 
 	:global(.wordmark svg path) {
 		fill: currentColor;
+	}
+
+	@media (min-width: 800px) {
+		header {
+			padding: 32px;
+		}
 	}
 </style>
