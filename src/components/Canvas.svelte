@@ -196,7 +196,7 @@
 	</div>
 	<div class="ink">
 		{#if noInk}
-			<span>no ink left!</span>
+			<span class="message">no ink left!</span>
 		{:else}
 			<span class="bar" style="--ink: {inkRem * 100}%;" />
 		{/if}
@@ -253,6 +253,7 @@
 		width: 100%;
 		height: auto;
 		background: var(--color-bg);
+		margin-top: 32px;
 		padding: 8px 0;
 	}
 
@@ -319,6 +320,7 @@
 	.ink {
 		background: var(--color-secondary);
 		height: 12px;
+		position: relative;
 	}
 
 	.ink .bar {
@@ -327,5 +329,13 @@
 		height: 4px;
 		transform: translate(4px, 4px);
 		width: calc(var(--ink) - 8px);
+	}
+
+	.ink .message {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		transform: translateY(calc(100% + 8px));
+		color: var(--color-secondary);
 	}
 </style>

@@ -38,6 +38,7 @@
 	<p>{@html text}</p>
 	<Canvas bind:this={canvas} bind:paths>
 		<div slot="ui">
+			<span>Frames: </span>
 			<button on:click={onAddFrame}>Add</button>
 			<button on:click={onDeleteFrame}>Delete</button>
 			<button on:click={onPreview}
@@ -48,8 +49,25 @@
 	<button disabled={rendering} on:click={share}
 		>{rendering ? "Rendering Animation" : "Share Animation"}</button
 	>
+
 	{#if gif}
-		<a class="btn" href={gif} download="animation.gif">Download</a>
-		<img src={gif} alt="animation" />
+		<div class="share">
+			<a class="btn" href={gif} download="animation.gif">Download</a>
+			<img src={gif} alt="animation" />
+		</div>
 	{/if}
 </section>
+
+<style>
+	#playground {
+		margin: 32px 0;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	.share {
+		margin: 16px auto;
+	}
+</style>
