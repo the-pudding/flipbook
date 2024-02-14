@@ -11,6 +11,7 @@
 	export let path;
 	export let paths;
 	export let disabled;
+	export let showFrameIndex;
 
 	const W = 300;
 	const H = W;
@@ -28,7 +29,7 @@
 	let coordinates = [];
 	let pathPrevious = "";
 	let pathPreview = "";
-	let valid;
+	let valid = true;
 	let debug1 = {};
 	let debug2 = {};
 	let previewing;
@@ -37,7 +38,7 @@
 
 	export const preview = togglePreview;
 	export const addFrame = add;
-	export const deleteFrame = del;
+	export const clearFrame = clear;
 	export const resetFrame = reset;
 
 	function normalizeFrechet(frechet) {
@@ -120,6 +121,7 @@
 		coordinates[frameIndex] = [];
 		pathPreview = "";
 		inkRem = 1;
+		valid = true;
 	}
 
 	function animatePreview(index = 0) {
@@ -136,8 +138,8 @@
 		submit();
 	}
 
-	function del() {
-		// TODO
+	function clear() {
+		reset();
 	}
 
 	function togglePreview() {
@@ -163,6 +165,12 @@
 	$: pathCurrent = coordsCurrent?.length ? `M${coordsCurrent}` : "";
 	$: paths = coordinates.map((c) => `M${c.map((d) => d.join(" ")).join("L")}`);
 	$: path = pathCurrent;
+	$: message =
+		valid === false
+			? "I think you can do better!"
+			: noInk
+			  ? "Out of ink"
+			  : null;
 </script>
 
 <div
@@ -189,22 +197,22 @@
 			</g>
 		</svg>
 
-		<p>{frameIndex}</p>
-		{#if valid === false}
-			<p transition:fade class="invalid">I think you can do better!</p>
+		{#if showFrameIndex}
+			<p class="frame">{frameIndex + 1}</p>
+		{/if}
+
+		{#if message}
+			<p transition:fade class="message"><small>{message}</small></p>
 		{/if}
 	</div>
 	<div class="ink">
-		{#if noInk}
-			<span class="message">no ink left!</span>
-		{:else}
-			<span class="bar" style="--ink: {inkRem * 100}%;" />
-		{/if}
+		<span class="bar" style="--ink: {inkRem * 100}%;" />
 	</div>
 </div>
 
 <slot name="ui" />
 
+<!-- 
 {#if debug}
 	<div class="debug">
 		<p style="font-family: var(--mono); font-size: 12px;">
@@ -218,7 +226,7 @@
 			debug2: {JSON.stringify(debug2)}
 		</p>
 	</div>
-{/if}
+{/if} -->
 
 <style>
 	div {
@@ -246,21 +254,6 @@
 		cursor: not-allowed;
 	}
 
-	.ui {
-		display: flex;
-		justify-content: center;
-		max-width: var(--canvas-size);
-		width: 100%;
-		height: auto;
-		background: var(--color-bg);
-		margin-top: 32px;
-		padding: 8px 0;
-	}
-
-	.ui button {
-		margin: 0 8px;
-	}
-
 	svg {
 		display: block;
 		width: 100%;
@@ -286,20 +279,7 @@
 		stroke-opacity: 0.33;
 	}
 
-	.c p {
-		text-align: right;
-		position: absolute;
-		top: 4px;
-		right: 4px;
-		margin: 0 0;
-		line-height: 1;
-		font-family: var(--mono);
-		pointer-events: none;
-		opacity: 0.5;
-		font-size: 12px;
-	}
-
-	p.invalid {
+	p.message {
 		position: absolute;
 		top: 50%;
 		width: 90%;
@@ -310,11 +290,26 @@
 		padding: 8px;
 		z-index: 1;
 		text-align: center;
-		font-size: 14px;
-		font-weight: bold;
+		font-weight: var(--fw-bold);
 		background: var(--color-bg);
 		color: var(--color-fg);
 		opacity: 0.9;
+		pointer-events: none;
+		font-size: 1em;
+	}
+
+	p.frame {
+		position: absolute;
+		top: 8px;
+		left: 8px;
+		margin: 0;
+		z-index: 1;
+		text-align: center;
+		font-weight: var(--fw-bold);
+		color: var(--color-bg);
+		opacity: 0.75;
+		pointer-events: none;
+		font-size: 16px;
 	}
 
 	.ink {
@@ -332,6 +327,7 @@
 	}
 
 	.ink .message {
+		margin: 0;
 		position: absolute;
 		bottom: 0;
 		left: 0;

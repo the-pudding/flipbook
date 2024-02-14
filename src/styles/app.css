@@ -1,6 +1,5 @@
 @import "variables.css";
 @import "normalize.css";
-@import "font.css";
 @import "reset.css";
 
 /* colors defined in variables.css */
@@ -98,6 +97,16 @@ p, li, button, a, input, textarea, select, label, form, details {
 	font-size: clamp(16px, 3vw, 36px);
 }
 
+button, .btn, [type="button"], [type="submit"] {
+	line-height: 1;
+}
+
+small {
+	font-size: clamp(14px, 2vw, 20px);
+	font-weight: var(--fw-bold);
+	vertical-align: middle;
+}
+
 a {
 	border: none;
 	border-bottom: 0.1em dashed currentColor;
@@ -126,7 +135,7 @@ ul {
 	list-style-type: square;
 }
 
-button, [type="button"], [type="submit"] {
+button, [role="button"], [type="submit"] {
 	font-weight: var(--fw-bold);
 }
 

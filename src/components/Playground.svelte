@@ -6,7 +6,7 @@
 
 	import renderGif from "$utils/renderGif.js";
 
-	export let text = "Make an animation!";
+	export let text = "Make an animation";
 
 	let canvas;
 	let paths;
@@ -18,8 +18,8 @@
 		canvas.addFrame();
 	}
 
-	function onDeleteFrame() {
-		canvas.deleteFrame();
+	function onClearFrame() {
+		canvas.clearFrame();
 	}
 
 	function onPreview() {
@@ -36,23 +36,27 @@
 
 <section id="playground">
 	<p>{@html text}</p>
-	<Canvas bind:this={canvas} bind:paths>
-		<div slot="ui">
-			<span>Frames: </span>
-			<button on:click={onAddFrame}>Add</button>
-			<button on:click={onDeleteFrame}>Delete</button>
-			<button on:click={onPreview}
-				>{previewing ? "Stop" : "Play"} Preview</button
-			>
+	<Canvas bind:this={canvas} bind:paths showFrameIndex={true}>
+		<div class="ui" slot="ui">
+			<p>Frames:</p>
+			<div class="buttons">
+				<button on:click={onAddFrame}><small>Add</small></button>
+				<button on:click={onClearFrame}><small>Clear</small></button>
+				<button on:click={onPreview}
+					><small> {previewing ? "Stop" : "Play"} Preview</small></button
+				>
+			</div>
 		</div>
 	</Canvas>
-	<button disabled={rendering} on:click={share}
-		>{rendering ? "Rendering Animation" : "Share Animation"}</button
-	>
+	<div class="render">
+		<button disabled={rendering} on:click={share}
+			>{rendering ? "Rendering" : "Share"}</button
+		>
+	</div>
 
 	{#if gif}
 		<div class="share">
-			<a class="btn" href={gif} download="animation.gif">Download</a>
+			<a role="button" href={gif} download="animation.gif">Download</a>
 			<img src={gif} alt="animation" />
 		</div>
 	{/if}
@@ -64,10 +68,30 @@
 	}
 
 	p {
+		/* margin: 0; */
+	}
+
+	.ui .buttons {
+		display: flex;
+		flex-wrap: wrap;
+		max-width: var(--canvas-size);
+		width: 100%;
+		height: auto;
+		background: var(--color-bg);
+	}
+
+	button {
 		margin: 0;
+		display: flex;
+		margin-bottom: 8px;
+		margin-right: 8px;
+	}
+
+	.render {
+		margin: 32px auto;
 	}
 
 	.share {
-		margin: 16px auto;
+		margin: 32px auto;
 	}
 </style>
