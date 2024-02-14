@@ -87,10 +87,6 @@
 		margin-bottom: 32px;
 	}
 
-	.info {
-		/* padding: 16px 0; */
-	}
-
 	.info p {
 		margin: 0;
 	}

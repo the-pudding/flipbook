@@ -43,7 +43,7 @@
 				phone = undefined;
 				step = 0;
 			} catch (err) {
-				poolResponse = { error: err.message };
+				poolResponse = { message: err.message };
 			} finally {
 				submitting = false;
 				showForm = false;
@@ -110,7 +110,11 @@
 		<div class="issue">
 			<details>
 				<summary>{copy.issue} </summary>
-				Error: {poolResponse.error}
+				<p>Error: {poolResponse.message}</p>
+				<p>
+					Please try again, or contact russell@pudding.cool if the problem
+					persists.
+				</p>
 			</details>
 		</div>
 	{:else}
@@ -149,6 +153,10 @@
 			</ul>
 			<button on:click={() => (showForm = true)}>Get in line!</button>
 		</div>
+
+		<div class="hardest">
+			<p>{@html copy.hardest}</p>
+		</div>
 	</section>
 {/if}
 
@@ -166,7 +174,7 @@
 	{:else}
 		<section class="fg" class:submitting>
 			<form class="shadow" on:submit|preventDefault>
-				<p class="prompt"><strong>{@html copy.prompt}</strong></p>
+				<h2>{@html copy.prompt}</h2>
 
 				<div class="steps">
 					<svelte:component
@@ -191,6 +199,7 @@
 		height: 100vh;
 		border: 2vw solid var(--color-fg);
 		background: var(--color-bg);
+		padding-top: 16px;
 	}
 
 	#join.visible {
@@ -217,6 +226,7 @@
 
 	.issue {
 		color: var(--color-secondary);
+		margin: 32px auto;
 	}
 
 	#sell > div {

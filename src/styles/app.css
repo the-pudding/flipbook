@@ -75,7 +75,7 @@
 	}
 }
 
-h1, h2, h3, h4, h5, h6, p, li, button, a, input, textarea, select, label, form {
+h1, h2, h3, h4, h5, h6, p, li, button, a, input, textarea, select, label, form, details {
 	font-size: 1em;
 	line-height: 1.25;
 	font-weight: var(--fw-normal);
@@ -94,7 +94,7 @@ h2 {
 	margin-bottom: 32px;
 }
 
-p, li, button, a, input, textarea, select, label, form {
+p, li, button, a, input, textarea, select, label, form, details {
 	font-size: clamp(16px, 3vw, 36px);
 }
 
@@ -137,6 +137,47 @@ ul {
 
 button, [type="button"], [type="submit"] {
 	font-weight: var(--fw-bold);
+}
+
+/* forms */
+
+fieldset {
+	border: none;
+	padding: 0;
+}
+
+label {
+	margin-bottom: 8px;
+	font-weight: var(--fw-bold);
+}
+
+fieldset div {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	margin-bottom: 32px;
+}
+
+.info p {
+	margin: 0;
+}
+
+.invalid {
+	color: var(--color-secondary);
+}
+
+.review {
+	color: var(--color-primary);
+}
+
+input {
+	border-radius: 0;
+}
+
+input[type="checkbox"] {
+	width: 1.5em;
+	height: 1.5em;
+	accent-color: var(--color-fg);
 }
 
 @media (min-width: 800px) {

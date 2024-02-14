@@ -27,7 +27,7 @@ export default async function submit(endpoint, data) {
 		const duration = `${end - start}ms`;
 		return { ...result, duration };
 	} catch (err) {
-		console.log(err?.data?.message);
+		console.log(err?.message);
 		throw err;
 	}
 }
