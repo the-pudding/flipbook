@@ -60,6 +60,9 @@
 		"warm-red": {
 			"value": "#d73700"
 		},
+		"warm-red-darker": {
+			"value": "#a32901"
+		},
 		"off-black": {
 			"value": "#501400"
 		}

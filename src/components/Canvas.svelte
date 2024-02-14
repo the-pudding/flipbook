@@ -221,6 +221,10 @@
 {/if}
 
 <style>
+	div {
+		margin: 0;
+	}
+
 	.c {
 		padding: 16px 0;
 		width: var(--canvas-size);

@@ -24,19 +24,19 @@
 	--color-bg: var(--color-off-white);
 	--color-fg: var(--color-warm-red);
 	--color-primary: var(--color-warm-red);
-	--color-secondary: var(--color-off-black);
+	--color-secondary: var(--color-warm-red-darker);
 	--color-link: var(--color-warm-red);
-	--color-focus: var(--color-off-black);
-	--color-mark: var(--color-off-black);
-	--color-selection: var(--color-off-black);
+	--color-focus: var(--color-darker);
+	--color-mark: var(--color-darker);
+	--color-selection: var(--color-darker);
 	--color-border: var(--color-warm-red);
 	--color-button-bg: var(--color-warm-red);
 	--color-button-fg: var(--color-off-white);
-	--color-button-hover: var(--color-warm-red);
+	--color-button-hover: var(--color-warm-red-darker);
 	--color-input-bg: var(--color-off-white);
 	--color-input-fg: var(--color-warm-red);
 	--color-placeholder: var(--color-warm-red);
-	--color-text-outline: var(--color-off-black);
+	--color-text-outline: var(--color-darker);
 
 	--fw-normal: 400;
 	--fw-bold: 800;
@@ -104,20 +104,11 @@ a {
 }
 
 a:hover {
-	border-bottom: 0.1em solid currentColor;
+	border-bottom: 0.1em dashed var(--color-secondary);
+	color: var(--color-secondary);
 }
 
-/*
-@media screen and (min-width: 480px) {
-	h1 {
-		font-size: var(--64px);
-	}
-} */
-
-
 section {
-	/* max-width: calc(var(--canvas-size) + 64px); */
-	/* max-width: 360px; */
 	padding: 0 16px;
 	margin: 0 auto;
 }
@@ -140,7 +131,6 @@ button, [type="button"], [type="submit"] {
 }
 
 /* forms */
-
 fieldset {
 	border: none;
 	padding: 0;
