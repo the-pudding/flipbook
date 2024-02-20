@@ -57,6 +57,9 @@
 		"off-white": {
 			"value": "#fffaf5"
 		},
+		"off-white-darker": {
+			"value": "#ffc081"
+		},
 		"warm-red": {
 			"value": "#d73700"
 		},

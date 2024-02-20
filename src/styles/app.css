@@ -17,7 +17,7 @@
 
 	
 	/* presets (used in reset.css) */
-	--border-radius: 2px;
+	--border-radius: 0px;
 	--font-body: var(--sans);
 	--font-form: var(--sans);
 	--color-bg: var(--color-off-white);
@@ -25,9 +25,9 @@
 	--color-primary: var(--color-warm-red);
 	--color-secondary: var(--color-warm-red-darker);
 	--color-link: var(--color-warm-red);
-	--color-focus: var(--color-darker);
-	--color-mark: var(--color-darker);
-	--color-selection: var(--color-darker);
+	--color-focus: var(--color-warm-red-darker);
+	--color-mark: var(--color-warm-red-darker);
+	--color-selection: var(--color-warm-red-darker);
 	--color-border: var(--color-warm-red);
 	--color-button-bg: var(--color-warm-red);
 	--color-button-fg: var(--color-off-white);
@@ -35,7 +35,7 @@
 	--color-input-bg: var(--color-off-white);
 	--color-input-fg: var(--color-warm-red);
 	--color-placeholder: var(--color-warm-red);
-	--color-text-outline: var(--color-darker);
+	--color-text-outline: var(--color-warm-red-darker);
 
 	--fw-normal: 400;
 	--fw-bold: 800;
@@ -48,30 +48,35 @@
 /* dark theme */
 /* this is a starting place for dark mode - test before deploying */
 
-/* @media screen and (prefers-color-scheme:dark) {
+@media screen and (prefers-color-scheme:dark) {
 	:root {
-		--color-bg: var(--color-gray-900);
-		--color-fg: var(--color-gray-100);
-		--color-primary: var(--color-white);
-		--color-link: var(--color-white);
-		--color-focus: var(--color-red);
-		--color-mark: var(--color-yellow);
-		--color-selection: var(--color-gray-600);
-		--color-border: var(--color-gray-600);
-		--color-button-bg: var(--color-gray-600);
-		--color-button-fg: var(--color-gray-100);
-		--color-button-hover: var(--color-gray-700);
-		--color-input-bg: var(--color-gray-800);
-		--color-input-fg: var(--color-gray-100);
-		--color-placeholder: var(--color-gray-400);
-		--color-text-outline: var(--color-bg);
+	--color-bg: var(--color-warm-red-darker);
+	--color-fg: var(--color-off-white);
+	--color-primary: var(--color-off-white);
+	--color-secondary: var(--color-off-white-darker);
+	--color-link: var(--color-off-white);
+	--color-focus: var(--color-off-white-darker);
+	--color-mark: var(--color-off-white-darker);
+	--color-selection: var(--color-off-white-darker);
+	--color-border: var(--color-off-white);
+	--color-button-bg: var(--color-off-white);
+	--color-button-fg: var(--color-warm-red-darker);
+	--color-button-hover: var(--color-off-white-darker);
+	--color-input-bg: var(--color-warm-red-darker);
+	--color-input-fg: var(--color-off-white);
+	--color-placeholder: var(--color-off-white);
+	--color-text-outline: var(--color-off-white-darker);
 	}
-} */
+}
 
 @media screen and (prefers-reduced-motion: no-preference) {
 	:root {
 		--1s: 1s;
 	}
+}
+
+html {
+	/* filter: invert(1); */
 }
 
 h1, h2, h3, h4, h5, h6, p, li, button, a, input, textarea, select, label, form, details {
@@ -95,10 +100,6 @@ h2 {
 
 p, li, button, a, input, textarea, select, label, form, details {
 	font-size: clamp(16px, 3vw, 36px);
-}
-
-button, .btn, [type="button"], [type="submit"] {
-	line-height: 1;
 }
 
 small {
@@ -135,8 +136,10 @@ ul {
 	list-style-type: square;
 }
 
-button, [role="button"], [type="submit"] {
+button, .btn, [type="button"], [type="submit"], [role="button"], [type="submit"] {
+	line-height: 1;
 	font-weight: var(--fw-bold);
+	padding: 16px;
 }
 
 /* forms */
@@ -161,12 +164,8 @@ fieldset div {
 	margin: 0;
 }
 
-.invalid {
+.invalid, .review {
 	color: var(--color-secondary);
-}
-
-.review {
-	color: var(--color-primary);
 }
 
 input {

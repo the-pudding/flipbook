@@ -50,7 +50,6 @@
 	.close {
 		position: absolute;
 		width: 2em;
-		aspect-ratio: 1;
 		top: 16px;
 		right: 16px;
 		z-index: 1;
