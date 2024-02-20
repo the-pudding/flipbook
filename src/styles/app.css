@@ -20,22 +20,29 @@
 	--border-radius: 0px;
 	--font-body: var(--sans);
 	--font-form: var(--sans);
-	--color-bg: var(--color-off-white);
-	--color-fg: var(--color-warm-red);
-	--color-primary: var(--color-warm-red);
+	
+	/* cream/red */
+	/* --color-primary: var(--color-warm-red);
 	--color-secondary: var(--color-warm-red-darker);
-	--color-link: var(--color-warm-red);
-	--color-focus: var(--color-warm-red-darker);
-	--color-mark: var(--color-warm-red-darker);
-	--color-selection: var(--color-warm-red-darker);
-	--color-border: var(--color-warm-red);
-	--color-button-bg: var(--color-warm-red);
-	--color-button-fg: var(--color-off-white);
-	--color-button-hover: var(--color-warm-red-darker);
-	--color-input-bg: var(--color-off-white);
-	--color-input-fg: var(--color-warm-red);
-	--color-placeholder: var(--color-warm-red);
-	--color-text-outline: var(--color-warm-red-darker);
+	--color-bg: var(--color-off-white); */
+
+	--color-primary: var(--color-gray-700);
+	--color-secondary: var(--color-gray-1000);
+	--color-bg: var(--color-gray-50);
+	
+	--color-fg: var(--color-primary);
+	--color-link: var(--color-primary);
+	--color-focus: var(--color-secondary);
+	--color-mark: var(--color-secondary);
+	--color-selection: var(--color-secondary);
+	--color-border: var(--color-primary);
+	--color-button-bg: var(--color-primary);
+	--color-button-fg: var(--color-bg);
+	--color-button-hover: var(--color-secondary);
+	--color-input-bg: var(--color-bg);
+	--color-input-fg: var(--color-primary);
+	--color-placeholder: var(--color-primary);
+	--color-text-outline: var(--color-secondary);
 
 	--fw-normal: 400;
 	--fw-bold: 800;
@@ -50,22 +57,9 @@
 
 @media screen and (prefers-color-scheme:dark) {
 	:root {
-	--color-bg: var(--color-warm-red-darker);
-	--color-fg: var(--color-off-white);
-	--color-primary: var(--color-off-white);
-	--color-secondary: var(--color-off-white-darker);
-	--color-link: var(--color-off-white);
-	--color-focus: var(--color-off-white-darker);
-	--color-mark: var(--color-off-white-darker);
-	--color-selection: var(--color-off-white-darker);
-	--color-border: var(--color-off-white);
-	--color-button-bg: var(--color-off-white);
-	--color-button-fg: var(--color-warm-red-darker);
-	--color-button-hover: var(--color-off-white-darker);
-	--color-input-bg: var(--color-warm-red-darker);
-	--color-input-fg: var(--color-off-white);
-	--color-placeholder: var(--color-off-white);
-	--color-text-outline: var(--color-off-white-darker);
+		--color-primary: var(--color-gray-100);
+		--color-secondary: var(--color-gray-300);
+		--color-bg: var(--color-gray-900);
 	}
 }
 
@@ -75,8 +69,10 @@
 	}
 }
 
-html {
-	/* filter: invert(1); */
+.dark {
+	--color-primary: var(--color-gray-100);
+	--color-secondary: var(--color-gray-300);
+	--color-bg: var(--color-gray-900);
 }
 
 h1, h2, h3, h4, h5, h6, p, li, button, a, input, textarea, select, label, form, details {
