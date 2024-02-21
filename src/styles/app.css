@@ -29,12 +29,12 @@
 	--color-primary: var(--color-gray-700);
 	--color-secondary: var(--color-gray-1000);
 	--color-bg: var(--color-gray-50);
+	--color-selection: var(--color-gray-200);
 	
 	--color-fg: var(--color-primary);
 	--color-link: var(--color-primary);
 	--color-focus: var(--color-secondary);
 	--color-mark: var(--color-secondary);
-	--color-selection: var(--color-secondary);
 	--color-border: var(--color-primary);
 	--color-button-bg: var(--color-primary);
 	--color-button-fg: var(--color-bg);
@@ -60,6 +60,7 @@
 		--color-primary: var(--color-gray-100);
 		--color-secondary: var(--color-gray-300);
 		--color-bg: var(--color-gray-900);
+		--color-selection: var(--color-gray-700);
 	}
 }
 
@@ -73,6 +74,7 @@
 	--color-primary: var(--color-gray-100);
 	--color-secondary: var(--color-gray-300);
 	--color-bg: var(--color-gray-900);
+	--color-selection: var(--color-gray-700);
 }
 
 h1, h2, h3, h4, h5, h6, p, li, button, a, input, textarea, select, label, form, details {
@@ -124,7 +126,8 @@ font-weight: var(--fw-bold);
 }
 
 mark {
-	background: rgba(255, 0, 0, 0.5);
+	background: var(--color-fg);
+	color: var(--color-bg);
 }
 
 ul {
@@ -173,6 +176,8 @@ input[type="checkbox"] {
 	height: 1.5em;
 	accent-color: var(--color-fg);
 }
+
+
 
 @media (min-width: 800px) {
 	section {

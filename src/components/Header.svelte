@@ -1,18 +1,22 @@
 <script>
+	import { page } from "$app/stores";
+	$: showHeader = $page?.route?.id !== "/admin";
 	import wordmark from "$svg/wordmark.svg";
 	import { showFaq } from "$stores/misc.js";
 </script>
 
-<header>
-	<div class="wordmark">
-		<a href="https://pudding.cool" aria-label="The Pudding" target="_self"
-			>{@html wordmark}</a
-		>
-	</div>
-	<div class="faq">
-		<button on:click={() => ($showFaq = true)}>FAQ</button>
-	</div>
-</header>
+{#if showHeader}
+	<header>
+		<div class="wordmark">
+			<a href="https://pudding.cool" aria-label="The Pudding" target="_self"
+				>{@html wordmark}</a
+			>
+		</div>
+		<div class="faq">
+			<button on:click={() => ($showFaq = true)}>FAQ</button>
+		</div>
+	</header>
+{/if}
 
 <style>
 	header {

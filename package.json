@@ -12,6 +12,7 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-dsv": "^3.0.4",
+		"@supabase/supabase-js": "^2.39.7",
 		"@sveltejs/adapter-static": "2.0.3",
 		"@sveltejs/kit": "1.27.6",
 		"archieml": "^0.5.0",
