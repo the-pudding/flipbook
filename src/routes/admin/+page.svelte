@@ -16,11 +16,14 @@
 
 	async function updateAnimations() {
 		for (let animation of animations) {
-			if (animation.updatePerson && animation.pool_id) {
-				const { email, phone, notified } = await getPerson(animation.pool_id);
-				animation.email = email;
-				animation.phone = phone;
-				animation.notified = notified;
+			if (animation.updatePerson) {
+				if (animation.pool_id) {
+					const { email, phone, notified } = await getPerson(animation.pool_id);
+					animation.email = email;
+					animation.phone = phone;
+					animation.notified = notified;
+				}
+
 				animation.updatePerson = false;
 
 				// next 10
@@ -37,7 +40,9 @@
 				animation.updateDrawing = false;
 			}
 
-			animation.time = new Date(animation.expiration).toLocaleTimeString();
+			animation.time = animation.expiration
+				? new Date(animation.expiration).toLocaleTimeString()
+				: null;
 		}
 
 		animations = animations;
@@ -157,6 +162,37 @@
 		throw new Error("no animations");
 	}
 
+	async function onPause(id, paused) {
+		const response = await supabase
+			.from("animation")
+			.update({ paused })
+			.eq("id", id);
+
+		if (response.error) {
+			console.log(response.error);
+			throw new Error("onPause failed");
+		} else if (response) return;
+		return undefined;
+	}
+
+	async function onReset(id) {
+		const response = await supabase
+			.from("animation")
+			.update({
+				drawing: null,
+				pool_id: null,
+				expiration: null,
+				shortcode: null
+			})
+			.eq("id", id);
+
+		if (response.error) {
+			console.log(response.error);
+			throw new Error("onReset failed");
+		} else if (response) return;
+		return undefined;
+	}
+
 	onMount(async () => {
 		animations = await getAllAnimations();
 		animations.forEach((a) => {
@@ -186,19 +222,27 @@
 				<th>Email</th>
 				<th>Phone</th>
 				<th>Notified</th>
+				<th>Pause</th>
+				<th>Reset</th>
 			</tr>
 		</thead>
 		<tbody>
-			{#each animations as g}
-				{@const updated = g.updated}
+			{#each animations as a}
+				{@const updated = a.updated}
 				<tr class:updated>
-					<td>{g.id}</td>
-					<td>{g.frame_index}</td>
-					<td>{g.time}</td>
-					<td>{g.shortcode}</td>
-					<td>{g.email}</td>
-					<td>{g.phone}</td>
-					<td>{g.notified}</td>
+					<td>{a.id}</td>
+					<td>{a.frame_index}</td>
+					<td>{a.time}</td>
+					<td>{a.shortcode}</td>
+					<td>{a.email}</td>
+					<td>{a.phone}</td>
+					<td>{a.notified}</td>
+					<td
+						><button on:click={() => onPause(a.id, !a.paused)}
+							>{a.paused ? "Resume" : "Pause"}</button
+						></td
+					>
+					<td><button on:click={() => onReset(a.id)}>Reset</button></td>
 				</tr>
 			{/each}
 		</tbody>

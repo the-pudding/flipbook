@@ -126,8 +126,8 @@
 		{#if preset}
 			<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
 				<div slot="ui">
-					<button on:click={onSubmit}>Submit</button>
-					<button on:click={onClear}>Clear</button>
+					<button on:click={onSubmit}><small>Submit</small></button>
+					<button on:click={onClear}><small>Clear</small></button>
 				</div>
 			</Canvas>
 		{/if}
