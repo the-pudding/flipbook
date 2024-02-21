@@ -161,7 +161,7 @@
 {/if}
 
 {#if joined}
-	<Playground text={copy.playground} />
+	<Playground text={copy.playground} note={copy.playgroundNote} />
 {/if}
 <div id="join" class:visible={showForm}>
 	<button aria-label="close" class="close" on:click={() => (showForm = false)}

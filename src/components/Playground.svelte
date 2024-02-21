@@ -6,7 +6,8 @@
 
 	import renderGif from "$utils/renderGif.js";
 
-	export let text = "Make an animation";
+	export let text = "Make an animation!";
+	export let note;
 
 	let canvas;
 	let paths;
@@ -35,7 +36,11 @@
 </script>
 
 <section id="playground">
-	<p>{@html text}</p>
+	<p>
+		{@html text}
+		<br />
+		<em>Note: {note}</em>
+	</p>
 	<Canvas bind:this={canvas} bind:paths showFrameIndex={true}>
 		<div class="ui" slot="ui">
 			<p>Frames:</p>

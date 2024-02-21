@@ -16,4 +16,4 @@
 </script>
 
 <Meta {title} {description} {url} {keywords} />
-<Playground />
+<Playground note={copy.playgroundNote} />
