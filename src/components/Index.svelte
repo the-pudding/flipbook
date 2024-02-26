@@ -192,6 +192,7 @@
 	#join {
 		display: none;
 		position: fixed;
+		overflow: auto;
 		top: 0;
 		left: 0;
 		z-index: var(--z-overlay);

@@ -18,10 +18,10 @@
 		for (let animation of animations) {
 			if (animation.updatePerson) {
 				if (animation.pool_id) {
-					const { email, phone, notified } = await getPerson(animation.pool_id);
+					const { email, phone, status } = await getPerson(animation.pool_id);
 					animation.email = email;
 					animation.phone = phone;
-					animation.notified = notified;
+					animation.status = status;
 				}
 
 				animation.updatePerson = false;
@@ -89,8 +89,8 @@
 	async function getNext() {
 		const response = await supabase
 			.from("pool")
-			.select("email, phone, timezone, notified")
-			.in("notified", ["next", "soon"]);
+			.select("email, phone, timezone, status")
+			.in("status", ["next", "soon"]);
 
 		if (response.error) {
 			console.log(response.error);
@@ -116,7 +116,7 @@
 		const response = await supabase
 			.from("pool")
 			.select("*", { count: "exact", head: true })
-			.eq("notified", "skipped");
+			.eq("status", "skipped");
 
 		if (response.error) {
 			console.log(response.error);
@@ -221,7 +221,7 @@
 				<th>Shortcode</th>
 				<th>Email</th>
 				<th>Phone</th>
-				<th>Notified</th>
+				<th>Status</th>
 				<th>Pause</th>
 				<th>Reset</th>
 			</tr>
@@ -236,7 +236,7 @@
 					<td>{a.shortcode}</td>
 					<td>{a.email}</td>
 					<td>{a.phone}</td>
-					<td>{a.notified}</td>
+					<td>{a.status}</td>
 					<td
 						><button on:click={() => onPause(a.id, !a.paused)}
 							>{a.paused ? "Resume" : "Pause"}</button
@@ -271,7 +271,7 @@
 					<th>Email</th>
 					<th>Phone</th>
 					<th>Timezone</th>
-					<th>Notified</th>
+					<th>Status</th>
 				</tr>
 			</thead>
 			{#each animation.next as person}
@@ -280,7 +280,7 @@
 						<td>{person.email}</td>
 						<td>{person.phone}</td>
 						<td>{person.timezone}</td>
-						<td>{person.notified}</td>
+						<td>{person.status}</td>
 					</tr>
 				</tbody>
 			{/each}

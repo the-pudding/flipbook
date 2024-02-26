@@ -114,22 +114,43 @@
 		{#if preset}
 			<p>
 				{@html copy.draw.task}
+				<br />
 				<em>Note: {copy.draw.note}</em>
 			</p>
 		{/if}
 
 		{#if error}
-			<p class="error">{error}</p>
-			<p><a class="btn" href="/?signup=true">Get in line again</a></p>
+			<p class="error"><strong>{error}</strong></p>
+			<p><a href="/?signup=true">Get in line again</a></p>
 		{/if}
 
 		{#if preset}
 			<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
-				<div slot="ui">
-					<button on:click={onSubmit}><small>Submit</small></button>
-					<button on:click={onClear}><small>Clear</small></button>
+				<div class="ui" slot="ui">
+					<div class="buttons">
+						<button on:click={onSubmit}><small>Submit</small></button>
+						<button on:click={onClear}><small>Clear</small></button>
+					</div>
 				</div>
 			</Canvas>
 		{/if}
 	{/if}
 </section>
+
+<style>
+	.ui .buttons {
+		display: flex;
+		flex-wrap: wrap;
+		max-width: var(--canvas-size);
+		width: 100%;
+		height: auto;
+		background: var(--color-bg);
+	}
+
+	button {
+		margin: 0;
+		display: flex;
+		margin-bottom: 8px;
+		margin-right: 8px;
+	}
+</style>
