@@ -134,14 +134,14 @@
 {#if !joined}
 	<section id="sell">
 		<div class="nothing">
-			<button on:click={() => (showForm = true)}>Get in line!</button>
+			<button on:click={() => (showForm = true)}>Get started!</button>
 		</div>
 
 		<div class="hard">
 			<p>{@html copy.hard}</p>
 			<!-- <img src="assets/demo/test.jpg" alt="test" /> -->
 			<p>{@html copy.hard2}</p>
-			<button on:click={() => (showForm = true)}>Get in line!</button>
+			<button on:click={() => (showForm = true)}>Get started!</button>
 		</div>
 
 		<div class="harder">
@@ -151,7 +151,7 @@
 					<li>{@html item}</li>
 				{/each}
 			</ul>
-			<button on:click={() => (showForm = true)}>Get in line!</button>
+			<button on:click={() => (showForm = true)}>Get started!</button>
 		</div>
 
 		<div class="hardest">

@@ -100,7 +100,7 @@
 			<p>{copy.rejoined}</p>
 			<p><ShareButton {buttonText} {title} {url} /></p>
 		{:else}
-			<p><button on:click={onRejoin}>Get in line again</button></p>
+			<p><button on:click={onRejoin}>Join again</button></p>
 		{/if}
 	{:else}
 		<p>{@html copy.draw.thanks}</p>
@@ -121,7 +121,7 @@
 
 		{#if error}
 			<p class="error"><strong>{error}</strong></p>
-			<p><a href="/?signup=true">Get in line again</a></p>
+			<p><a href="/?signup=true">Join again</a></p>
 		{/if}
 
 		{#if preset}
