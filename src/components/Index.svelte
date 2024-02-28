@@ -12,9 +12,9 @@
 
 	const copy = getContext("copy");
 
-	let previousShortcode;
+	let prevShortcode;
 	let animationId;
-	let animationFrameIndex;
+	let prevFrameIndex;
 	let frameCount = 0;
 
 	function loadStorage() {
@@ -29,22 +29,22 @@
 			storage.set("pudding_flipbook_data", $userData);
 		}
 
-		console.log($userData);
+		console.log({ $userData });
 	}
 
 	async function loadData() {
 		const url = "https://pudding.cool/projects/flipbook-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
 		const data = await response.json();
-		console.log(data);
+		console.log({ data });
 
 		// TODO
-		previousShortcode = data.animations[0].prev;
+		prevShortcode = data.animations[0].shortcode;
 		animationId = data.animations[0].id;
-		animationFrameIndex = data.animations[0].index;
+		prevFrameIndex = data.animations[0].frame_index;
 
 		frameCount = format(",")(data.frames || 0);
-		console.log("updated", data.updated);
+		console.log("updated:", new Date(data.updated).toLocaleString());
 	}
 
 	onMount(async () => {
@@ -68,8 +68,8 @@
 	</p>
 </section>
 
-{#if previousShortcode}
-	<Draw {animationId} {previousShortcode} {animationFrameIndex}></Draw>
+{#if prevShortcode}
+	<Draw {animationId} {prevShortcode} {prevFrameIndex}></Draw>
 {:else}
 	<div class="loading"></div>
 {/if}

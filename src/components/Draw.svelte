@@ -1,5 +1,5 @@
 <script>
-	import { onMount, getContext } from "svelte";
+	import { getContext } from "svelte";
 	import Canvas from "$components/Canvas.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import server from "$utils/server.js";
@@ -16,8 +16,8 @@
 	const title = copy.title;
 
 	export let animationId;
-	export let animationFrameIndex;
-	export let previousShortcode;
+	export let prevFrameIndex;
+	export let prevShortcode;
 
 	let path;
 	let preset;
@@ -37,26 +37,32 @@
 	async function onValidate({ detail }) {
 		try {
 			if (detail) {
+				// send to server
 				const response = await server("submit", {
 					userId: $userData.id,
 					animationId,
-					previousShortcode,
+					prevShortcode,
+					nextFrameIndex,
 					drawing: path
 				});
 
+				const { status, message, shortcode } = response;
+
 				// store locally
-				const { status, shortcode } = response;
 				const timestamp = Date.now();
 				if (status === 200) {
 					$userData?.submissions?.push({
 						animationId,
-						animationFrameIndex,
-						previousShortcode,
+						nextFrameIndex,
+						prevShortcode,
 						shortcode,
 						timestamp
 					});
+					complete = true;
+				} else {
+					// TODO
+					console.log({ status, message });
 				}
-				complete = true;
 			}
 		} catch (err) {
 			// TODO
@@ -64,16 +70,19 @@
 		}
 	}
 
-	onMount(async () => {
+	async function loadDrawing() {
 		try {
-			const url = `${base}/${animationId}/${previousShortcode}.txt?version=${Date.now()}`;
+			const url = `${base}/${animationId}/${prevShortcode}.txt?version=${Date.now()}`;
 			const response = await fetch(url);
 			preset = await response.text();
 		} catch (err) {
 			// TODO
 			console.log(err);
 		}
-	});
+	}
+
+	$: nextFrameIndex = prevFrameIndex + 1;
+	$: loadDrawing(prevShortcode);
 </script>
 
 <section>
