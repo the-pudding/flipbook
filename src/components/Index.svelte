@@ -3,7 +3,7 @@
 	import { format } from "d3";
 	import Notify from "$components/Join.Notify.svelte";
 	import Human from "$components/Join.Human.svelte";
-	import Playground from "$components/Playground.svelte";
+	import Draw from "$components/Draw.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import submit from "$utils/submit.js";
 	import storage from "$utils/localStorage.js";
@@ -24,14 +24,13 @@
 	let phone;
 	let path;
 
-	let timezone;
-
 	let showForm;
 	let reversed;
-	let frameCount = "0";
-	let waitingCount = "0";
 	let submitting;
 	let poolResponse;
+	let previousShortcode;
+	let animationId;
+	let frameCount = 0;
 
 	async function join() {
 		if (isHuman) {
@@ -80,9 +79,6 @@
 	$: joined = poolResponse?.status === 200;
 
 	onMount(async () => {
-		const offsetInMinutes = new Date().getTimezoneOffset();
-		timezone = offsetInMinutes / 60;
-
 		reversed = Math.random() < 0.5;
 		if (reversed) formSteps.reverse();
 
@@ -92,8 +88,10 @@
 		const url = "https://pudding.cool/projects/trace-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
 		const data = await response.json();
+		// TODO remove test
+		previousShortcode = "test";
+		animationId = 1;
 		frameCount = format(",")(data.frames || 0);
-		waitingCount = format(",")(data.waiting || 0);
 		statsVisible = true;
 		console.log("updated", data.timestamp);
 	});
@@ -120,73 +118,22 @@
 	{:else}
 		<p>
 			{@html copy.definition}
-		</p>
-
-		<p class="stats" class:visible={statsVisible}>
-			<strong>{frameCount}</strong>
-			{copy.statsFrames}<br />
-			<strong>{waitingCount}</strong>
-			{copy.statsWaiting}
+			<br />
+			<span class="stats" class:visible={statsVisible}>
+				<strong>{frameCount}</strong>
+				{copy.statsFrames}
+			</span>
 		</p>
 	{/if}
 </section>
 
-{#if !joined}
-	<section id="sell">
-		<div class="nothing">
-			<button on:click={() => (showForm = true)}>Get started!</button>
-		</div>
+<Draw {animationId} {previousShortcode}></Draw>
 
-		<div class="hard">
-			<p>{@html copy.hard}</p>
-			<!-- <img src="assets/demo/test.jpg" alt="test" /> -->
-			<p>{@html copy.hard2}</p>
-			<button on:click={() => (showForm = true)}>Get started!</button>
-		</div>
-
-		<div class="harder">
-			<p>{@html copy.harder}</p>
-			<ul>
-				{#each copy.harderLi as item}
-					<li>{@html item}</li>
-				{/each}
-			</ul>
-			<button on:click={() => (showForm = true)}>Get started!</button>
-		</div>
-
-		<div class="hardest">
-			<p>{@html copy.hardest}</p>
-		</div>
+<footer>
+	<section>
+		<p>{@html copy.recirc}</p>
 	</section>
-{/if}
-
-{#if joined}
-	<Playground text={copy.playground} note={copy.playgroundNote} />
-{/if}
-<div id="join" class:visible={showForm}>
-	<button aria-label="close" class="close" on:click={() => (showForm = false)}
-		>X</button
-	>
-	{#if submitting}
-		<section class="submitting">
-			<p>Adding you to the line...</p>
-		</section>
-	{:else}
-		<section class="fg" class:submitting>
-			<form class="shadow" on:submit|preventDefault>
-				<h2>{@html copy.prompt}</h2>
-
-				<div class="steps">
-					<svelte:component
-						this={formSteps[step]}
-						on:update={onUpdate}
-						value={step === 0 ? "Next" : "Submit"}
-					/>
-				</div>
-			</form>
-		</section>
-	{/if}
-</div>
+</footer>
 
 <style>
 	#join {
@@ -239,11 +186,14 @@
 	}
 
 	.stats {
-		margin-top: 15vh;
 		visibility: hidden;
 	}
 
 	.stats.visible {
 		visibility: visible;
+	}
+
+	footer {
+		margin: 64px auto;
 	}
 </style>

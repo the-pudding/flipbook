@@ -1,5 +1,5 @@
 <script>
-	import { getContext } from "svelte";
+	import { onMount, getContext } from "svelte";
 	import Canvas from "$components/Canvas.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import submit from "$utils/submit.js";
@@ -13,41 +13,15 @@
 	const url = copy.url;
 	const title = copy.title;
 
-	let shortcode;
-	let loading;
+	export let animationId;
+	export let previousShortcode;
+
 	let path;
 	let preset;
 	let error;
 	let canvas;
-	let animationId;
-	let rejoined;
-	let rejoinError;
 
 	let complete;
-
-	async function onStart() {
-		shortcode = getParam("id");
-		loading = true;
-		try {
-			const result = await submit("checkin", { shortcode });
-
-			if (result.status === 200) {
-				const { id, prev_shortcode, done } = result.data;
-				if (done) complete = true;
-				else {
-					const response = await fetch(`${base}/${id}/${prev_shortcode}.txt`);
-					preset = await response.text();
-				}
-			} else if (result.status === 404) error = "Oh no! This turn has expired.";
-			else {
-				error = result.message || "Oh no! Something went wrong.";
-			}
-		} catch (err) {
-			error = `Error: ${err.message}`;
-		} finally {
-			loading = false;
-		}
-	}
 
 	function onSubmit() {
 		canvas.addFrame();
@@ -55,18 +29,6 @@
 
 	function onClear() {
 		canvas.resetFrame();
-	}
-
-	async function onRejoin() {
-		try {
-			const response = await submit("rejoin", { shortcode });
-			rejoined = true;
-			rejoinError = response.status === 200 ? null : response.message;
-		} catch (err) {
-			console.log(err);
-			rejoined = true;
-			rejoinError = err.message;
-		}
 	}
 
 	async function onValidate({ detail }) {
@@ -84,6 +46,12 @@
 			console.log(err);
 		}
 	}
+
+	onMount(async () => {
+		const url = `${base}/${animationId}/${previousShortcode}.txt`;
+		const response = await fetch(url);
+		preset = await response.text();
+	});
 </script>
 
 <section>
@@ -103,12 +71,10 @@
 			<p><button on:click={onRejoin}>Join again</button></p>
 		{/if}
 	{:else}
-		<p>{@html copy.draw.thanks}</p>
+		<!-- <p>{@html copy.draw.thanks}</p> -->
 
 		{#if !preset && !error}
-			<button disabled={loading} on:click={onStart}
-				>{loading ? "Loading..." : "Start"}</button
-			>
+			<!--  -->
 		{/if}
 
 		{#if preset}
@@ -133,6 +99,8 @@
 					</div>
 				</div>
 			</Canvas>
+		{:else}
+			<div class="loading"></div>
 		{/if}
 	{/if}
 </section>
@@ -152,5 +120,9 @@
 		display: flex;
 		margin-bottom: 8px;
 		margin-right: 8px;
+	}
+
+	.loading {
+		height: 500px;
 	}
 </style>

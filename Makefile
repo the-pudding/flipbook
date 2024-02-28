@@ -9,9 +9,9 @@ github:
 	git push
 	
 aws-sync:
-	aws s3 sync build s3://pudding.cool/projects/draw --delete --cache-control 'max-age=31536000'
+	aws s3 sync build s3://pudding.cool/projects/trace --delete --cache-control 'max-age=31536000'
 
 aws-cache:
-	aws cloudfront create-invalidation --distribution-id E13X38CRR4E04D --paths '/projects/draw*'	
+	aws cloudfront create-invalidation --distribution-id E13X38CRR4E04D --paths '/projects/trace*'	
 
 pudding: aws-sync aws-cache
