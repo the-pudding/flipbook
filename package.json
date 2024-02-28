@@ -28,6 +28,7 @@
 		"prettier-plugin-svelte": "^3.1.2",
 		"rollup": "^4.6.0",
 		"rollup-plugin-svg": "^2.0.0",
+		"short-unique-id": "^5.0.3",
 		"style-dictionary": "^3.9.0",
 		"svelte": "^4.2.7",
 		"svelte-copy": "^1.4.1",

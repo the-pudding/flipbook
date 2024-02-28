@@ -56,6 +56,9 @@ devDependencies:
   rollup-plugin-svg:
     specifier: ^2.0.0
     version: 2.0.0
+  short-unique-id:
+    specifier: ^5.0.3
+    version: 5.0.3
   style-dictionary:
     specifier: ^3.9.0
     version: 3.9.0
@@ -1554,6 +1557,11 @@ packages:
 
   /set-cookie-parser@2.6.0:
     resolution: {integrity: sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==}
+    dev: true
+
+  /short-unique-id@5.0.3:
+    resolution: {integrity: sha512-yhniEILouC0s4lpH0h7rJsfylZdca10W9mDJRAFh3EpcSUanCHGb0R7kcFOIUCZYSAPo0PUD5ZxWQdW0T4xaug==}
+    hasBin: true
     dev: true
 
   /sirv@2.0.3:

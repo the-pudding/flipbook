@@ -4,10 +4,8 @@
 	import { fade } from "svelte/transition";
 	import lineLength from "$utils/lineLength.js";
 	import validateLine from "$utils/validateLine.js";
-	// import presets from "$data/presets.json";
 
 	export let preset;
-	export let debug;
 	export let path;
 	export let paths;
 	export let disabled;
@@ -60,6 +58,7 @@
 	}
 
 	function startDrawing(e) {
+		message = null;
 		noInk = false;
 		inkRem = 1;
 		drawing = true;
@@ -202,7 +201,7 @@
 		{/if}
 
 		{#if message}
-			<p transition:fade class="message"><small>{message}</small></p>
+			<p in:fade class="message"><small>{message}</small></p>
 		{/if}
 	</div>
 	<div class="ink">

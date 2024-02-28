@@ -2,18 +2,21 @@
 	import { onMount, getContext } from "svelte";
 	import Canvas from "$components/Canvas.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
-	import submit from "$utils/submit.js";
+	import server from "$utils/server.js";
 	import getParam from "$utils/getParam.js";
+	import generateId from "$utils/generateId.js";
+	import { userData } from "$stores/misc.js";
 
 	const copy = getContext("copy");
 
-	const base = "https://pudding.cool/projects/trace-data/drawings";
+	const base = "https://pudding.cool/projects/flipbook-data/drawings";
 
 	const buttonText = copy.spread;
 	const url = copy.url;
 	const title = copy.title;
 
 	export let animationId;
+	export let animationFrameIndex;
 	export let previousShortcode;
 
 	let path;
@@ -34,45 +37,49 @@
 	async function onValidate({ detail }) {
 		try {
 			if (detail) {
-				// const response = await submit("submit", {
-				// 	shortcode,
-				// 	drawing: path
-				// });
-				// console.log(response);
-				console.log("todo: submit");
+				const response = await server("submit", {
+					userId: $userData.id,
+					animationId,
+					previousShortcode,
+					drawing: path
+				});
+
+				// store locally
+				const { status, shortcode } = response;
+				const timestamp = Date.now();
+				if (status === 200) {
+					$userData?.submissions?.push({
+						animationId,
+						animationFrameIndex,
+						previousShortcode,
+						shortcode,
+						timestamp
+					});
+				}
 				complete = true;
 			}
 		} catch (err) {
+			// TODO
 			console.log(err);
 		}
 	}
 
 	onMount(async () => {
-		const url = `${base}/${animationId}/${previousShortcode}.txt`;
-		const response = await fetch(url);
-		preset = await response.text();
+		try {
+			const url = `${base}/${animationId}/${previousShortcode}.txt?version=${Date.now()}`;
+			const response = await fetch(url);
+			preset = await response.text();
+		} catch (err) {
+			// TODO
+			console.log(err);
+		}
 	});
 </script>
 
 <section>
 	{#if complete}
 		<p>{@html copy.draw.done}</p>
-		{#if rejoinError}
-			<div class="issue">
-				<details>
-					<summary>{copy.issue} </summary>
-					Error: {rejoinError}
-				</details>
-			</div>
-		{:else if rejoined}
-			<p>{copy.rejoined}</p>
-			<p><ShareButton {buttonText} {title} {url} /></p>
-		{:else}
-			<p><button on:click={onRejoin}>Join again</button></p>
-		{/if}
 	{:else}
-		<!-- <p>{@html copy.draw.thanks}</p> -->
-
 		{#if !preset && !error}
 			<!--  -->
 		{/if}

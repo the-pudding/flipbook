@@ -1,15 +1,16 @@
 import { dev } from "$app/environment";
 import getParam from "$utils/getParam.js";
 
-export default async function submit(endpoint, data) {
-	const url = "https://pudding-server-utils.herokuapp.com/trace";
-	// const url = "http://localhost:5000/trace";
+export default async function server(endpoint, data) {
+	// const base = "https://pudding-flipbook-server.herokuapp.com";
+	const base = "http://localhost:5000";
+	const url = `${base}/${endpoint}`;
 
 	const token = dev ? getParam("token") : "";
 
 	try {
 		const start = Date.now();
-		const body = JSON.stringify({ endpoint, data });
+		const body = JSON.stringify(data);
 		const options = {
 			method: "POST",
 			headers: {

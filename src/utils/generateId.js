@@ -1,9 +1,7 @@
-import { range } from "d3";
+import ShortUniqueId from "short-unique-id";
 
-export default function generateId(len = 4) {
-	const vals = "0123456789abcdefghijklmnopqrstuvwxyz".split("");
-	const id = range(len)
-		.map(() => vals[Math.floor(Math.random() * vals.length)])
-		.join("");
-	return id;
+const uid = new ShortUniqueId({ length: 12 });
+
+export default function generateId() {
+	return uid.rnd();
 }
