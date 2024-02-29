@@ -12,10 +12,13 @@
 
 	const copy = getContext("copy");
 
+	const FRAME_WAIT_THRESHOLD = 100;
+
 	let prevShortcode;
 	let animationId;
 	let prevFrameIndex;
 	let frameCount = 0;
+	let exhausted;
 
 	function loadStorage() {
 		$userData = storage.get("pudding_flipbook_data") || {};
@@ -34,10 +37,32 @@
 		const data = await response.json();
 		console.log({ data });
 
-		// TODO
-		prevShortcode = data.animations[0].shortcode;
-		animationId = data.animations[0].id;
-		prevFrameIndex = data.animations[0].frame_index;
+		const withUser = data.animations.map((a) => {
+			const o = { ...a };
+			const match = $userData.submissions.find((s) => s.animationId === a.id);
+
+			if (match) {
+				o.frameDelta = a.frame_index - match.nextFrameIndex;
+				o.timeDelta = Math.floor((Date.now() - match.timestamp) / 60000);
+			}
+			return o;
+		});
+
+		withUser.sort((a, b) => {
+			if (a.frameDelta === undefined) return -1;
+			else if (b.frameDelta === undefined) return 1;
+			return b.frameDelta - a.frameDelta;
+		});
+
+		const chosen = withUser[0];
+
+		if (chosen.frameDelta !== undefined) {
+			exhausted = chosen.frameDelta < FRAME_WAIT_THRESHOLD;
+		} else {
+			prevShortcode = chosen.shortcode;
+			animationId = chosen.id;
+			prevFrameIndex = chosen.frame_index;
+		}
 
 		frameCount = format(",")(data.frames || 0);
 		console.log("updated:", new Date(data.updated).toLocaleString());
@@ -67,6 +92,8 @@
 
 {#if prevShortcode}
 	<Draw {animationId} {prevShortcode} {prevFrameIndex}></Draw>
+{:else if exhausted}
+	<section><p>{@html copy.exhausted}</p></section>
 {:else}
 	<div class="loading"></div>
 {/if}

@@ -139,10 +139,11 @@ button, .btn, [type="button"], [type="submit"], [role="button"], [type="submit"]
 	line-height: 1;
 	font-weight: var(--fw-bold);
 	padding: 16px;
+	text-align: center;
 }
 
 button.small, .btn.small {
-	font-size: 0.8em;
+	font-size: clamp(14px, 2vmin, 20px);
 	margin: 0;
 }
 

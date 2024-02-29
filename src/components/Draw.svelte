@@ -63,11 +63,14 @@
 					complete = true;
 				} else {
 					// TODO
+					error =
+						"Sorry! There was an issue submitting your drawing. Please refresh the page or try again later.";
 					console.log({ status, message });
 				}
 			}
 		} catch (err) {
-			// TODO
+			error =
+				"Sorry! There was an issue submitting your drawing. Please refresh the page or try again later.";
 			console.log(err);
 		}
 	}
@@ -78,7 +81,8 @@
 			const response = await fetch(url);
 			preset = await response.text();
 		} catch (err) {
-			// TODO
+			error =
+				"Sorry. We had trouble loading the previous drawing. Please try again later.";
 			console.log(err);
 		}
 	}
@@ -90,36 +94,20 @@
 <section>
 	{#if complete}
 		<p>{@html copy.draw.done}</p>
-	{:else}
-		{#if !preset && !error}
-			<!--  -->
-		{/if}
-
-		{#if preset}
-			<p>
-				{@html copy.draw.task}
-				<br />
-				<em>Note: {copy.draw.note}</em>
-			</p>
-		{/if}
-
-		{#if error}
-			<p class="error"><strong>{error}</strong></p>
-			<p><a href="/?signup=true">Join again</a></p>
-		{/if}
-
-		{#if preset}
-			<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
-				<div class="ui" slot="ui">
-					<div class="buttons">
-						<button class="small" on:click={onSubmit}>Submit</button>
-						<button class="small" on:click={onClear}>Clear</button>
-					</div>
+	{:else if error}
+		<p class="error"><strong>{error}</strong></p>
+		<p><a href="/?signup=true">Join again</a></p>
+	{:else if preset}
+		<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
+			<div class="ui" slot="ui">
+				<div class="buttons">
+					<button class="small" on:click={onSubmit}>Submit</button>
+					<button class="small" on:click={onClear}>Clear</button>
 				</div>
-			</Canvas>
-		{:else}
-			<div class="loading"></div>
-		{/if}
+			</div>
+		</Canvas>
+	{:else}
+		<div class="loading"></div>
 	{/if}
 </section>
 
@@ -134,9 +122,13 @@
 	}
 
 	button {
-		display: flex;
+		flex: 1;
 		margin-bottom: 8px;
 		margin-right: 8px;
+	}
+
+	button:last-of-type {
+		margin-right: 0;
 	}
 
 	.loading {

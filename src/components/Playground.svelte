@@ -86,7 +86,6 @@
 	}
 
 	button {
-		display: flex;
 		margin-bottom: 8px;
 		margin-right: 8px;
 	}
