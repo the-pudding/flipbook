@@ -110,8 +110,8 @@
 			<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
 				<div class="ui" slot="ui">
 					<div class="buttons">
-						<button on:click={onSubmit}><small>Submit</small></button>
-						<button on:click={onClear}><small>Clear</small></button>
+						<button class="small" on:click={onSubmit}>Submit</button>
+						<button class="small" on:click={onClear}>Clear</button>
 					</div>
 				</div>
 			</Canvas>
@@ -132,7 +132,6 @@
 	}
 
 	button {
-		margin: 0;
 		display: flex;
 		margin-bottom: 8px;
 		margin-right: 8px;

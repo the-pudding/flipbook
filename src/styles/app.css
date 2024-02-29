@@ -141,6 +141,11 @@ button, .btn, [type="button"], [type="submit"], [role="button"], [type="submit"]
 	padding: 16px;
 }
 
+button.small, .btn.small {
+	font-size: 0.8em;
+	margin: 0;
+}
+
 /* forms */
 fieldset {
 	border: none;

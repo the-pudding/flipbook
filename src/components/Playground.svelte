@@ -45,10 +45,10 @@
 		<div class="ui" slot="ui">
 			<p>Frames:</p>
 			<div class="buttons">
-				<button on:click={onAddFrame}><small>Add</small></button>
-				<button on:click={onClearFrame}><small>Clear</small></button>
-				<button on:click={onPreview}
-					><small> {previewing ? "Stop" : "Play"} Preview</small></button
+				<button class="small" on:click={onAddFrame}>Add</button>
+				<button class="small" on:click={onClearFrame}>Clear</button>
+				<button class="small" on:click={onPreview}>
+					{previewing ? "Stop" : "Play"} Preview</button
 				>
 			</div>
 		</div>
@@ -86,7 +86,6 @@
 	}
 
 	button {
-		margin: 0;
 		display: flex;
 		margin-bottom: 8px;
 		margin-right: 8px;
