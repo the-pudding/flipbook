@@ -25,11 +25,7 @@
 				id: generateId(),
 				submissions: []
 			};
-
-			storage.set("pudding_flipbook_data", $userData);
 		}
-
-		console.log({ $userData });
 	}
 
 	async function loadData() {
@@ -47,6 +43,8 @@
 		console.log("updated:", new Date(data.updated).toLocaleString());
 	}
 
+	$: if ($userData) console.log($userData);
+	$: if ($userData) storage.set("pudding_flipbook_data", $userData);
 	onMount(async () => {
 		loadStorage();
 		await loadData();
@@ -55,12 +53,11 @@
 
 <section id="intro">
 	<h1>
-		{@html copy.cta}
+		{@html copy.title}
 	</h1>
 
 	<p>
-		{@html copy.definition}
-		<br />
+		{@html copy.sub}
 		<span class="stats" class:visible={!!frameCount}>
 			<strong>{frameCount}</strong>
 			{copy.statsFrames}
@@ -84,6 +81,10 @@
 </footer>
 
 <style>
+	#intro p {
+		margin-bottom: 64px;
+	}
+
 	.stats {
 		visibility: hidden;
 	}

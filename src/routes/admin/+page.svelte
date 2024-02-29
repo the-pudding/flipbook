@@ -19,6 +19,8 @@
 	let path;
 	let created;
 
+	let updated;
+
 	async function loadDrawing({ id, shortcode }) {
 		const root = "https://pudding.cool/projects/flipbook-data/drawings";
 		const url = `${root}/${id}/${shortcode}.txt?version=${Date.now()}`;
@@ -60,6 +62,16 @@
 
 	function onCopy() {
 		alert("copied");
+	}
+
+	async function update() {
+		const url = "https://pudding.cool/projects/flipbook-data/meta.json";
+		const response = await fetch(`${url}?version=${Date.now()}`);
+		const data = await response.json();
+
+		updated = new Date(data.updated).toLocaleString();
+
+		setTimeout(update, 15000);
 	}
 
 	onMount(async () => {
@@ -106,11 +118,15 @@
 		}
 
 		animations = animations;
+
+		update();
 	});
 </script>
 
 <section>
 	<h1>Admin Dashboard</h1>
+
+	<p>last public update: {updated}</p>
 
 	<h2>Current</h2>
 	<table id="animations">

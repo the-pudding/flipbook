@@ -47,17 +47,19 @@
 				});
 
 				const { status, message, shortcode } = response;
-
 				// store locally
 				const timestamp = Date.now();
 				if (status === 200) {
-					$userData?.submissions?.push({
+					const newData = {
 						animationId,
 						nextFrameIndex,
 						prevShortcode,
 						shortcode,
 						timestamp
-					});
+					};
+					const submissions = [...$userData.submissions, newData];
+
+					$userData = { ...$userData, submissions };
 					complete = true;
 				} else {
 					// TODO
