@@ -1,84 +1,111 @@
 <script>
 	import { onMount } from "svelte";
+	import { copy } from "svelte-copy";
 	import { fade } from "svelte/transition";
-	import version from "$utils/version.js";
 	import { createClient } from "@supabase/supabase-js";
+	import dataS3 from "data-s3";
+	import version from "$utils/version.js";
+	import Canvas from "$components/Canvas.svelte";
 	export let data;
 
 	version();
 
-	const supabase = createClient(data.supabaseUrl, data.supabaseKey);
+	const bucket = "pudding.cool";
+	const region = "us-east-1";
+	const base = "projects/flipbook-data";
 
+	let supabase;
 	let animations = [];
-	let waiting = 0;
-	let skipped = 0;
-	let contributed = 0;
+	let path;
+	let created;
 
-	const channels = supabase
-		.channel("custom-all-channel")
-		.on(
-			"postgres_changes",
-			{ event: "*", schema: "public", table: "animation" },
-			async (payload) => {
-				if (animations.length && payload.new) {
-					const i = animations.findIndex((d) => d.id === payload.new.id);
-
-					if (i > -1)
-						animations[i] = {
-							...animations[i],
-							...payload.new,
-							updated: true
-						};
-
-					animations = animations;
-					setTimeout(() => {
-						animations[i].updated = false;
-						animations = animations;
-					}, 2000);
-				}
-			}
-		)
-		.subscribe();
-
-	async function getDrawing(id, frame) {
-		const response = await supabase
-			.from("frame")
-			.select()
-			.eq("animation_id", id)
-			.eq("index", frame);
-
-		if (response.error) {
-			console.log(response.error);
-			throw new Error("getDrawing failed");
-		} else if (response.data) return response.data[0];
-		return undefined;
+	async function loadDrawing({ id, shortcode }) {
+		const root = "https://pudding.cool/projects/flipbook-data/drawings";
+		const url = `${root}/${id}/${shortcode}.txt?version=${Date.now()}`;
+		const response = await fetch(url);
+		const path = await response.text();
+		return path;
 	}
 
 	async function getAllAnimations() {
-		const response = await supabase.from("animation").select();
+		try {
+			const response = await supabase.from("animation").select();
 
-		if (response.error) {
-			console.log(response.error);
-			throw new Error("getAllAnimations failed");
-		} else if (response.data) return response.data;
-		throw new Error("no animations");
+			if (response.error) {
+				console.log(response.error);
+				throw new Error("getAllAnimations failed");
+			} else if (response.data) return response.data;
+			throw new Error("no animations");
+		} catch (err) {
+			console.log(err);
+		}
 	}
 
 	async function onPause(id, paused) {
-		const response = await supabase
-			.from("animation")
-			.update({ paused })
-			.eq("id", id);
+		try {
+			const response = await supabase
+				.from("animation")
+				.update({ paused })
+				.eq("id", id);
 
-		if (response.error) {
-			console.log(response.error);
-			throw new Error("onPause failed");
-		} else if (response) return;
-		return undefined;
+			if (response.error) {
+				console.log(response.error);
+				throw new Error("onPause failed");
+			} else if (response) return;
+			return undefined;
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
+	function onCopy() {
+		alert("copied");
 	}
 
 	onMount(async () => {
+		supabase = createClient(data.supabaseUrl, data.supabaseKey);
+		const { accessKeyId, secretAccessKey } = data;
+		await dataS3.init({ accessKeyId, secretAccessKey, region });
+
+		const channels = supabase
+			.channel("custom-all-channel")
+			.on(
+				"postgres_changes",
+				{ event: "*", schema: "public", table: "animation" },
+				async (payload) => {
+					if (animations.length && payload.new) {
+						const i = animations.findIndex((d) => d.id === payload.new.id);
+
+						if (i > -1) {
+							if (!animations[i]) animations[i] = {};
+
+							animations[i] = {
+								...animations[i],
+								...payload.new,
+								updated: true
+							};
+
+							const drawing = await loadDrawing(animations[i]);
+							animations[i].drawing = drawing;
+						}
+
+						animations = animations;
+						setTimeout(() => {
+							animations[i].updated = false;
+							animations = animations;
+						}, 2000);
+					}
+				}
+			)
+			.subscribe();
+
 		animations = await getAllAnimations();
+		for (const a of animations) {
+			const drawing = await loadDrawing(a);
+			a.drawing = drawing;
+		}
+
+		animations = animations;
 	});
 </script>
 
@@ -120,10 +147,19 @@
 			<mark>animation: {animation.id} frame: {animation.frame_index}</mark>
 		</p>
 		<svg>
-			<!-- TODO -->
-			<path />
+			<path d={animation.drawing} />
 		</svg>
 	{/each}
+
+	<h2>New Animation</h2>
+	{#if created}
+		<p>Animation Created!</p>
+	{:else}
+		<Canvas bind:path></Canvas>
+		<p>
+			<button use:copy={path || ""} on:svelte-copy={onCopy}>Copy SVG</button>
+		</p>
+	{/if}
 </section>
 
 <style>
@@ -159,6 +195,8 @@
 		fill: none;
 		stroke: black;
 		stroke-width: 4px;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
 
 	#animations th:nth-of-type(1),

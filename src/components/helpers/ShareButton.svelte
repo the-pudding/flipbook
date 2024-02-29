@@ -20,7 +20,9 @@
 			navigator
 				.share({ title, url })
 				.then(() => {})
-				.catch(copyLink);
+				.catch((err) => {
+					console.log(err);
+				});
 		} else notify();
 	}
 </script>
