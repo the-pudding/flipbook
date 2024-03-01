@@ -1,6 +1,7 @@
 <script>
 	import { page } from "$app/stores";
-	$: showHeader = $page?.route?.id !== "/admin";
+	$: showHeader = $page?.route?.id !== "admin";
+	$: showFAQ = $page?.route?.id === "/";
 	import wordmark from "$svg/wordmark.svg";
 	import { showFaq } from "$stores/misc.js";
 </script>
@@ -12,9 +13,11 @@
 				>{@html wordmark}</a
 			>
 		</div>
-		<div class="faq">
-			<button on:click={() => ($showFaq = true)}>FAQ</button>
-		</div>
+		{#if showFAQ}
+			<div class="faq">
+				<button on:click={() => ($showFaq = true)}>FAQ</button>
+			</div>
+		{/if}
 	</header>
 {/if}
 

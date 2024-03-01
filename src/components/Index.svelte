@@ -1,6 +1,7 @@
 <script>
 	import { onMount, getContext } from "svelte";
 	import { format } from "d3";
+	import FAQ from "$components/FAQ.svelte";
 	import Draw from "$components/Draw.svelte";
 	import Join from "$components/Join.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
@@ -134,6 +135,7 @@
 	<Join on:close={() => ($showJoin = false)}></Join>
 {/if}
 
+<FAQ />
 <footer>
 	<section>
 		{#if !submitted}
