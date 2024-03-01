@@ -13,15 +13,21 @@
 	const copy = getContext("copy");
 
 	const FRAME_WAIT_THRESHOLD = 100;
+	const TIME_WAIT_THRESHOLD = 1440;
 
 	let prevShortcode;
 	let animationId;
 	let prevFrameIndex;
 	let frameCount = 0;
+	let submitted;
 	let exhausted;
+	let joinVisible;
 
 	function loadStorage() {
 		$userData = storage.get("pudding_flipbook_data") || {};
+
+		// TODO remove
+		$userData.human = false;
 
 		if (!$userData?.id) {
 			$userData = {
@@ -31,11 +37,12 @@
 		}
 	}
 
-	async function loadData() {
+	async function loadData(refresh) {
+		submitted = false;
 		const url = "https://pudding.cool/projects/flipbook-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
 		const data = await response.json();
-		console.log({ data });
+		// console.log({ data });
 
 		const withUser = data.animations.map((a) => {
 			const o = { ...a };
@@ -49,15 +56,15 @@
 		});
 
 		withUser.sort((a, b) => {
-			if (a.frameDelta === undefined) return -1;
-			else if (b.frameDelta === undefined) return 1;
-			return b.frameDelta - a.frameDelta;
+			if (a.timeDelta === undefined) return -1;
+			else if (b.timeDelta === undefined) return 1;
+			return b.timeDelta - a.timeDelta;
 		});
 
 		const chosen = withUser[0];
 
 		if (chosen.frameDelta !== undefined) {
-			exhausted = chosen.frameDelta < FRAME_WAIT_THRESHOLD;
+			exhausted = chosen.frameDelta < TIME_WAIT_THRESHOLD;
 		} else {
 			prevShortcode = chosen.shortcode;
 			animationId = chosen.id;
@@ -68,11 +75,27 @@
 		console.log("updated:", new Date(data.updated).toLocaleString());
 	}
 
-	$: if ($userData) console.log($userData);
+	async function onDone() {
+		submitted = true;
+		prevShortcode = null;
+		animationId = null;
+		prevFrameIndex = null;
+	}
+
+	function onSignup() {
+		joinVisible = true;
+	}
+
+	async function onOther() {
+		await loadData(true);
+	}
+
+	// $: if ($userData) console.log($userData);
 	$: if ($userData) storage.set("pudding_flipbook_data", $userData);
 	onMount(async () => {
 		loadStorage();
 		await loadData();
+		await onDone();
 	});
 </script>
 
@@ -81,34 +104,65 @@
 		{@html copy.title}
 	</h1>
 
-	<p>
-		{@html copy.sub}
-		<span class="stats" class:visible={!!frameCount}>
-			<strong>{frameCount}</strong>
-			{copy.statsFrames}
-		</span>
-	</p>
+	{#if !submitted}
+		<p>
+			{@html copy.sub}
+			<span class="stats" class:visible={!!frameCount}>
+				<strong>{frameCount}</strong>
+				{copy.statsFrames}
+			</span>
+		</p>
+	{/if}
 </section>
 
 {#if prevShortcode}
-	<Draw {animationId} {prevShortcode} {prevFrameIndex}></Draw>
+	<Draw {animationId} {prevShortcode} {prevFrameIndex} on:done={onDone}></Draw>
 {:else if exhausted}
 	<section><p>{@html copy.exhausted}</p></section>
+{:else if submitted}
+	<section class="submitted">
+		<p><strong>{@html copy.submitted}</strong></p>
+		<!-- TODO only if no human in storage -->
+		{#if !$userData?.human}
+			<p>{@html copy.signup}</p>
+			<p><button on:click={onSignup}>Add me</button></p>
+		{/if}
+		{#if !exhausted}
+			<p>{@html copy.other}</p>
+			<p><button on:click={onOther}>Draw more</button></p>
+		{/if}
+		<p>{@html copy.share}</p>
+		<p>
+			<ShareButton buttonText={copy.spread} title={copy.title} url={copy.url} />
+		</p>
+	</section>
 {:else}
 	<div class="loading"></div>
 {/if}
 
+{#if joinVisible}
+	<Join on:close={() => (joinVisible = false)}></Join>
+{/if}
+
 <footer>
 	<section>
-		<p>
-			<ShareButton buttonText={copy.spread} title={copy.title} url={copy.url} />
-		</p>
+		{#if !submitted}
+			<p>
+				<ShareButton
+					buttonText={copy.spread}
+					title={copy.title}
+					url={copy.url}
+				/>
+			</p>
+		{/if}
+
 		<p>{@html copy.recirc}</p>
 	</section>
 </footer>
 
 <style>
 	#intro p {
+		margin-top: 64px;
 		margin-bottom: 64px;
 	}
 
@@ -122,6 +176,10 @@
 
 	.loading {
 		height: 500px;
+	}
+
+	.submitted {
+		margin-top: 64px;
 	}
 
 	footer {

@@ -1,5 +1,5 @@
 <script>
-	import { getContext } from "svelte";
+	import { createEventDispatcher, getContext, tick } from "svelte";
 	import Canvas from "$components/Canvas.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import server from "$utils/server.js";
@@ -7,24 +7,22 @@
 	import generateId from "$utils/generateId.js";
 	import { userData } from "$stores/misc.js";
 
-	const copy = getContext("copy");
-
-	const base = "https://pudding.cool/projects/flipbook-data/drawings";
-
-	const buttonText = copy.spread;
-	const url = copy.url;
-	const title = copy.title;
-
 	export let animationId;
 	export let prevFrameIndex;
 	export let prevShortcode;
+
+	const copy = getContext("copy");
+
+	const base = "https://pudding.cool/projects/flipbook-data/drawings";
+	const buttonText = copy.spread;
+	const url = copy.url;
+	const title = copy.title;
+	const dispatch = createEventDispatcher();
 
 	let path;
 	let preset;
 	let error;
 	let canvas;
-
-	let complete;
 
 	function onSubmit() {
 		canvas.addFrame();
@@ -60,7 +58,8 @@
 					const submissions = [...$userData.submissions, newData];
 
 					$userData = { ...$userData, submissions };
-					complete = true;
+					await tick();
+					dispatch("done");
 				} else {
 					// TODO
 					error =
@@ -92,11 +91,8 @@
 </script>
 
 <section>
-	{#if complete}
-		<p>{@html copy.draw.done}</p>
-	{:else if error}
+	{#if error}
 		<p class="error"><strong>{error}</strong></p>
-		<p><a href="/?signup=true">Join again</a></p>
 	{:else if preset}
 		<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
 			<div class="ui" slot="ui">
@@ -107,7 +103,7 @@
 			</div>
 		</Canvas>
 	{:else}
-		<div class="loading"></div>
+		<div class="spacer"></div>
 	{/if}
 </section>
 
@@ -131,7 +127,7 @@
 		margin-right: 0;
 	}
 
-	.loading {
+	.spacer {
 		height: 500px;
 	}
 </style>

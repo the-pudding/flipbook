@@ -1,99 +1,132 @@
 <script>
-	import { onMount, getContext } from "svelte";
+	import { onMount, getContext, createEventDispatcher } from "svelte";
 	import Notify from "$components/Join.Notify.svelte";
 	import Human from "$components/Join.Human.svelte";
 	import submit from "$utils/server.js";
 	import storage from "$utils/localStorage.js";
+	import { userData } from "$stores/misc.js";
 
 	const copy = getContext("copy");
 
 	let isHuman;
 	let email;
 	let phone;
+	let name;
+	let path;
+	let handle;
 	let formSteps = [Notify, Human];
 	let step = 0;
+	let sending;
 
 	let showForm;
 	let reversed;
 	let submitting;
 
-	async function join() {
-		if (isHuman) {
-			submitting = true;
-			try {
-				poolResponse = await submit("pool", { email, phone, timezone });
-				isHuman = undefined;
-				email = undefined;
-				phone = undefined;
-				step = 0;
-			} catch (err) {
-				poolResponse = { message: err.message };
-			} finally {
-				submitting = false;
-				showForm = false;
+	const dispatch = createEventDispatcher();
+
+	async function onUpdate({ detail }) {
+		try {
+			phone = detail?.phone || phone;
+			email = detail?.email || email;
+			name = detail?.name || name;
+			handle = detail?.handle || handle;
+			isHuman = detail?.isHuman || isHuman;
+			path = detail?.path || path;
+
+			const hasInfo = phone || email || name || handle;
+
+			const localHuman = $userData.human;
+
+			if (step === 0) {
+				if (reversed && path && !$userData?.human) {
+					sending = true;
+					const resp = await submit("human", {
+						drawing: path,
+						userId: $userData?.id
+					});
+					$userData.human = true;
+					$userData = $userData;
+					sending = false;
+				} else if (!reversed && hasInfo) {
+					sending = true;
+					const resp = await submit("notify", {
+						phone,
+						email,
+						name,
+						handle,
+						userId: $userData?.id
+					});
+					sending = false;
+				}
+				step += 1;
+			} else {
+				if (reversed && hasInfo) {
+					sending = true;
+					const resp = await submit("notify", {
+						phone,
+						email,
+						name,
+						handle,
+						userId: $userData?.id
+					});
+					sending = false;
+				} else if (!reversed && path && $userData?.human) {
+					sending = true;
+					const resp = await submit("human", {
+						drawing: path,
+						phone,
+						email,
+						name,
+						handle,
+						userId: $userData?.id
+					});
+
+					$userData.human = true;
+					$userData = $userData;
+
+					sending = false;
+				}
+				dispatch("close");
 			}
+		} catch (err) {
+			console.log(err);
+			// TODO
 		}
 	}
 
-	function onUpdate({ detail }) {
-		phone = detail?.phone || phone;
-		email = detail?.email || email;
-		isHuman = detail?.isHuman || isHuman;
-		path = detail?.path || path;
-
-		const humanInStorage = storage.get("pudding_flipbook_human");
-
-		if (path && !humanInStorage)
-			submit("human", {
-				drawing: path,
-				has_phone: !!phone,
-				has_email: !!email
-			})
-				.then(({ duration, message }) => {
-					console.log(duration, message);
-					storage.set("pudding_flipbook_human", true);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-
-		if (step === 0) step += 1;
-		else join();
-	}
-
 	function setupForm() {
+		// TODO re-enable
 		reversed = Math.random() < 0.5;
 		if (reversed) formSteps.reverse();
-
 		formSteps = [...formSteps];
-		showForm = getParam("signup");
+		// TODO move
+		// showForm = getParam("signup");
 	}
-
-	$: joined = poolResponse?.status === 200;
 
 	onMount(() => {
 		setupForm();
 	});
 </script>
 
+<!-- TODO add issue -->
 <div id="join" class:visible={showForm}>
-	<button aria-label="close" class="close" on:click={() => (showForm = false)}
+	<button aria-label="close" class="close" on:click={() => dispatch("close")}
 		>X</button
 	>
 	{#if submitting}
 		<section class="submitting">
-			<p>Adding you to the line...</p>
+			<p>Submitting...</p>
 		</section>
 	{:else}
 		<section class="fg" class:submitting>
 			<form class="shadow" on:submit|preventDefault>
-				<h2>{@html copy.prompt}</h2>
+				<h2>{@html copy.join.prompt}</h2>
 
 				<div class="steps">
 					<svelte:component
 						this={formSteps[step]}
 						on:update={onUpdate}
-						value={step === 0 ? "Next" : "Submit"}
+						value={sending ? "Submitting..." : step === 0 ? "Next" : "Submit"}
 					/>
 				</div>
 			</form>
@@ -103,7 +136,6 @@
 
 <style>
 	#join {
-		display: none;
 		position: fixed;
 		overflow: auto;
 		top: 0;
@@ -114,10 +146,6 @@
 		border: 2vw solid var(--color-fg);
 		background: var(--color-bg);
 		padding-top: 16px;
-	}
-
-	#join.visible {
-		display: block;
 	}
 
 	#join section {

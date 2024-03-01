@@ -40,7 +40,7 @@
 	--color-button-fg: var(--color-bg);
 	--color-button-hover: var(--color-secondary);
 	--color-input-bg: var(--color-bg);
-	--color-input-fg: var(--color-primary);
+	--color-input-fg: var(--color-fg);
 	--color-placeholder: var(--color-primary);
 	--color-text-outline: var(--color-secondary);
 

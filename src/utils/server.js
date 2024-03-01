@@ -2,7 +2,7 @@ import { dev } from "$app/environment";
 import getParam from "$utils/getParam.js";
 
 export default async function server(endpoint, data) {
-	// const base = "https://pudding-flipbook-server.herokuapp.com";
+	// const base = "https://pudding-flipbook-server-5a76bc9eb168.herokuapp.com/";
 	const base = "http://localhost:5000";
 	const url = `${base}/${endpoint}`;
 

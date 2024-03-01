@@ -38,6 +38,7 @@
 	export const addFrame = add;
 	export const clearFrame = clear;
 	export const resetFrame = reset;
+	export const addMessage = message;
 
 	function normalizeFrechet(frechet) {
 		return frechet / DIAGONAL;
@@ -139,6 +140,10 @@
 
 	function clear() {
 		reset();
+	}
+
+	function message(msg) {
+		message = msg;
 	}
 
 	function togglePreview() {

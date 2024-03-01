@@ -7,6 +7,7 @@
 
 	export let value;
 
+	let canvas;
 	let invalid;
 	let review;
 	let isHuman;
@@ -17,37 +18,38 @@
 		if (review) return;
 		if (path.length > 4) {
 			review = true;
+			canvas.addMessage(copy.join.humanReview);
 			setTimeout(() => {
 				review = false;
+				canvas.addMessage(undefined);
 				dispatch("update", { isHuman, path });
 			}, 1500);
-		} else invalid = "You must draw a circle";
+		} else canvas.addMessage("You must draw.");
 	}
 </script>
 
 <fieldset>
 	<div class="step human">
 		<div>
-			<label for="human">Are you a human?</label>
+			<label for="human">{@html copy.join.humanLabel}</label>
 			<input type="checkbox" id="human" name="human" bind:checked={isHuman} />
 		</div>
 		<div class="draw" class:visible={isHuman}>
-			<p>{@html copy.humanPrompt}</p>
-			<Canvas human={true} bind:path disabled={review} />
+			<p>{@html copy.join.humanPrompt}</p>
+			<Canvas bind:this={canvas} bind:path disabled={review} />
 		</div>
 	</div>
 </fieldset>
 
 {#if isHuman}
-	<button disabled={review} on:click|preventDefault={onSubmit}>{value}</button>
+	<button
+		disabled={review || value === "Submitting..."}
+		on:click|preventDefault={onSubmit}>{value}</button
+	>
 {/if}
 
 {#if invalid}
 	<p class="invalid">{invalid}</p>
-{/if}
-
-{#if review}
-	<p class="review">{copy.humanReview}</p>
 {/if}
 
 <style>
