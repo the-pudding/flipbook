@@ -94,6 +94,11 @@
 	{#if error}
 		<p class="error"><strong>{error}</strong></p>
 	{:else if preset}
+		<p>
+			{@html copy.draw.task}
+			<br />
+			<em>Note: {copy.draw.note}</em>
+		</p>
 		<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
 			<div class="ui" slot="ui">
 				<div class="buttons">

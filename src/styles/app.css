@@ -119,6 +119,7 @@ a:hover {
 section {
 	padding: 0 16px;
 	margin: 0 auto;
+	
 }
 
 strong {
@@ -188,6 +189,8 @@ input[type="checkbox"] {
 @media (min-width: 800px) {
 	section {
 		padding: 0 32px;
+		max-width: 70vmin;
+		min-width: max(480px, 40vw);
 	}
 	
 	ul {
