@@ -36,7 +36,7 @@
 	<p>
 		{@html text}
 		<br />
-		<em>Note: {note}</em>
+		<small><em>Note: {note}</em></small>
 	</p>
 	<Canvas bind:this={canvas} bind:paths showFrameIndex={true}>
 		<div class="ui" slot="ui">
