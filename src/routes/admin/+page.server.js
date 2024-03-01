@@ -1,5 +1,7 @@
 import { env } from "$env/dynamic/private";
 
+export const prerender = false;
+
 export async function load() {
 	return {
 		supabaseUrl: env.SUPABASE_URL,
