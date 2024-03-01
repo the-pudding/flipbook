@@ -8,7 +8,7 @@
 	import storage from "$utils/localStorage.js";
 	import getParam from "$utils/getParam.js";
 	import generateId from "$utils/generateId.js";
-	import { userData } from "$stores/misc.js";
+	import { userData, showJoin } from "$stores/misc.js";
 
 	const copy = getContext("copy");
 
@@ -21,13 +21,9 @@
 	let frameCount = 0;
 	let submitted;
 	let exhausted;
-	let joinVisible;
 
 	function loadStorage() {
 		$userData = storage.get("pudding_flipbook_data") || {};
-
-		// TODO remove
-		$userData.human = false;
 
 		if (!$userData?.id) {
 			$userData = {
@@ -82,20 +78,15 @@
 		prevFrameIndex = null;
 	}
 
-	function onSignup() {
-		joinVisible = true;
-	}
-
 	async function onOther() {
 		await loadData(true);
 	}
 
-	// $: if ($userData) console.log($userData);
 	$: if ($userData) storage.set("pudding_flipbook_data", $userData);
+
 	onMount(async () => {
 		loadStorage();
 		await loadData();
-		await onDone();
 	});
 </script>
 
@@ -122,7 +113,6 @@
 {:else if submitted}
 	<section class="submitted">
 		<p><strong>{@html copy.submitted}</strong></p>
-		<!-- TODO only if no human in storage -->
 		{#if !$userData?.human}
 			<p>{@html copy.signup}</p>
 			<p><button on:click={onSignup}>Add me</button></p>
@@ -140,8 +130,8 @@
 	<div class="loading"></div>
 {/if}
 
-{#if joinVisible}
-	<Join on:close={() => (joinVisible = false)}></Join>
+{#if $showJoin}
+	<Join on:close={() => ($showJoin = false)}></Join>
 {/if}
 
 <footer>

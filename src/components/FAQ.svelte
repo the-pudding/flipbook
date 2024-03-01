@@ -1,6 +1,11 @@
 <script>
-	import { showFaq } from "$stores/misc.js";
+	import { showFaq, showJoin } from "$stores/misc.js";
 	import copy from "$data/copy.json";
+
+	function onSignup() {
+		$showFaq = false;
+		$showJoin = true;
+	}
 </script>
 
 <div id="faq" class:visible={$showFaq}>
@@ -12,6 +17,10 @@
 				<p>{@html a}</p>
 			</li>
 		{/each}
+		<li>
+			<h3><strong>How can I watch the final animation?</strong></h3>
+			<p><button on:click={onSignup}>Sign up</button> to get notified.</p>
+		</li>
 	</ul>
 	<button class="close" aria-label="close" on:click={() => ($showFaq = false)}
 		>X</button

@@ -99,8 +99,6 @@
 		reversed = Math.random() < 0.5;
 		if (reversed) formSteps.reverse();
 		formSteps = [...formSteps];
-		// TODO move
-		// showForm = getParam("signup");
 	}
 
 	onMount(() => {
