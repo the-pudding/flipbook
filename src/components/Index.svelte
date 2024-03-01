@@ -79,6 +79,10 @@
 		prevFrameIndex = null;
 	}
 
+	function onSignup() {
+		$showJoin = true;
+	}
+
 	async function onOther() {
 		await loadData(true);
 	}
