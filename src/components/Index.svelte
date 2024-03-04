@@ -2,11 +2,11 @@
 	import { dev, browser } from "$app/environment";
 	import { onMount, getContext } from "svelte";
 	import { shuffle, format } from "d3";
+	import { detectIncognito } from "detectincognitojs";
 	import FAQ from "$components/FAQ.svelte";
 	import Draw from "$components/Draw.svelte";
 	import Join from "$components/Join.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
-	import server from "$utils/server.js";
 	import storage from "$utils/localStorage.js";
 	import getParam from "$utils/getParam.js";
 	import generateId from "$utils/generateId.js";
@@ -25,12 +25,14 @@
 	let exhausted;
 	let reversed;
 
-	function loadStorage() {
+	async function loadStorage() {
+		const { isPrivate } = await detectIncognito();
 		$userData = storage.get("pudding_flipbook_data") || {};
 
 		if (!$userData?.id) {
 			$userData = {
 				id: generateId(),
+				neato: isPrivate,
 				submissions: []
 			};
 		}
@@ -128,7 +130,7 @@
 	}
 	onMount(async () => {
 		reversed = Math.random() < 0.5;
-		loadStorage();
+		await loadStorage();
 		await loadData();
 	});
 </script>

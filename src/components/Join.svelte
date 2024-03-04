@@ -2,7 +2,7 @@
 	import { onMount, getContext, createEventDispatcher } from "svelte";
 	import Notify from "$components/Join.Notify.svelte";
 	import Human from "$components/Join.Human.svelte";
-	import submit from "$utils/server.js";
+	import server from "$utils/server.js";
 	import storage from "$utils/localStorage.js";
 	import { userData } from "$stores/misc.js";
 
@@ -41,7 +41,7 @@
 			if (step === 0) {
 				if (reversed && path && !$userData?.human) {
 					sending = true;
-					const resp = await submit("human", {
+					await server("human", {
 						drawing: path,
 						userId: $userData?.id
 					});
@@ -50,7 +50,7 @@
 					sending = false;
 				} else if (!reversed && hasInfo) {
 					sending = true;
-					const resp = await submit("notify", {
+					await server("notify", {
 						phone,
 						email,
 						name,
@@ -63,7 +63,7 @@
 			} else {
 				if (reversed && hasInfo) {
 					sending = true;
-					const resp = await submit("notify", {
+					await submit("notify", {
 						phone,
 						email,
 						name,
@@ -73,7 +73,7 @@
 					sending = false;
 				} else if (!reversed && path && $userData?.human) {
 					sending = true;
-					const resp = await submit("human", {
+					await submit("human", {
 						drawing: path,
 						phone,
 						email,

@@ -32,6 +32,9 @@ devDependencies:
   data-s3:
     specifier: ^2.0.0
     version: 2.0.0
+  detectincognitojs:
+    specifier: ^1.3.0
+    version: 1.3.0
   gif.js:
     specifier: ^0.2.0
     version: 0.2.0
@@ -2182,6 +2185,10 @@ packages:
   /detect-indent@6.1.0:
     resolution: {integrity: sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==}
     engines: {node: '>=8'}
+    dev: true
+
+  /detectincognitojs@1.3.0:
+    resolution: {integrity: sha512-/uAMG+6Ipa8izluYQ45HqARjeYgtJLLBvpAiX1Zd3zWJ1MhEne6FDSjkkLaC3pdNeHfT3qhpvFRqB6dwLbdnng==}
     dev: true
 
   /devalue@4.3.2:

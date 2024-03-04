@@ -38,13 +38,19 @@
 		try {
 			if (detail) {
 				// send to server
-				const response = await server("submit", {
-					userId: $userData.id,
-					animationId,
-					prevShortcode,
-					nextFrameIndex,
-					drawing: path
-				});
+
+				let response;
+				if ($userData.neato)
+					response = { status: 200, shortcode: "neato", message: "" };
+				else {
+					response = await server("submit", {
+						userId: $userData.id,
+						animationId,
+						prevShortcode,
+						nextFrameIndex,
+						drawing: path
+					});
+				}
 
 				const { status, message, shortcode } = response;
 				// store locally
@@ -63,7 +69,7 @@
 					);
 					if (index >= 0) $userData.submissions[index] = newData;
 					else $userData.submissions.push(newData);
-					// TODO test submission replacement
+
 					$userData = $userData;
 					await tick();
 					dispatch("done");
