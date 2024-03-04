@@ -23,8 +23,10 @@
 	let preset;
 	let error;
 	let canvas;
+	let disabled;
 
 	function onSubmit() {
+		disabled = true;
 		canvas.addFrame();
 	}
 
@@ -75,6 +77,8 @@
 			error =
 				"Sorry! There was an issue submitting your drawing. Please refresh the page or try again later.";
 			console.log(err);
+		} finally {
+			disabled = false;
 		}
 	}
 
@@ -108,13 +112,13 @@
 			bind:path
 			{preset}
 			showFrameIndex={false}
-			disabled={false}
+			{disabled}
 			on:validate={onValidate}
 		>
 			<div class="ui" slot="ui">
 				<div class="buttons">
-					<button class="small" on:click={onSubmit}>Submit</button>
-					<button class="small" on:click={onClear}>Clear</button>
+					<button {disabled} class="small" on:click={onSubmit}>Submit</button>
+					<button {disabled} class="small" on:click={onClear}>Clear</button>
 				</div>
 			</div>
 		</Canvas>
