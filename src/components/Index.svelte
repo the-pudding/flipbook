@@ -14,7 +14,6 @@
 
 	const copy = getContext("copy");
 
-	const FRAME_WAIT_THRESHOLD = 100;
 	const TIME_WAIT_THRESHOLD = 1440; // one day
 
 	let prevShortcode;
@@ -36,6 +35,8 @@
 				submissions: []
 			};
 		}
+
+		if (dev) console.log({ $userData });
 	}
 
 	async function loadData(refresh) {
@@ -48,12 +49,10 @@
 			const o = { ...a };
 			const match = $userData.submissions.find((s) => s.animationId === a.id);
 
-			if (match) {
-				o.frameDelta = a.frame_index - match.nextFrameIndex;
+			if (match)
 				o.timeDelta = Math.floor((Date.now() - match.timestamp) / (60 * 1000));
-			}
 
-			o.available = !match || o.timeDelta > FRAME_WAIT_THRESHOLD;
+			o.available = (match && o.timeDelta > TIME_WAIT_THRESHOLD) || !match;
 			o.priority = o.id <= data.realtime;
 			return o;
 		});
@@ -146,6 +145,7 @@
 			<span class="stats" class:visible={!!frameCount}>
 				<strong>{frameCount} frames</strong>
 				{copy.statsFrames}
+				{#if !exhausted}{copy.your}{/if}
 			</span>
 		</p>
 	{/if}
@@ -154,7 +154,13 @@
 {#if prevShortcode}
 	<Draw {animationId} {prevShortcode} {prevFrameIndex} on:done={onDone}></Draw>
 {:else if exhausted}
-	<section><p>{@html copy.exhausted}</p></section>
+	<section>
+		<p>{@html copy.exhausted}</p>
+		{#if !$userData?.human}
+			<p>{@html copy.signup}</p>
+			<p><button on:click={onSignup}>Add me</button></p>
+		{/if}
+	</section>
 {:else if submitted}
 	<section class="submitted">
 		<p><strong>{@html copy.submitted}</strong></p>
