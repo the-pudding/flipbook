@@ -75,6 +75,7 @@
 	}
 
 	async function onDone() {
+		window.scrollTo(0, 0);
 		submitted = true;
 		prevShortcode = null;
 		animationId = null;
