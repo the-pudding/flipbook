@@ -90,7 +90,7 @@
 			}
 		} catch (err) {
 			console.log(err);
-			// TODO
+			dispatch("close");
 		}
 	}
 

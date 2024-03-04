@@ -81,7 +81,7 @@
 			preset = await response.text();
 		} catch (err) {
 			error =
-				"Sorry. We had trouble loading the previous drawing. Please try again later.";
+				"Sorry! There was an issue loading the previous drawing. Please try again later.";
 			console.log(err);
 		}
 	}

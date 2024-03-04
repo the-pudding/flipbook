@@ -191,8 +191,9 @@ input[type="checkbox"] {
 @media (min-width: 800px) {
 	section {
 		padding: 0 32px;
-		min-width: max(540px, 50vw);
-		max-width: 70vmin;
+		min-width: 640px;
+		width: 70vmin;
+		max-width: 960px;
 	}
 	
 	ul {
