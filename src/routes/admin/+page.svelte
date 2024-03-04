@@ -159,14 +159,18 @@
 	</table>
 
 	<h2>Previous</h2>
-	{#each animations as animation}
-		<p>
-			<mark>animation: {animation.id} frame: {animation.frame_index}</mark>
-		</p>
-		<svg>
-			<path d={animation.drawing} />
-		</svg>
-	{/each}
+	<div class="previous">
+		{#each animations as animation}
+			<div class="animation">
+				<p>
+					<mark>animation: {animation.id} frame: {animation.frame_index}</mark>
+				</p>
+				<svg>
+					<path d={animation.drawing} />
+				</svg>
+			</div>
+		{/each}
+	</div>
 
 	<h2>Public Data</h2>
 	<pre>
@@ -187,6 +191,14 @@
 </section>
 
 <style>
+	h1 {
+		font-size: 48px;
+	}
+
+	h2 {
+		font-size: 32px;
+	}
+
 	section {
 		padding: 0 16px;
 	}
@@ -236,5 +248,13 @@
 	#animations th:nth-of-type(3),
 	#animations td:nth-of-type(3) {
 		width: 10em;
+	}
+
+	.previous {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.animation {
+		margin-right: 16px;
 	}
 </style>
