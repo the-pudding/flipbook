@@ -201,6 +201,8 @@
 
 	section {
 		padding: 0 16px;
+		max-width: 1200px;
+		width: 90%;
 	}
 
 	tr {
