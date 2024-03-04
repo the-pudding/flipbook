@@ -23,6 +23,7 @@
 	let frameCount = 0;
 	let submitted;
 	let exhausted;
+	let reversed;
 
 	function loadStorage() {
 		$userData = storage.get("pudding_flipbook_data") || {};
@@ -67,6 +68,7 @@
 
 		exhausted = withUser.every((a) => !a.available);
 
+		// TODO test this
 		if (!exhausted) {
 			let chosen;
 			const choices1 = withUser.filter(
@@ -123,6 +125,7 @@
 		document.body.style.width = "auto";
 	}
 	onMount(async () => {
+		reversed = Math.random() < 0.5;
 		loadStorage();
 		await loadData();
 	});
@@ -169,7 +172,7 @@
 {/if}
 
 {#if $showJoin}
-	<Join on:close={() => ($showJoin = false)}></Join>
+	<Join {reversed} on:close={() => ($showJoin = false)}></Join>
 {/if}
 
 <FAQ />

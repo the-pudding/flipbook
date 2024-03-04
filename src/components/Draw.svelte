@@ -55,9 +55,14 @@
 						shortcode,
 						timestamp
 					};
-					const submissions = [...$userData.submissions, newData];
 
-					$userData = { ...$userData, submissions };
+					const index = $userData.submissions.findIndex(
+						(d) => d.animationId === animationId
+					);
+					if (match) $userData.submissions[index] = newData;
+					else $userData.submissions.push(newData);
+					// TODO test submission replacement
+					$userData = $userData;
 					await tick();
 					dispatch("done");
 				} else {

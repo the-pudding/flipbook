@@ -8,6 +8,8 @@
 
 	const copy = getContext("copy");
 
+	export let reversed;
+
 	let isHuman;
 	let email;
 	let phone;
@@ -19,7 +21,6 @@
 	let sending;
 
 	let showForm;
-	let reversed;
 	let submitting;
 
 	const dispatch = createEventDispatcher();
@@ -94,14 +95,8 @@
 		}
 	}
 
-	function setupForm() {
-		reversed = Math.random() < 0.5;
-		if (reversed) formSteps.reverse();
-		formSteps = [...formSteps];
-	}
-
 	onMount(() => {
-		setupForm();
+		if (reversed) formSteps = [Human, Notify];
 	});
 </script>
 
