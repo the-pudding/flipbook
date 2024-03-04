@@ -87,6 +87,7 @@ h1 {
 	line-height: 1;
 	font-size: clamp(32px, 10vmin, 128px);
 	font-weight: 800;
+	margin: 0;
 }
 
 h2 {
@@ -117,6 +118,7 @@ a:hover {
 }
 
 section {
+	width: 100%;
 	padding: 0 16px;
 	margin: 0 auto;
 	
@@ -189,7 +191,7 @@ input[type="checkbox"] {
 @media (min-width: 800px) {
 	section {
 		padding: 0 32px;
-		min-width: max(480px, 50vw);
+		min-width: max(540px, 50vw);
 		max-width: 70vmin;
 	}
 	

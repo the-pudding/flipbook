@@ -99,7 +99,14 @@
 			<br />
 			<small><em>Note: {copy.draw.note}</em></small>
 		</p>
-		<Canvas bind:this={canvas} bind:path {preset} on:validate={onValidate}>
+		<Canvas
+			bind:this={canvas}
+			bind:path
+			{preset}
+			showFrameIndex={false}
+			disabled={false}
+			on:validate={onValidate}
+		>
 			<div class="ui" slot="ui">
 				<div class="buttons">
 					<button class="small" on:click={onSubmit}>Submit</button>

@@ -1,4 +1,5 @@
 <script>
+	import { browser } from "$app/environment";
 	import { onMount, getContext } from "svelte";
 	import { format } from "d3";
 	import FAQ from "$components/FAQ.svelte";
@@ -9,12 +10,12 @@
 	import storage from "$utils/localStorage.js";
 	import getParam from "$utils/getParam.js";
 	import generateId from "$utils/generateId.js";
-	import { userData, showJoin } from "$stores/misc.js";
+	import { userData, showFaq, showJoin } from "$stores/misc.js";
 
 	const copy = getContext("copy");
 
 	const FRAME_WAIT_THRESHOLD = 100;
-	const TIME_WAIT_THRESHOLD = 1440;
+	const TIME_WAIT_THRESHOLD = 1440; // one day
 
 	let prevShortcode;
 	let animationId;
@@ -39,7 +40,6 @@
 		const url = "https://pudding.cool/projects/flipbook-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
 		const data = await response.json();
-		// console.log({ data });
 
 		const withUser = data.animations.map((a) => {
 			const o = { ...a };
@@ -47,7 +47,7 @@
 
 			if (match) {
 				o.frameDelta = a.frame_index - match.nextFrameIndex;
-				o.timeDelta = Math.floor((Date.now() - match.timestamp) / 60000);
+				o.timeDelta = Math.floor((Date.now() - match.timestamp) / (60 * 1000));
 			}
 			return o;
 		});
@@ -60,9 +60,11 @@
 
 		const chosen = withUser[0];
 
-		if (chosen.frameDelta !== undefined) {
-			exhausted = chosen.frameDelta < TIME_WAIT_THRESHOLD;
-		} else {
+		if (chosen.timeDelta !== undefined) {
+			exhausted = chosen.timeDelta < TIME_WAIT_THRESHOLD;
+		}
+
+		if (!exhausted) {
 			prevShortcode = chosen.shortcode;
 			animationId = chosen.id;
 			prevFrameIndex = chosen.frame_index;
@@ -89,6 +91,15 @@
 
 	$: if ($userData) storage.set("pudding_flipbook_data", $userData);
 
+	$: if ((browser && $showFaq) || $showJoin) {
+		document.body.style.overflow = "hidden";
+		document.body.style.position = "fixed";
+		document.body.style.width = "100%";
+	} else if (browser) {
+		document.body.style.overflow = "auto";
+		document.body.style.position = "static";
+		document.body.style.width = "auto";
+	}
 	onMount(async () => {
 		loadStorage();
 		await loadData();
@@ -104,7 +115,7 @@
 		<p>
 			{@html copy.sub}
 			<span class="stats" class:visible={!!frameCount}>
-				<strong>{frameCount}</strong>
+				<strong>{frameCount} frames</strong>
 				{copy.statsFrames}
 			</span>
 		</p>
