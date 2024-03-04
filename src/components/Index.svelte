@@ -1,5 +1,5 @@
 <script>
-	import { browser } from "$app/environment";
+	import { dev, browser } from "$app/environment";
 	import { onMount, getContext } from "svelte";
 	import { shuffle, format } from "d3";
 	import FAQ from "$components/FAQ.svelte";
@@ -66,6 +66,8 @@
 			return a.available === true ? -1 : 1;
 		});
 
+		if (dev) console.log({ withUser });
+
 		exhausted = withUser.every((a) => !a.available);
 
 		// TODO test this
@@ -83,7 +85,7 @@
 				chosen = choices1[0];
 			} else if (choices2.length) {
 				shuffle(choices2);
-				chosen = choices[0];
+				chosen = choices2[0];
 			} else {
 				chosen = choices3[0];
 			}

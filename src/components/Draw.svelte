@@ -61,7 +61,7 @@
 					const index = $userData.submissions.findIndex(
 						(d) => d.animationId === animationId
 					);
-					if (match) $userData.submissions[index] = newData;
+					if (index >= 0) $userData.submissions[index] = newData;
 					else $userData.submissions.push(newData);
 					// TODO test submission replacement
 					$userData = $userData;
