@@ -95,7 +95,6 @@
 	}
 
 	function setupForm() {
-		// TODO re-enable
 		reversed = Math.random() < 0.5;
 		if (reversed) formSteps.reverse();
 		formSteps = [...formSteps];
@@ -106,7 +105,6 @@
 	});
 </script>
 
-<!-- TODO add issue -->
 <div id="join" class:visible={showForm}>
 	<button aria-label="close" class="close" on:click={() => dispatch("close")}
 		>X</button

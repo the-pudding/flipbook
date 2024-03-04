@@ -61,7 +61,6 @@
 					await tick();
 					dispatch("done");
 				} else {
-					// TODO
 					error =
 						"Sorry! There was an issue submitting your drawing. Please refresh the page or try again later.";
 					console.log({ status, message });
