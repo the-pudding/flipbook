@@ -1,7 +1,7 @@
 <script>
 	import { browser } from "$app/environment";
 	import { onMount, getContext } from "svelte";
-	import { format } from "d3";
+	import { shuffle, format } from "d3";
 	import FAQ from "$components/FAQ.svelte";
 	import Draw from "$components/Draw.svelte";
 	import Join from "$components/Join.svelte";
@@ -49,22 +49,43 @@
 				o.frameDelta = a.frame_index - match.nextFrameIndex;
 				o.timeDelta = Math.floor((Date.now() - match.timestamp) / (60 * 1000));
 			}
+
+			o.available = !match || o.timeDelta > FRAME_WAIT_THRESHOLD;
+			o.priority = o.id <= data.realtime;
 			return o;
 		});
 
 		withUser.sort((a, b) => {
-			if (a.timeDelta === undefined) return -1;
-			else if (b.timeDelta === undefined) return 1;
-			return b.timeDelta - a.timeDelta;
+			if (a.available === b.available) {
+				if (a.timeDelta === undefined) return -1;
+				else if (b.timeDelta === undefined) return 1;
+				else if (a.timeDelta === b.timeDelta) return a.id - b.id;
+				return b.timeDelta - a.timeDelta;
+			}
+			return a.available === true ? -1 : 1;
 		});
 
-		const chosen = withUser[0];
-
-		if (chosen.timeDelta !== undefined) {
-			exhausted = chosen.timeDelta < TIME_WAIT_THRESHOLD;
-		}
+		exhausted = withUser.every((a) => !a.available);
 
 		if (!exhausted) {
+			let chosen;
+			const choices1 = withUser.filter(
+				(a) => a.priority && a.available && a.timeDelta === undefined
+			);
+			const choices2 = withUser.filter(
+				(a) => a.available && a.timeDelta === undefined
+			);
+			const choices3 = withUser.filter((a) => a.available);
+			if (choices1.length) {
+				shuffle(choices1);
+				chosen = choices1[0];
+			} else if (choices2.length) {
+				shuffle(choices2);
+				chosen = choices[0];
+			} else {
+				chosen = choices3[0];
+			}
+
 			prevShortcode = chosen.shortcode;
 			animationId = chosen.id;
 			prevFrameIndex = chosen.frame_index;

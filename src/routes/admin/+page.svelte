@@ -19,6 +19,7 @@
 	let path;
 	let created;
 
+	let publicData;
 	let updated;
 
 	async function loadDrawing({ id, shortcode }) {
@@ -67,9 +68,9 @@
 	async function update() {
 		const url = "https://pudding.cool/projects/flipbook-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
-		const data = await response.json();
+		publicData = await response.json();
 
-		updated = new Date(data.updated).toLocaleString();
+		updated = new Date(publicData.updated).toLocaleString();
 
 		setTimeout(update, 15000);
 	}
@@ -166,6 +167,13 @@
 			<path d={animation.drawing} />
 		</svg>
 	{/each}
+
+	<h2>Public Data</h2>
+	<pre>
+		<code>
+{JSON.stringify(publicData, null, 2)}
+	</code>
+	</pre>
 
 	<h2>New Animation</h2>
 	{#if created}
