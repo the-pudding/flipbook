@@ -96,7 +96,7 @@
 		<p>
 			Instructions: {@html copy.draw.task}
 			<br />
-			<small><em>Note: {copy.draw.note}</em></small>
+			<small><em>{copy.draw.note}</em></small>
 		</p>
 		<Canvas
 			bind:this={canvas}
