@@ -1,6 +1,5 @@
 <script>
 	import { onMount } from "svelte";
-	import { copy } from "svelte-copy";
 	import { fade } from "svelte/transition";
 	import { createClient } from "@supabase/supabase-js";
 	import dataS3 from "data-s3";
@@ -59,10 +58,6 @@
 		} catch (err) {
 			console.log(err);
 		}
-	}
-
-	function onCopy() {
-		alert("copied");
 	}
 
 	async function update() {
@@ -184,10 +179,13 @@
 		<p>Animation Created!</p>
 	{:else}
 		<Canvas bind:path></Canvas>
-		<p>
-			<button use:copy={path || ""} on:svelte-copy={onCopy}>Copy SVG</button>
-		</p>
 	{/if}
+	<details>
+		<summary>Path Code</summary>
+		<code>
+			{path}
+		</code>
+	</details>
 </section>
 
 <style>
