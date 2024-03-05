@@ -192,8 +192,14 @@
 {/if}
 
 {#if $showJoin}
-	<Join {reversed} on:close={() => ($showJoin = false)}></Join>
+	<Join
+		{reversed}
+		noCredit={$showJoin?.noCredit}
+		on:close={() => ($showJoin = false)}
+	></Join>
 {/if}
+
+<section class="hr"></section>
 
 <footer>
 	<section>
@@ -234,6 +240,6 @@
 	}
 
 	footer {
-		margin: 64px auto;
+		margin: 32px auto;
 	}
 </style>

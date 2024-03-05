@@ -5,6 +5,7 @@
 	const dispatch = createEventDispatcher();
 
 	export let value;
+	export let noCredit;
 
 	let name;
 	let handle;
@@ -31,34 +32,36 @@
 	}
 </script>
 
-<fieldset>
-	<div class="credit">
-		<p>{@html copy.join.credit}</p>
-		<div>
-			<label for="name">Name <small>(optional)</small></label>
-			<input
-				type="text"
-				id="name"
-				name="name"
-				maxlength="30"
-				placeholder="your name"
-				bind:value={name}
-			/>
-		</div>
+{#if !noCredit}
+	<fieldset>
+		<div class="credit">
+			<p>{@html copy.join.credit}</p>
+			<div>
+				<label for="name">Name <small>(optional)</small></label>
+				<input
+					type="text"
+					id="name"
+					name="name"
+					maxlength="30"
+					placeholder="your name"
+					bind:value={name}
+				/>
+			</div>
 
-		<div>
-			<label for="handle">Social Handle URL <small>(optional)</small></label>
-			<input
-				type="text"
-				id="handle"
-				name="handle"
-				maxlength="60"
-				placeholder="https://www.tiktok.com/@the_pudding"
-				bind:value={handle}
-			/>
+			<div>
+				<label for="handle">Social Handle URL <small>(optional)</small></label>
+				<input
+					type="text"
+					id="handle"
+					name="handle"
+					maxlength="60"
+					placeholder="https://www.tiktok.com/@the_pudding"
+					bind:value={handle}
+				/>
+			</div>
 		</div>
-	</div>
-</fieldset>
+	</fieldset>
+{/if}
 
 <fieldset>
 	<div class="notify">

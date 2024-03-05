@@ -190,11 +190,7 @@
 
 <style>
 	h1 {
-		font-size: 48px;
-	}
-
-	h2 {
-		font-size: 32px;
+		margin-top: 32px;
 	}
 
 	section {

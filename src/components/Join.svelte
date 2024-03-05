@@ -9,6 +9,7 @@
 	const copy = getContext("copy");
 
 	export let reversed;
+	export let noCredit;
 
 	let isHuman;
 	let email;
@@ -116,6 +117,7 @@
 				<div class="steps">
 					<svelte:component
 						this={formSteps[step]}
+						{noCredit}
 						on:update={onUpdate}
 						value={sending ? "Submitting..." : step === 0 ? "Next" : "Submit"}
 					/>
@@ -145,8 +147,6 @@
 
 	.close {
 		position: absolute;
-		width: 2em;
-		aspect-ratio: 1;
 		top: 16px;
 		right: 16px;
 		z-index: 1;

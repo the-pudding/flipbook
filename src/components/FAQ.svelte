@@ -4,7 +4,7 @@
 
 	function onSignup() {
 		$showFaq = false;
-		$showJoin = true;
+		$showJoin = { noCredit: true };
 	}
 </script>
 
@@ -15,7 +15,7 @@
 			{#each copy.faq as { q, a }}
 				<li>
 					<h3><strong>{q}</strong></h3>
-					<p><small>{@html a}</small></p>
+					<p>{@html a}</p>
 				</li>
 			{/each}
 			<li>
@@ -31,14 +31,26 @@
 		margin: 0;
 		display: inline-block;
 	}
+	h3 {
+		margin-bottom: 0;
+	}
 	ul,
 	li {
 		padding: 0;
 		list-style-type: none;
 	}
 
+	li {
+		margin-bottom: 32px;
+	}
+
 	details {
 		cursor: pointer;
-		margin-bottom: 16px;
+		margin-bottom: 32px;
+	}
+
+	p {
+		font-size: var(--16px);
+		margin-top: 8px;
 	}
 </style>

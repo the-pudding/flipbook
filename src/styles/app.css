@@ -28,6 +28,7 @@
 	--color-bg: var(--color-off-white); */
 
 	--color-primary: var(--color-gray-800);
+	--color-primary-hover: var(--color-black);
 	--color-secondary: var(--color-light-orange);
 	--color-secondary-aa: var(--color-light-orange-aa);
 	--color-bg: var(--color-gray-50);
@@ -40,7 +41,7 @@
 	--color-border: var(--color-primary);
 	--color-button-bg: var(--color-primary);
 	--color-button-fg: var(--color-bg);
-	--color-button-hover: var(--color-primary);
+	--color-button-hover: var(--color-primary-hover);
 	--color-input-bg: var(--color-bg);
 	--color-input-fg: var(--color-fg);
 	--color-placeholder: var(--color-primary);
@@ -60,6 +61,7 @@
 @media screen and (prefers-color-scheme:dark) {
 	:root {
 		--color-primary: var(--color-gray-300);
+		--color-primary-hover: var(--color-white);
 		--color-secondary: var(--color-light-orange);
 		--color-secondary-aa: var(--color-light-orange-aa);
 		--color-bg: var(--color-gray-900);
