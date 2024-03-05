@@ -151,9 +151,4 @@
 		right: 16px;
 		z-index: 1;
 	}
-
-	.issue {
-		color: var(--color-secondary);
-		margin: 32px auto;
-	}
 </style>
