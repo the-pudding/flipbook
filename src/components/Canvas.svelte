@@ -209,9 +209,6 @@
 			<p in:fade class="message"><small>{message}</small></p>
 		{/if}
 	</div>
-	<!-- <div class="ink">
-		<span class="bar" style="--ink: {inkRem * 100}%;" />
-	</div> -->
 </div>
 
 <slot name="ui" />
@@ -357,28 +354,5 @@
 		opacity: 0.75;
 		pointer-events: none;
 		font-size: 16px;
-	}
-
-	.ink {
-		margin-top: 4px;
-		/* background: var(--color-secondary); */
-		height: 4px;
-		position: relative;
-	}
-
-	.ink .bar {
-		display: block;
-		background: var(--color-fg);
-		height: 4px;
-		width: var(--ink);
-	}
-
-	.ink .message {
-		margin: 0;
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		transform: translateY(calc(100% + 8px));
-		color: var(--color-secondary);
 	}
 </style>
