@@ -1,10 +1,11 @@
 <script>
-	import { showFaq, showJoin } from "$stores/misc.js";
+	import { showFaq, showJoin, noCredit } from "$stores/misc.js";
 	import copy from "$data/copy.json";
 
 	function onSignup() {
 		$showFaq = false;
-		$showJoin = { noCredit: true };
+		$noCredit = true;
+		$showJoin = true;
 	}
 </script>
 

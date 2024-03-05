@@ -38,19 +38,17 @@
 			const hasInfo = phone || email || name || handle;
 
 			const localHuman = $userData.human;
+			sending = true;
 
 			if (step === 0) {
-				if (reversed && path && !$userData?.human) {
-					sending = true;
+				if (reversed && path && !localHuman) {
 					await server("human", {
 						drawing: path,
 						userId: $userData?.id
 					});
 					$userData.human = true;
 					$userData = $userData;
-					sending = false;
 				} else if (!reversed && hasInfo) {
-					sending = true;
 					await server("notify", {
 						phone,
 						email,
@@ -58,23 +56,19 @@
 						handle,
 						userId: $userData?.id
 					});
-					sending = false;
 				}
 				step += 1;
 			} else {
 				if (reversed && hasInfo) {
-					sending = true;
-					await submit("notify", {
+					await server("notify", {
 						phone,
 						email,
 						name,
 						handle,
 						userId: $userData?.id
 					});
-					sending = false;
-				} else if (!reversed && path && $userData?.human) {
-					sending = true;
-					await submit("human", {
+				} else if (!reversed && path && !localHuman) {
+					await server("human", {
 						drawing: path,
 						phone,
 						email,
@@ -85,13 +79,12 @@
 
 					$userData.human = true;
 					$userData = $userData;
-
-					sending = false;
 				}
-				dispatch("close");
 			}
 		} catch (err) {
 			console.log(err);
+		} finally {
+			sending = false;
 			dispatch("close");
 		}
 	}

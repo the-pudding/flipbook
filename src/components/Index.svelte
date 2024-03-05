@@ -10,7 +10,7 @@
 	import storage from "$utils/localStorage.js";
 	import getParam from "$utils/getParam.js";
 	import generateId from "$utils/generateId.js";
-	import { userData, showFaq, showJoin } from "$stores/misc.js";
+	import { userData, showFaq, showJoin, noCredit } from "$stores/misc.js";
 
 	const copy = getContext("copy");
 
@@ -25,7 +25,6 @@
 	let reversed;
 
 	async function loadStorage() {
-		// if (dev) storage.remove("pudding_flipbook_data");
 		const { isPrivate } = await detectIncognito();
 		$userData = storage.get("pudding_flipbook_data") || {};
 
@@ -167,16 +166,26 @@
 	<section>
 		<p>{@html copy.exhausted}</p>
 		{#if !$userData?.human}
-			<p>{@html copy.signup}</p>
-			<p><button on:click={onSignup}>Add me</button></p>
+			{#if $noCredit}
+				<p>{@html copy.signupNoCredit}</p>
+				<p><button on:click={onSignup}>Notify me</button></p>
+			{:else}
+				<p>{@html copy.signup}</p>
+				<p><button on:click={onSignup}>Add me</button></p>
+			{/if}
 		{/if}
 	</section>
 {:else if submitted}
 	<section class="submitted">
 		<p><strong>{@html copy.submitted}</strong></p>
 		{#if !$userData?.human}
-			<p>{@html copy.signup}</p>
-			<p><button on:click={onSignup}>Add me</button></p>
+			{#if $noCredit}
+				<p>{@html copy.signupNoCredit}</p>
+				<p><button on:click={onSignup}>Notify me</button></p>
+			{:else}
+				<p>{@html copy.signup}</p>
+				<p><button on:click={onSignup}>Add me</button></p>
+			{/if}
 		{/if}
 		{#if !exhausted}
 			<p>{@html copy.other}</p>
@@ -192,10 +201,7 @@
 {/if}
 
 {#if $showJoin}
-	<Join
-		{reversed}
-		noCredit={$showJoin?.noCredit}
-		on:close={() => ($showJoin = false)}
+	<Join {reversed} noCredit={$noCredit} on:close={() => ($showJoin = false)}
 	></Join>
 {/if}
 
