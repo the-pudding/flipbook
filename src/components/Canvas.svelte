@@ -10,8 +10,9 @@
 	export let paths;
 	export let disabled;
 	export let showFrameIndex;
+	export let inkRem = 1;
 
-	const W = 300;
+	const W = 320;
 	const H = W;
 	const MAX_LINE_LENGTH = W * 5;
 	const FPS = 12;
@@ -20,7 +21,6 @@
 
 	const shouldValidate = !!preset;
 
-	let inkRem = 1;
 	let noInk = false;
 	let drawing = false;
 	let frameIndex = 0;
@@ -209,9 +209,9 @@
 			<p in:fade class="message"><small>{message}</small></p>
 		{/if}
 	</div>
-	<div class="ink">
+	<!-- <div class="ink">
 		<span class="bar" style="--ink: {inkRem * 100}%;" />
-	</div>
+	</div> -->
 </div>
 
 <slot name="ui" />
@@ -247,7 +247,49 @@
 		height: var(--canvas-size);
 		touch-action: none;
 		user-select: none;
-		background: var(--color-fg);
+		background-image: repeating-linear-gradient(
+				0deg,
+				var(--color-fg),
+				var(--color-fg) 6px,
+				transparent 6px,
+				transparent 12px,
+				var(--color-fg) 12px
+			),
+			repeating-linear-gradient(
+				90deg,
+				var(--color-fg),
+				var(--color-fg) 6px,
+				transparent 6px,
+				transparent 12px,
+				var(--color-fg) 12px
+			),
+			repeating-linear-gradient(
+				180deg,
+				var(--color-fg),
+				var(--color-fg) 6px,
+				transparent 6px,
+				transparent 12px,
+				var(--color-fg) 12px
+			),
+			repeating-linear-gradient(
+				270deg,
+				var(--color-fg),
+				var(--color-fg) 6px,
+				transparent 6px,
+				transparent 12px,
+				var(--color-fg) 12px
+			);
+		background-size:
+			2px 100%,
+			100% 2px,
+			2px 100%,
+			100% 2px;
+		background-position:
+			0 0,
+			0 0,
+			100% 0,
+			0 100%;
+		background-repeat: no-repeat;
 	}
 
 	.c.disabled {
@@ -273,14 +315,15 @@
 
 	svg path {
 		fill: none;
-		stroke: var(--color-bg);
+		stroke: var(--color-fg);
 		stroke-width: 4px;
 		stroke-linecap: round;
 		stroke-linejoin: round;
 	}
 
 	path.prev {
-		stroke-opacity: 0.33;
+		stroke: var(--color-secondary-aa);
+		/* stroke: #8f8f8f; */
 	}
 
 	p.message {
@@ -291,12 +334,12 @@
 		transform: translate(-50%, -50%);
 		right: 0;
 		margin: 0;
-		padding: 8px;
+		padding: 8px 0 4px 0;
 		z-index: 1;
 		text-align: center;
 		font-weight: var(--fw-bold);
-		background: var(--color-bg);
-		color: var(--color-fg);
+		background: var(--color-fg);
+		color: var(--color-bg);
 		opacity: 0.9;
 		pointer-events: none;
 		font-size: 1em;
@@ -317,17 +360,17 @@
 	}
 
 	.ink {
-		background: var(--color-secondary);
-		height: 12px;
+		margin-top: 4px;
+		/* background: var(--color-secondary); */
+		height: 4px;
 		position: relative;
 	}
 
 	.ink .bar {
 		display: block;
-		background: var(--color-bg);
+		background: var(--color-fg);
 		height: 4px;
-		transform: translate(4px, 4px);
-		width: calc(var(--ink) - 8px);
+		width: var(--ink);
 	}
 
 	.ink .message {

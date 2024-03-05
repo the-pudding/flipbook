@@ -29,12 +29,12 @@
     "yellow": "#e5e338",
     "off-white": "#fffaf5",
     "off-white-darker": "#ffc081",
-    "warm-red": "#d73700",
-    "warm-red-darker": "#a32901",
-    "off-black": "#501400"
+    "light-orange": "#f5b1a3",
+    "light-orange-aa": "#EB6547"
   },
   "": {
     "12px": "0.75rem",
+    "13px": "0.8125rem",
     "14px": "0.875rem",
     "16px": "1rem",
     "18px": "1.125rem",

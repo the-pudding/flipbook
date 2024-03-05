@@ -24,6 +24,7 @@
 	let error;
 	let canvas;
 	let disabled;
+	let inkRem;
 
 	function onSubmit() {
 		disabled = true;
@@ -108,14 +109,19 @@
 	{#if error}
 		<p class="error"><strong>{error}</strong></p>
 	{:else if preset}
-		<p>
+		<p class="instructions">
 			Instructions: {@html copy.draw.task}
 			<br />
-			<small><em>{copy.draw.note}</em></small>
+			<small
+				>{copy.draw.note}
+				<span class="ink" style="--ink: {inkRem * 100}%;">{copy.draw.ink}</span
+				></small
+			>
 		</p>
 		<Canvas
 			bind:this={canvas}
 			bind:path
+			bind:inkRem
 			{preset}
 			showFrameIndex={false}
 			{disabled}
@@ -155,5 +161,23 @@
 
 	.spacer {
 		height: 500px;
+	}
+
+	small {
+		display: inline-block;
+		margin-top: 16px;
+	}
+
+	span.ink {
+		display: inline-block;
+		/* use background-image to create a bottom border that is a percentvalue */
+		background-image: linear-gradient(var(--color-fg), var(--color-fg));
+		background-size: var(--ink) 4px;
+		background-position: 0 100%;
+		background-repeat: no-repeat;
+	}
+
+	p.instructions {
+		margin-bottom: 0px;
 	}
 </style>

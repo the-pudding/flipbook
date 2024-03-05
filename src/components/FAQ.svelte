@@ -8,59 +8,37 @@
 	}
 </script>
 
-<div id="faq" class:visible={$showFaq}>
-	<h2>FAQ</h2>
-	<ul>
-		{#each copy.faq as { q, a }}
+<details>
+	<summary><h2>FAQ</h2></summary>
+	<div class="contents">
+		<ul>
+			{#each copy.faq as { q, a }}
+				<li>
+					<h3><strong>{q}</strong></h3>
+					<p><small>{@html a}</small></p>
+				</li>
+			{/each}
 			<li>
-				<h3><strong>{q}</strong></h3>
-				<p>{@html a}</p>
+				<h3><strong>How can I watch the final animation?</strong></h3>
+				<p><button on:click={onSignup}>Sign up</button> to get notified.</p>
 			</li>
-		{/each}
-		<li>
-			<h3><strong>How can I watch the final animation?</strong></h3>
-			<p><button on:click={onSignup}>Sign up</button> to get notified.</p>
-		</li>
-	</ul>
-	<button class="close" aria-label="close" on:click={() => ($showFaq = false)}
-		>X</button
-	>
-</div>
+		</ul>
+	</div>
+</details>
 
 <style>
-	#faq {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100vh;
-		overflow: auto;
-		padding: 16px;
-		background-color: var(--color-bg);
-		color: var(--color-fg);
-		z-index: var(--z-overlay);
-		display: none;
-		border: 2vw solid var(--color-fg);
-		padding-right: 4em;
+	h2 {
+		margin: 0;
+		display: inline-block;
 	}
-
-	ul {
-		margin-bottom: 15vh;
-	}
-
+	ul,
 	li {
-		margin-bottom: 1em;
+		padding: 0;
+		list-style-type: none;
 	}
 
-	#faq.visible {
-		display: block;
-	}
-
-	.close {
-		position: absolute;
-		width: 2em;
-		top: 16px;
-		right: 16px;
-		z-index: 1;
+	details {
+		cursor: pointer;
+		margin-bottom: 16px;
 	}
 </style>

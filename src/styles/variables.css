@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Tue, 20 Feb 2024 19:03:16 GMT
+ * Generated on Tue, 05 Mar 2024 15:19:13 GMT
  */
 
 :root {
@@ -31,10 +31,10 @@
   --color-yellow: #e5e338;
   --color-off-white: #fffaf5;
   --color-off-white-darker: #ffc081;
-  --color-warm-red: #d73700;
-  --color-warm-red-darker: #a32901;
-  --color-off-black: #501400;
+  --color-light-orange: #f5b1a3;
+  --color-light-orange-aa: #eb6547;
   --12px: 0.75rem;
+  --13px: 0.8125rem;
   --14px: 0.875rem;
   --16px: 1rem;
   --18px: 1.125rem;

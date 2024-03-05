@@ -8,11 +8,11 @@
 
 {#if showHeader}
 	<header>
-		<div class="wordmark">
+		<!-- <div class="wordmark">
 			<a href="https://pudding.cool" aria-label="The Pudding" target="_self"
 				>{@html wordmark}</a
 			>
-		</div>
+		</div> -->
 		{#if showFAQ}
 			<div class="faq">
 				<button on:click={() => ($showFaq = true)}>FAQ</button>

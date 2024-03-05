@@ -224,8 +224,8 @@
 	}
 
 	svg {
-		width: 300px;
-		height: 300px;
+		width: 320px;
+		height: 320px;
 		background: #fff;
 	}
 

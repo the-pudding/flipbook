@@ -134,7 +134,6 @@
 		z-index: var(--z-overlay);
 		width: 100%;
 		height: 100vh;
-		border: 2vw solid var(--color-fg);
 		background: var(--color-bg);
 		padding-top: 16px;
 	}

@@ -107,14 +107,14 @@
 	}
 
 	label {
-		margin-bottom: 8px;
+		margin-bottom: 4px;
 	}
 
 	fieldset div {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		margin-bottom: 32px;
+		margin-bottom: 16px;
 	}
 
 	.info p {
@@ -126,8 +126,7 @@
 	}
 
 	input {
-		width: 50vw;
-		max-width: 640px;
+		width: 100%;
 	}
 
 	input::placeholder {

@@ -27,7 +27,7 @@
 
 	async function share() {
 		rendering = true;
-		gif = await renderGif({ frames: paths, width: 300, height: 300 });
+		gif = await renderGif({ frames: paths, width: 320, height: 320 });
 		rendering = false;
 	}
 </script>

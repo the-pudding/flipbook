@@ -60,14 +60,11 @@
 		"off-white-darker": {
 			"value": "#ffc081"
 		},
-		"warm-red": {
-			"value": "#d73700"
+		"light-orange": {
+			"value": "#f5b1a3"
 		},
-		"warm-red-darker": {
-			"value": "#a32901"
-		},
-		"off-black": {
-			"value": "#501400"
+		"light-orange-aa": {
+			"value": "#EB6547"
 		}
 	}
 }

@@ -1,11 +1,12 @@
 @import "variables.css";
 @import "normalize.css";
 @import "reset.css";
+@import "font.css";
 
 /* colors defined in variables.css */
 :root {
 	/* font */
-	--sans: -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+	--sans:"Grandstander", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
 	--serif: "Atkinson", Iowan Old Style, Times New Roman, Times, serif;
 	--mono: Menlo, Consolas, Monaco, monospace;
 
@@ -26,8 +27,9 @@
 	--color-secondary: var(--color-warm-red-darker);
 	--color-bg: var(--color-off-white); */
 
-	--color-primary: var(--color-gray-700);
-	--color-secondary: var(--color-gray-1000);
+	--color-primary: var(--color-gray-800);
+	--color-secondary: var(--color-light-orange);
+	--color-secondary-aa: var(--color-light-orange-aa);
 	--color-bg: var(--color-gray-50);
 	--color-selection: var(--color-gray-200);
 	
@@ -38,18 +40,18 @@
 	--color-border: var(--color-primary);
 	--color-button-bg: var(--color-primary);
 	--color-button-fg: var(--color-bg);
-	--color-button-hover: var(--color-secondary);
+	--color-button-hover: var(--color-primary);
 	--color-input-bg: var(--color-bg);
 	--color-input-fg: var(--color-fg);
 	--color-placeholder: var(--color-primary);
 	--color-text-outline: var(--color-secondary);
 
-	--fw-normal: 400;
+	--fw-normal: 300;
 	--fw-bold: 800;
 
 	/* "1" second duration */
 	--1s: 1ms;
-	--canvas-size: 300px;
+	--canvas-size: 320px;
 }
 
 /* dark theme */
@@ -57,8 +59,9 @@
 
 @media screen and (prefers-color-scheme:dark) {
 	:root {
-		--color-primary: var(--color-gray-100);
-		--color-secondary: var(--color-gray-300);
+		--color-primary: var(--color-gray-300);
+		--color-secondary: var(--color-light-orange);
+		--color-secondary-aa: var(--color-light-orange-aa);
 		--color-bg: var(--color-gray-900);
 		--color-selection: var(--color-gray-700);
 	}
@@ -77,51 +80,56 @@
 	--color-selection: var(--color-gray-700);
 }
 
-h1, h2, h3, h4, h5, h6, p, li, button, a, input, textarea, select, label, form, details {
+h1, h2, h3, h4, h5, h6, p, li, button, input, textarea, select, label, form, details {
 	font-size: 1em;
-	line-height: 1.25;
+	line-height: 1.325;
 	font-weight: var(--fw-normal);
 }
 
 h1 {
 	line-height: 1;
-	font-size: clamp(32px, 10vmin, 128px);
-	font-weight: 800;
+	/* font-size: clamp(32px, 10vmin, 128px); */
+	font-size: var(--56px);
+	font-weight: var(--fw-bold);
 	margin: 0;
 }
 
 h2 {
 	line-height: 1;
-	font-size: clamp(24px, 6vmin, 64px);
-	font-weight: 800;
+	/* font-size: clamp(24px, 6vmin, 64px); */
+	font-size: var(--28px);
+	font-weight: var(--fw-bold);
 	margin-bottom: 32px;
 }
 
-p, li, button, a, input, textarea, select, label, form, details {
-	font-size: clamp(16px, 4vmin, 36px);
+p, li, button, input, textarea, select, label, form, details {
+	/* font-size: clamp(16px, 4vmin, 36px); */
+	font-size: var(--20px);
 }
 
 small {
-	font-size: clamp(14px, 2vmin, 20px);
-	font-weight: var(--fw-bold);
+	/* font-size: clamp(14px, 2vmin, 20px); */
+	font-size: var(--13px);
 	vertical-align: middle;
 }
 
 a {
-	border: none;
-	border-bottom: 0.1em dashed currentColor;
+	/* border: none; */
+	border-bottom: 2px solid currentColor;
 }
 
 a:hover {
-	border-bottom: 0.1em dashed var(--color-secondary);
-	color: var(--color-secondary);
+	/* TODO */
+	/* border-bottom: 2px solid var(--color-secondary);
+	color: var(--color-secondary); */
 }
 
 section {
+	--section-padding: 16px;
 	width: 100%;
-	padding: 0 16px;
+	padding: 0 var(--section-padding);
 	margin: 0 auto;
-	
+	max-width: calc(var(--canvas-size) + calc(var(--section-padding) * 2));
 }
 
 strong {
@@ -129,8 +137,12 @@ font-weight: var(--fw-bold);
 }
 
 mark {
-	background: var(--color-fg);
-	color: var(--color-bg);
+	padding: 6px 0 2px 0;
+	background: var(--color-secondary);
+	margin: 0 8px;
+	box-shadow: -8px 0px 0px var(--color-secondary), 8px 0px 0px var(--color-secondary);
+  box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
 }
 
 ul {
@@ -141,12 +153,12 @@ ul {
 button, .btn, [type="button"], [type="submit"], [role="button"], [type="submit"] {
 	line-height: 1;
 	font-weight: var(--fw-bold);
-	padding: 16px;
+	padding: 16px 16px 12px 16px;
 	text-align: center;
 }
 
 button.small, .btn.small {
-	font-size: clamp(14px, 2vmin, 20px);
+	/* font-size: clamp(14px, 2vmin, 20px); */
 	margin: 0;
 }
 
@@ -186,15 +198,65 @@ input[type="checkbox"] {
 	accent-color: var(--color-fg);
 }
 
+section.hr {
+	height: 2px;
+	width: var(--canvas-size);
+	margin: 32px auto;
+
+	background-image: repeating-linear-gradient(
+				0deg,
+				transparent,
+				transparent 6px,
+				transparent 6px,
+				transparent 12px,
+				transparent 12px
+			),
+			repeating-linear-gradient(
+				90deg,
+				transparent,
+				transparent 6px,
+				transparent 6px,
+				transparent 12px,
+				transparent 12px
+			),
+			repeating-linear-gradient(
+				180deg,
+				transparent,
+				transparent 6px,
+				transparent 6px,
+				transparent 12px,
+				transparent 12px
+			),
+			repeating-linear-gradient(
+				270deg,
+				var(--color-fg),
+				var(--color-fg) 6px,
+				transparent 6px,
+				transparent 12px,
+				var(--color-fg) 12px
+			);
+		background-size:
+			2px 100%,
+			100% 2px,
+			2px 100%,
+			100% 2px;
+		background-position:
+			0 0,
+			0 0,
+			100% 0,
+			0 100%;
+		background-repeat: no-repeat;
+}
+
 
 
 @media (min-width: 800px) {
-	section {
+	/* section {
 		padding: 0 32px;
 		min-width: 640px;
 		width: 70vmin;
 		max-width: 960px;
-	}
+	} */
 	
 	ul {
 		padding-left: 32px;

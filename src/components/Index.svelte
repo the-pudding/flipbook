@@ -25,6 +25,7 @@
 	let reversed;
 
 	async function loadStorage() {
+		// if (dev) storage.remove("pudding_flipbook_data");
 		const { isPrivate } = await detectIncognito();
 		$userData = storage.get("pudding_flipbook_data") || {};
 
@@ -135,21 +136,30 @@
 </script>
 
 <section id="intro">
+	<p>
+		<small
+			><a href="https://pudding.cool" target="_blank" rel="noreferer"
+				>The Pudding</a
+			> presents</small
+		>
+	</p>
+
 	<h1>
-		{@html copy.title}
+		{@html copy.hed}
 	</h1>
 
 	{#if !submitted}
 		<p>
 			{@html copy.sub}
-			<span class="stats" class:visible={!!frameCount}>
-				<strong>{frameCount} frames</strong>
-				{copy.statsFrames}
-				{#if !exhausted}{copy.your}{/if}
-			</span>
+		</p>
+		<p class="stats" class:visible={!!frameCount}>
+			<strong>{frameCount} frames</strong>
+			{copy.statsFrames}
 		</p>
 	{/if}
 </section>
+
+<section class="hr"></section>
 
 {#if prevShortcode}
 	<Draw {animationId} {prevShortcode} {prevFrameIndex} on:done={onDone}></Draw>
@@ -185,9 +195,9 @@
 	<Join {reversed} on:close={() => ($showJoin = false)}></Join>
 {/if}
 
-<FAQ />
 <footer>
 	<section>
+		<FAQ />
 		{#if !submitted}
 			<p>
 				<ShareButton
@@ -204,8 +214,7 @@
 
 <style>
 	#intro p {
-		margin-top: 64px;
-		margin-bottom: 64px;
+		margin: 32px auto;
 	}
 
 	.stats {
@@ -221,7 +230,7 @@
 	}
 
 	.submitted {
-		margin-top: 64px;
+		margin-top: 32px;
 	}
 
 	footer {
