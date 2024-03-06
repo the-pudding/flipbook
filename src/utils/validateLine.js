@@ -1,59 +1,58 @@
-import {
-	shapeSimilarity,
-	frechetDistance,
-	rebalanceCurve
-} from "curve-matcher";
+import { dev } from "$app/environment";
+import { rebalanceCurve } from "curve-matcher";
 import lineLength from "$utils/lineLength.js";
+import overlapPercent from "$utils/overlapPercent.js";
 
-export default function validateLine({ cur, prev, diagonal }) {
+export default function validateLine({ cur, prev, canvasSize, strokeWidth }) {
 	const numPoints = Math.max(prev.length, cur.length);
 
 	const lineCur = rebalanceCurve(cur, { numPoints });
-	const linePrevF = rebalanceCurve(prev, { numPoints });
-	const linePrevR = [...linePrevF].reverse();
-
-	const opts = { estimationPoints: 200, rotations: 30 };
-	const simF = shapeSimilarity(linePrevF, lineCur, opts);
-	const simR = shapeSimilarity(linePrevR, lineCur, opts);
-
+	const linePrev = rebalanceCurve(prev, { numPoints });
 	const lineLengthCur = lineLength(lineCur, true);
-	const lineLengthPrev = lineLength(linePrevF, true);
+	const lineLengthPrev = lineLength(linePrev, true);
 	const lineLengthMax = Math.max(lineLengthCur, lineLengthPrev);
-	const ll = Math.abs(lineLengthCur / lineLengthPrev - 1);
 
-	const frechetF = frechetDistance(linePrevF, lineCur);
-	const frechetR = frechetDistance(linePrevR, lineCur);
-	const diagF = frechetF / diagonal;
-	const diagR = frechetR / diagonal;
-	const lenF = frechetF / lineLengthMax;
-	const lenR = frechetR / lineLengthMax;
+	let lengthRatio = 0;
+	if (lineLengthCur < lineLengthPrev)
+		lengthRatio = lineLengthCur / lineLengthPrev;
+	else lengthRatio = lineLengthPrev / lineLengthCur;
 
-	let targetLL = 0.075;
-	if (lineLengthPrev < 100) targetLL = 0.2;
-	if (lineLengthPrev < 200) targetLL = 0.15;
-	if (lineLengthPrev < 300) targetLL = 0.1;
+	let targetRatio = 0.5;
+	let targetRatioOverlap = 0.5;
+	let targetRatioExcess = 0.5;
+	if (lineLengthMax > 50) targetRatio = 0.6;
+	if (lineLengthMax > 100) targetRatio = 0.7;
+	if (lineLengthMax > 200) {
+		targetRatio = 0.8;
+		targetRatioOverlap = 0.6;
+		targetRatioExcess = 0.4;
+	}
+	if (lineLengthMax > 300) {
+		targetRatio = 0.9;
+		targetRatioOverlap = 0.7;
+		targetRatioExcess = 0.3;
+	}
 
-	const passF = ll < targetLL && simF > 0.9 && (diagF < 0.2 || lenF < 0.2);
-	const passR = ll < targetLL && simR > 0.9 && (diagR < 0.2 || lenR < 0.2);
-	const valid = passF || passR;
+	if (dev)
+		console.log({
+			lengthRatio,
+			targetRatio,
+			targetRatioOverlap,
+			targetRatioExcess
+		});
+	const overlap = overlapPercent({
+		prev,
+		cur,
+		strokeWidth,
+		canvasSize,
+		targetRatioOverlap,
+		targetRatioExcess
+	});
 
-	return {
-		valid,
-		debug1: {
-			ll_target: targetLL,
-			ll: +ll.toFixed(2),
-			sim: +simF.toFixed(2),
-			diag: +diagF.toFixed(2),
-			len: +lenF.toFixed(2),
-			pass: passF
-		},
-		debug2: {
-			ll_target: targetLL,
-			ll: +ll.toFixed(2),
-			sim: +simR.toFixed(2),
-			diag: +diagR.toFixed(2),
-			len: +lenR.toFixed(2),
-			pass: passR
-		}
-	};
+	const passL = lengthRatio >= targetRatio;
+	const passO = overlap;
+
+	const valid = passL && passO;
+
+	return valid;
 }

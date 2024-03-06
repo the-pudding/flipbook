@@ -12,6 +12,7 @@
 	export let showFrameIndex;
 	export let inkRem = 1;
 
+	const STROKE_W = 4;
 	const W = 320;
 	const H = W;
 	const MAX_LINE_LENGTH = W * 5;
@@ -28,11 +29,7 @@
 	let pathPrevious = "";
 	let pathPreview = "";
 	let valid = true;
-	let debug1 = {};
-	let debug2 = {};
 	let previewing;
-
-	let pathDebug = "";
 
 	export const preview = togglePreview;
 	export const addFrame = add;
@@ -95,11 +92,13 @@
 			}));
 			const diagonal = Math.sqrt(W ** 2 + H ** 2);
 
-			const response = validateLine({ cur, prev, diagonal });
-
-			valid = response.valid;
-			debug1 = response.debug1;
-			debug2 = response.debug2;
+			valid = validateLine({
+				cur,
+				prev,
+				diagonal,
+				canvasSize: W,
+				strokeWidth: STROKE_W
+			});
 
 			dispatch("validate", valid);
 		} else valid = true;
@@ -185,7 +184,7 @@
 	on:pointerleave={stopDrawing}
 	class:disabled
 >
-	<div class="canvas">
+	<div class="canvas" style="--stroke-width: {STROKE_W};">
 		<svg class="preview">
 			<g>
 				<path d={pathPreview} />
@@ -212,22 +211,6 @@
 </div>
 
 <slot name="ui" />
-
-<!-- 
-{#if debug}
-	<div class="debug">
-		<p style="font-family: var(--mono); font-size: 12px;">
-			target: ll &lt; ~0.1 && sim &gt; 0.9 &amp;&amp; (diag &lt; 0.2 || len &lt;
-			0.2)
-		</p>
-		<p style="font-family: var(--mono); font-size: 12px;">
-			debug1: {JSON.stringify(debug1)}
-		</p>
-		<p style="font-family: var(--mono); font-size: 12px;">
-			debug2: {JSON.stringify(debug2)}
-		</p>
-	</div>
-{/if} -->
 
 <style>
 	div {
@@ -313,7 +296,7 @@
 	svg path {
 		fill: none;
 		stroke: var(--color-fg);
-		stroke-width: 4px;
+		stroke-width: var(--stroke-width);
 		stroke-linecap: round;
 		stroke-linejoin: round;
 	}
