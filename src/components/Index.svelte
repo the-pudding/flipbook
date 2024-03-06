@@ -25,7 +25,9 @@
 	let reversed;
 
 	async function loadStorage() {
+		const reset = getParam("reset");
 		const { isPrivate } = await detectIncognito();
+		if (reset) storage.set("pudding_flipbook_data", {});
 		$userData = storage.get("pudding_flipbook_data") || {};
 
 		if (!$userData?.id) {

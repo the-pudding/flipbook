@@ -3,7 +3,6 @@
 	import Canvas from "$components/Canvas.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import server from "$utils/server.js";
-	import getParam from "$utils/getParam.js";
 	import generateId from "$utils/generateId.js";
 	import { userData } from "$stores/misc.js";
 
