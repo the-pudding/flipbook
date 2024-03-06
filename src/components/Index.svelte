@@ -102,8 +102,10 @@
 		console.log("updated:", new Date(data.updated).toLocaleString());
 	}
 
-	async function onDone() {
-		window.scrollTo(0, 0);
+	function onDone() {
+		const el = document.querySelector("#draw");
+		if (el) window.scrollTo(0, el.offsetTop + 36);
+
 		submitted = true;
 		prevShortcode = null;
 		animationId = null;
@@ -161,6 +163,7 @@
 </section>
 
 <section class="hr"></section>
+<div id="draw"></div>
 
 {#if prevShortcode}
 	<Draw {animationId} {prevShortcode} {prevFrameIndex} on:done={onDone}></Draw>

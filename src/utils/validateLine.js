@@ -21,16 +21,16 @@ export default function validateLine({ cur, prev, canvasSize, strokeWidth }) {
 	let targetRatioOverlap = 0.5;
 	let targetRatioExcess = 0.5;
 	if (lineLengthMax > 50) targetRatio = 0.6;
-	if (lineLengthMax > 100) targetRatio = 0.7;
-	if (lineLengthMax > 200) {
+	if (lineLengthMax > 150) targetRatio = 0.7;
+	if (lineLengthMax > 300) {
 		targetRatio = 0.8;
+		targetRatioOverlap = 0.55;
+		targetRatioExcess = 0.45;
+	}
+	if (lineLengthMax > 600) {
+		targetRatio = 0.9;
 		targetRatioOverlap = 0.6;
 		targetRatioExcess = 0.4;
-	}
-	if (lineLengthMax > 300) {
-		targetRatio = 0.9;
-		targetRatioOverlap = 0.7;
-		targetRatioExcess = 0.3;
 	}
 
 	if (dev)
