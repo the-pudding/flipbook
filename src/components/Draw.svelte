@@ -27,6 +27,7 @@
 
 	function onSubmit() {
 		disabled = true;
+		canvas.addMessage("submitting...");
 		canvas.addFrame();
 	}
 
@@ -37,8 +38,6 @@
 	async function onValidate({ detail }) {
 		try {
 			if (detail) {
-				// send to server
-
 				let response;
 				if ($userData.neato)
 					response = { status: 200, shortcode: "neato", message: "" };
@@ -85,6 +84,7 @@
 			console.log(err);
 		} finally {
 			disabled = false;
+			canvas.addMessage("");
 		}
 	}
 
