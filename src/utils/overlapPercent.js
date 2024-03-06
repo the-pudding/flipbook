@@ -92,5 +92,10 @@ export default function overlapPercent({
 			excess
 		});
 
+	// remove the canvas elements
+	canvasPrev.remove();
+	canvasCur.remove();
+	canvasPrevBig.remove();
+	canvasCurBig.remove();
 	return overlap > targetRatioOverlap && excess < targetRatioExcess;
 }
