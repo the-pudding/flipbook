@@ -8,7 +8,7 @@
 	export let noCredit;
 
 	let name;
-	let handle;
+	let platform;
 	let phone;
 	let email;
 	let invalid;
@@ -28,7 +28,7 @@
 	function onSubmit() {
 		invalid = email || phone ? invalidate() : false;
 
-		if (!invalid) dispatch("update", { phone, email, name, handle });
+		if (!invalid) dispatch("update", { phone, email, name, platform });
 	}
 </script>
 
@@ -36,27 +36,23 @@
 	<fieldset>
 		<div class="credit">
 			<p>{@html copy.join.credit}</p>
+			<label for="name">Name/Handle <small>(optional)</small></label>
+			<select bind:value={platform}>
+				<option value="name">Name</option>
+				<option value="tiktok">TikTok</option>
+				<option value="instagram">Instagram</option>
+				<option value="youtube">YouTube</option>
+				<option value="bluesky">Bluesky</option>
+				<option value="x">X</option>
+			</select>
 			<div>
-				<label for="name">Name <small>(optional)</small></label>
 				<input
 					type="text"
 					id="name"
 					name="name"
 					maxlength="30"
-					placeholder="your name"
+					placeholder="your name/handle"
 					bind:value={name}
-				/>
-			</div>
-
-			<div>
-				<label for="handle">Social Handle URL <small>(optional)</small></label>
-				<input
-					type="text"
-					id="handle"
-					name="handle"
-					maxlength="60"
-					placeholder="https://www.tiktok.com/@the_pudding"
-					bind:value={handle}
 				/>
 			</div>
 		</div>
@@ -138,5 +134,12 @@
 
 	.action {
 		margin-bottom: 64px;
+	}
+
+	select {
+		color: var(--color-fg);
+		margin-bottom: 16px;
+		padding: 8px;
+		background: transparent;
 	}
 </style>

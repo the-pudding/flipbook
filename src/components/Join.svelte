@@ -16,7 +16,7 @@
 	let phone;
 	let name;
 	let path;
-	let handle;
+	let platform;
 	let formSteps = [Notify, Human];
 	let step = 0;
 	let sending;
@@ -31,11 +31,11 @@
 			phone = detail?.phone || phone;
 			email = detail?.email || email;
 			name = detail?.name || name;
-			handle = detail?.handle || handle;
+			platform = detail?.platform || platform;
 			isHuman = detail?.isHuman || isHuman;
 			path = detail?.path || path;
 
-			const hasInfo = phone || email || name || handle;
+			const hasInfo = phone || email || name || platform;
 
 			const localHuman = $userData.human;
 			sending = true;
@@ -53,7 +53,7 @@
 						phone,
 						email,
 						name,
-						handle,
+						platform,
 						userId: $userData?.id
 					});
 				}
@@ -64,7 +64,7 @@
 						phone,
 						email,
 						name,
-						handle,
+						platform,
 						userId: $userData?.id
 					});
 				} else if (!reversed && path && !localHuman) {
@@ -73,7 +73,7 @@
 						phone,
 						email,
 						name,
-						handle,
+						platform,
 						userId: $userData?.id
 					});
 
