@@ -191,7 +191,10 @@
 			</g>
 		</svg>
 
-		<svg class="draw shadow">
+		<svg
+			class="draw shadow"
+			aria-label="a drawing canvas to trace an image drawn by a previous user"
+		>
 			<g>
 				{#if pathPrevious && !previewing}
 					<path class="prev" d={pathPrevious} />
