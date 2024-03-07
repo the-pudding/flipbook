@@ -55,43 +55,18 @@
 				o.timeDelta = Math.floor((Date.now() - match.timestamp) / (60 * 1000));
 
 			o.available = (match && o.timeDelta > TIME_WAIT_THRESHOLD) || !match;
-			o.priority = o.id <= data.realtime;
 			return o;
-		});
-
-		withUser.sort((a, b) => {
-			if (a.available === b.available) {
-				if (a.timeDelta === undefined) return -1;
-				else if (b.timeDelta === undefined) return 1;
-				else if (a.timeDelta === b.timeDelta) return a.id - b.id;
-				return b.timeDelta - a.timeDelta;
-			}
-			return a.available === true ? -1 : 1;
 		});
 
 		if (dev) console.log({ withUser });
 
-		exhausted = withUser.every((a) => !a.available);
+		const available = withUser.filter((a) => a.available);
 
-		// TODO test this
+		exhausted = available.length === 0;
+
 		if (!exhausted) {
-			let chosen;
-			const choices1 = withUser.filter(
-				(a) => a.priority && a.available && a.timeDelta === undefined
-			);
-			const choices2 = withUser.filter(
-				(a) => a.available && a.timeDelta === undefined
-			);
-			const choices3 = withUser.filter((a) => a.available);
-			if (choices1.length) {
-				shuffle(choices1);
-				chosen = choices1[0];
-			} else if (choices2.length) {
-				shuffle(choices2);
-				chosen = choices2[0];
-			} else {
-				chosen = choices3[0];
-			}
+			shuffle(available);
+			const chosen = available[0];
 
 			prevShortcode = chosen.shortcode;
 			animationId = chosen.id;
