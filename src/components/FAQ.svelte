@@ -25,6 +25,7 @@
 			</li>
 		</ul>
 	</div>
+	<div class="hr"></div>
 </details>
 
 <style>
