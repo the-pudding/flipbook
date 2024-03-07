@@ -104,8 +104,10 @@
 
 	function onDone() {
 		const el = document.querySelector("#draw");
-
-		if (el) window.scrollTo(0, el.offsetTop + 36);
+		if (el)
+			setTimeout(() => {
+				window.scrollTo(0, el.offsetTop + 36);
+			}, 17);
 
 		submitted = true;
 		prevShortcode = null;
