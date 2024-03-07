@@ -84,6 +84,15 @@
 	}
 
 	function submit() {
+		if (!coordinates[frameIndex]) {
+			message = "Draw something first!";
+			dispatch("validate", false);
+			setTimeout(() => {
+				message = null;
+			}, 2000);
+			return;
+		}
+
 		if (shouldValidate && frameIndex > 0) {
 			const cur = [...coordinates[frameIndex]].map(([x, y]) => ({ x, y }));
 			const prev = [...coordinates[frameIndex - 1]].map(([x, y]) => ({

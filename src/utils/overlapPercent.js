@@ -6,7 +6,7 @@ function pointsToPath(points) {
 	);
 }
 
-export default function overlapPercent({
+export default async function overlapPercent({
 	prev,
 	cur,
 	strokeWidth = 1,
@@ -34,9 +34,9 @@ export default function overlapPercent({
 	const ctxCurBig = canvasCurBig.getContext("2d");
 
 	// Set stroke styles
-	ctxPrev.strokeStyle = "black";
+	ctxPrev.strokeStyle = "lightgray";
 	ctxCur.strokeStyle = "black";
-	ctxPrevBig.strokeStyle = "black";
+	ctxPrevBig.strokeStyle = "lightgray";
 	ctxCurBig.strokeStyle = "black";
 	ctxPrev.lineWidth = strokeWidth;
 	ctxCur.lineWidth = strokeWidth;
@@ -84,6 +84,55 @@ export default function overlapPercent({
 	// Calculate the percentage
 	const overlap = overlapCount / prevCount;
 	const excess = excessCount / curCount;
+
+	// add canvas to body for debugging
+	// if (dev) {
+	// 	// make container div for these
+	// 	const div = document.createElement("div");
+	// 	// create div to contain them
+	// 	const divPrev = document.createElement("div");
+	// 	const divCur = document.createElement("div");
+
+	// 	// make them position relative and the canvas inside position absolute
+	// 	divPrev.style.position = "relative";
+	// 	divPrev.style.top = "320px";
+	// 	divCur.style.position = "relative";
+
+	// 	// make the canvas elements position absolute
+	// 	canvasPrev.style.position = "absolute";
+	// 	canvasCur.style.position = "absolute";
+	// 	canvasPrevBig.style.position = "absolute";
+	// 	canvasCurBig.style.position = "absolute";
+	// 	// top 0 left 0
+	// 	canvasPrev.style.top = "0";
+	// 	canvasPrev.style.left = "0";
+	// 	canvasCur.style.top = "0";
+	// 	canvasCur.style.left = "0";
+	// 	canvasPrevBig.style.top = "0";
+	// 	canvasPrevBig.style.left = "0";
+	// 	canvasCurBig.style.top = "0";
+
+	// 	//make the canvas have transparent background
+	// 	canvasPrev.style.backgroundColor = "rgba(0,0,0,0)";
+	// 	canvasCur.style.backgroundColor = "rgba(0,0,0,0)";
+	// 	canvasPrevBig.style.backgroundColor = "rgba(0,0,0,0)";
+	// 	canvasCurBig.style.backgroundColor = "rgba(0,0,0,0)";
+
+	// 	// attach to divs
+	// 	divPrev.appendChild(canvasCurBig);
+	// 	divPrev.appendChild(canvasPrev);
+
+	// 	divCur.appendChild(canvasPrevBig);
+	// 	divCur.appendChild(canvasCur);
+
+	// 	// attach to container
+	// 	div.appendChild(divPrev);
+	// 	div.appendChild(divCur);
+
+	// 	// attach to body
+	// 	document.body.appendChild(div);
+	// 	 await new Promise((r) => setTimeout(r, 10000));
+	// }
 
 	// remove the canvas elements
 	canvasPrev.remove();
