@@ -9,7 +9,7 @@
 	}
 </script>
 
-<details>
+<details id="faq">
 	<summary><h2>FAQ</h2></summary>
 	<div class="contents">
 		<ul>

@@ -154,6 +154,17 @@
 		{@html copy.hed}
 	</h1>
 
+	<p class="warning">
+		<details>
+			<summary
+				><small>Warning: {@html copy.draw.warningSummary} </small>
+			</summary>
+			<div>
+				<p><small>{@html copy.draw.warningDetails}</small></p>
+			</div>
+		</details>
+	</p>
+
 	{#if !submitted}
 		<p>
 			{@html copy.sub}
@@ -237,12 +248,24 @@
 		margin: 32px auto;
 	}
 
-	.stats {
+	p.stats {
 		visibility: hidden;
 	}
 
-	.stats.visible {
+	p.stats.visible {
 		visibility: visible;
+	}
+
+	#intro p.warning {
+		margin-top: 8px;
+	}
+
+	summary {
+		cursor: pointer;
+	}
+
+	#intro details p {
+		margin: 0;
 	}
 
 	.loading {
