@@ -104,6 +104,7 @@
 
 	function onDone() {
 		const el = document.querySelector("#draw");
+
 		if (el) window.scrollTo(0, el.offsetTop + 36);
 
 		submitted = true;

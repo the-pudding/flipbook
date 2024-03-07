@@ -84,18 +84,20 @@ export default function overlapPercent({
 	// Calculate the percentage
 	const overlap = overlapCount / prevCount;
 	const excess = excessCount / curCount;
-	if (dev)
-		console.log({
-			prevCount,
-			curCount,
-			overlap,
-			excess
-		});
 
 	// remove the canvas elements
 	canvasPrev.remove();
 	canvasCur.remove();
 	canvasPrevBig.remove();
 	canvasCurBig.remove();
+
+	if (dev)
+		console.log({
+			overlap,
+			excess,
+			validO: overlap > targetRatioOverlap,
+			validE: excess < targetRatioExcess
+		});
+
 	return overlap > targetRatioOverlap && excess < targetRatioExcess;
 }

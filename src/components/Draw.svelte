@@ -27,7 +27,6 @@
 
 	function onSubmit() {
 		disabled = true;
-		canvas.addMessage("submitting...");
 		canvas.addFrame();
 	}
 
@@ -38,6 +37,7 @@
 	async function onValidate({ detail }) {
 		try {
 			if (detail) {
+				canvas.addMessage("submitting...");
 				let response;
 				if ($userData.neato)
 					response = { status: 200, shortcode: "neato", message: "" };
@@ -77,6 +77,8 @@
 						"Sorry! There was an issue submitting your drawing. Please refresh the page or try again later.";
 					console.log({ status, message });
 				}
+
+				canvas.addMessage();
 			}
 		} catch (err) {
 			error =
@@ -84,7 +86,6 @@
 			console.log(err);
 		} finally {
 			disabled = false;
-			canvas.addMessage("");
 		}
 	}
 

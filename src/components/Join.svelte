@@ -57,7 +57,6 @@
 						userId: $userData?.id
 					});
 				}
-				step += 1;
 			} else {
 				if (reversed && hasInfo) {
 					await server("notify", {
@@ -85,7 +84,8 @@
 			console.log(err);
 		} finally {
 			sending = false;
-			dispatch("close");
+			step += 1;
+			if (step > 1) dispatch("close");
 		}
 	}
 

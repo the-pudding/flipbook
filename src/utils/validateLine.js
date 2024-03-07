@@ -33,13 +33,6 @@ export default function validateLine({ cur, prev, canvasSize, strokeWidth }) {
 		targetRatioExcess = 0.4;
 	}
 
-	if (dev)
-		console.log({
-			lengthRatio,
-			targetRatio,
-			targetRatioOverlap,
-			targetRatioExcess
-		});
 	const overlap = overlapPercent({
 		prev,
 		cur,
@@ -53,6 +46,17 @@ export default function validateLine({ cur, prev, canvasSize, strokeWidth }) {
 	const passO = overlap;
 
 	const valid = passL && passO;
+
+	if (dev)
+		console.log({
+			lengthRatio,
+			targetRatio,
+			targetRatioOverlap,
+			targetRatioExcess,
+			passL,
+			passO,
+			valid
+		});
 
 	return valid;
 }
