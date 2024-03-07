@@ -36,7 +36,7 @@
 	
 	--color-fg: var(--color-primary);
 	--color-link: var(--color-primary);
-	--color-focus: var(--color-secondary);
+	--color-focus: var(--color-secondary-aa);
 	--color-mark: var(--color-secondary);
 	--color-border: var(--color-primary);
 	--color-button-bg: var(--color-primary);
