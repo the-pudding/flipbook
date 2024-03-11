@@ -57,7 +57,6 @@
 		const available = withUser.filter((a) => a.available);
 
 		exhausted = available.length === 0;
-
 		if (!exhausted) {
 			const r = Math.floor(Math.random() * available.length);
 			const chosen = available[r];
