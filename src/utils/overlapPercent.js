@@ -1,12 +1,6 @@
 import { dev } from "$app/environment";
 
-function pointsToPath(points) {
-	return (
-		points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ") + " Z"
-	);
-}
-
-export default async function overlapPercent({
+export default function overlapPercent({
 	prev,
 	cur,
 	strokeWidth = 1,
@@ -14,9 +8,6 @@ export default async function overlapPercent({
 	targetRatioOverlap = 0.5,
 	targetRatioExcess = 0.5
 }) {
-	const prevPath = pointsToPath(prev);
-	const curPath = pointsToPath(cur);
-
 	// Create two canvas elements
 	const canvasPrev = document.createElement("canvas");
 	const canvasCur = document.createElement("canvas");
@@ -44,8 +35,8 @@ export default async function overlapPercent({
 	ctxCurBig.lineWidth = strokeWidth * 4;
 
 	// Draw paths
-	const pathPrev = new Path2D(prevPath);
-	const pathCur = new Path2D(curPath);
+	const pathPrev = new Path2D(prev);
+	const pathCur = new Path2D(cur);
 	ctxPrev.stroke(pathPrev);
 	ctxCur.stroke(pathCur);
 	ctxPrevBig.stroke(pathPrev);

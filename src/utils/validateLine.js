@@ -1,36 +1,33 @@
 import { dev } from "$app/environment";
-import { rebalanceCurve } from "curve-matcher";
-import lineLength from "$utils/lineLength.js";
+import getPathLength from "$utils/getPathLength.js";
 import overlapPercent from "$utils/overlapPercent.js";
 
 export default function validateLine({ cur, prev, canvasSize, strokeWidth }) {
-	const numPoints = Math.max(prev.length, cur.length);
-
-	const lineCur = rebalanceCurve(cur, { numPoints });
-	const linePrev = rebalanceCurve(prev, { numPoints });
-	const lineLengthCur = lineLength(lineCur, true);
-	const lineLengthPrev = lineLength(linePrev, true);
+	const lineLengthCur = getPathLength(cur);
+	const lineLengthPrev = getPathLength(prev);
 	const lineLengthMax = Math.max(lineLengthCur, lineLengthPrev);
+
+	if (dev) console.log({ lineLengthCur, lineLengthPrev, lineLengthMax });
 
 	let lengthRatio = 0;
 	if (lineLengthCur < lineLengthPrev)
 		lengthRatio = lineLengthCur / lineLengthPrev;
 	else lengthRatio = lineLengthPrev / lineLengthCur;
 
-	let targetRatio = 0.5;
+	let targetRatioLength = 0.5;
 	let targetRatioOverlap = 0.5;
 	let targetRatioExcess = 0.5;
-	if (lineLengthMax > 50) targetRatio = 0.6;
-	if (lineLengthMax > 150) targetRatio = 0.7;
-	if (lineLengthMax > 300) {
-		targetRatio = 0.8;
-		targetRatioOverlap = 0.55;
-		targetRatioExcess = 0.45;
-	}
-	if (lineLengthMax > 600) {
-		targetRatio = 0.9;
+	if (lineLengthMax > 100) targetRatioLength = 0.6;
+	if (lineLengthMax > 200) targetRatioLength = 0.7;
+	if (lineLengthMax > 400) {
+		targetRatioLength = 0.8;
 		targetRatioOverlap = 0.6;
 		targetRatioExcess = 0.4;
+	}
+	if (lineLengthMax > 600) {
+		targetRatioLength = 0.9;
+		targetRatioOverlap = 0.7;
+		targetRatioExcess = 0.3;
 	}
 
 	const overlap = overlapPercent({
@@ -42,7 +39,7 @@ export default function validateLine({ cur, prev, canvasSize, strokeWidth }) {
 		targetRatioExcess
 	});
 
-	const passL = lengthRatio >= targetRatio;
+	const passL = lengthRatio >= targetRatioLength;
 	const passO = overlap;
 
 	const valid = passL && passO;
@@ -50,7 +47,7 @@ export default function validateLine({ cur, prev, canvasSize, strokeWidth }) {
 	if (dev)
 		console.log({
 			lengthRatio,
-			targetRatio,
+			targetRatioLength,
 			targetRatioOverlap,
 			targetRatioExcess,
 			passL,

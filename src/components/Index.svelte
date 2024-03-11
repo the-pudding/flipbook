@@ -1,7 +1,7 @@
 <script>
 	import { dev, browser } from "$app/environment";
 	import { onMount, getContext } from "svelte";
-	import { shuffle, format } from "d3";
+	import { format } from "d3";
 	import { detectIncognito } from "detectincognitojs";
 	import FAQ from "$components/FAQ.svelte";
 	import Draw from "$components/Draw.svelte";
@@ -13,8 +13,6 @@
 	import { userData, showFaq, showJoin, noCredit } from "$stores/misc.js";
 
 	const copy = getContext("copy");
-
-	const TIME_WAIT_THRESHOLD = 1440; // one day
 
 	let prevShortcode;
 	let animationId;
@@ -50,11 +48,7 @@
 		const withUser = data.animations.map((a) => {
 			const o = { ...a };
 			const match = $userData.submissions.find((s) => s.animationId === a.id);
-
-			if (match)
-				o.timeDelta = Math.floor((Date.now() - match.timestamp) / (60 * 1000));
-
-			o.available = (match && o.timeDelta > TIME_WAIT_THRESHOLD) || !match;
+			o.available = !match;
 			return o;
 		});
 
@@ -65,8 +59,8 @@
 		exhausted = available.length === 0;
 
 		if (!exhausted) {
-			shuffle(available);
-			const chosen = available[0];
+			const r = Math.floor(Math.random() * available.length);
+			const chosen = available[r];
 
 			prevShortcode = chosen.shortcode;
 			animationId = chosen.id;

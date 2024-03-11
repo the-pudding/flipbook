@@ -7,33 +7,46 @@
 
 	export let preset;
 	export let path;
+	export let paths;
 	export let disabled;
+	export let showFrameIndex;
 	export let inkRem = 1;
 
 	const STROKE_W = 4;
 	const W = 320;
 	const H = W;
 	const MAX_LINE_LENGTH = W * 5;
+	const FPS = 12;
+	const MAX_FRAMES = FPS * 5;
 	const dispatch = createEventDispatcher();
 
 	const shouldValidate = !!preset;
 
 	let noInk = false;
 	let drawing = false;
+	let frameIndex = 0;
 	let coordinates = [];
 	let pathPrevious = "";
 	let pathPreview = "";
 	let valid = true;
+	let previewing;
 
+	export const preview = togglePreview;
 	export const addFrame = add;
 	export const clearFrame = clear;
 	export const resetFrame = reset;
 	export const addMessage = message;
 
-	function arrToPath(arr) {
-		if (!arr.length) return "";
-		const str = coordinates.map((d) => d.join(" ")).join("L");
-		return `M${str}`;
+	function normalizeFrechet(frechet) {
+		return frechet / DIAGONAL;
+	}
+
+	function flattenArray(arr) {
+		let flat = [];
+		for (let segment of arr) {
+			flat.push(...segment);
+		}
+		return flat;
 	}
 
 	function point(e) {
@@ -47,19 +60,23 @@
 		noInk = false;
 		inkRem = 1;
 		drawing = true;
-		const newPoint = point(e);
+		const d = point(e);
 
-		coordinates = [newPoint];
+		coordinates[frameIndex] = [];
+		coordinates[frameIndex].push(d);
 	}
 
 	function drawLine(e) {
 		if (!drawing || noInk) return;
-		const newPoint = point(e);
+		const d = point(e);
 
-		coordinates = [...coordinates, newPoint];
-		const len = lineLength(coordinates);
-		if (len > MAX_LINE_LENGTH) noInk = true;
+		coordinates[frameIndex].push(d);
+		const len = lineLength(coordinates[frameIndex]);
+		if (len > MAX_LINE_LENGTH) {
+			noInk = true;
+		}
 		inkRem = Math.max(0, (MAX_LINE_LENGTH - len) / MAX_LINE_LENGTH);
+		coordinates = [...coordinates];
 	}
 
 	function stopDrawing() {
@@ -67,7 +84,7 @@
 	}
 
 	function submit() {
-		if (!coordinates.length) {
+		if (!coordinates[frameIndex]) {
 			message = "Draw something first!";
 			dispatch("validate", false);
 			setTimeout(() => {
@@ -76,10 +93,18 @@
 			return;
 		}
 
-		if (shouldValidate) {
+		if (shouldValidate && frameIndex > 0) {
+			const cur = [...coordinates[frameIndex]].map(([x, y]) => ({ x, y }));
+			const prev = [...coordinates[frameIndex - 1]].map(([x, y]) => ({
+				x,
+				y
+			}));
+			const diagonal = Math.sqrt(W ** 2 + H ** 2);
+
 			valid = validateLine({
-				cur: path,
-				prev: pathPrevious,
+				cur,
+				prev,
+				diagonal,
 				canvasSize: W,
 				strokeWidth: STROKE_W
 			});
@@ -87,20 +112,34 @@
 			dispatch("validate", valid);
 		} else valid = true;
 
-		if (!valid) {
+		if (valid) {
+			pathPrevious = pathCurrent;
+			frameIndex += 1;
+		} else {
 			setTimeout(() => {
 				valid = undefined;
 			}, 2000);
 		}
 
-		coordinates = [];
+		coordsCurrent = [];
 		inkRem = 1;
 	}
 
 	function reset() {
-		coordinates = [];
+		coordinates[frameIndex] = [];
+		pathPreview = "";
 		inkRem = 1;
 		valid = true;
+	}
+
+	function animatePreview(index = 0) {
+		const str = coordinates[index].map((d) => d.join(" ")).join("L");
+		pathPreview = previewing ? `M${str}` : "";
+		setTimeout(() => {
+			let next = index + 1;
+			if (next > frameIndex - 1) next = 0;
+			if (previewing) animatePreview(next);
+		}, 1000 / FPS);
 	}
 
 	function add() {
@@ -115,11 +154,29 @@
 		message = msg;
 	}
 
+	function togglePreview() {
+		previewing = !previewing;
+		if (previewing) animatePreview();
+		else pathPreview = "";
+	}
+
 	onMount(() => {
 		pathPrevious = preset || "";
+		if (pathPrevious) {
+			frameIndex = 1;
+			coordinates[0] = flattenArray(
+				pathPrevious
+					.split("M")
+					.filter((d) => d)
+					.map((d) => d.split("L").map((d) => d.split(" ").map((d) => +d)))
+			);
+		}
 	});
 
-	$: path = arrToPath(coordinates);
+	$: coordsCurrent = coordinates[frameIndex]?.map((d) => d.join(" ")).join("L");
+	$: pathCurrent = coordsCurrent?.length ? `M${coordsCurrent}` : "";
+	$: paths = coordinates.map((c) => `M${c.map((d) => d.join(" ")).join("L")}`);
+	$: path = pathCurrent;
 	$: message =
 		valid === false
 			? "I think you can do better!"
@@ -137,17 +194,27 @@
 	class:disabled
 >
 	<div class="canvas" style="--stroke-width: {STROKE_W};">
+		<svg class="preview">
+			<g>
+				<path d={pathPreview} />
+			</g>
+		</svg>
+
 		<svg
 			class="draw shadow"
 			aria-label="a drawing canvas to trace an image drawn by a previous user"
 		>
 			<g>
-				{#if pathPrevious}
+				{#if pathPrevious && !previewing}
 					<path class="prev" d={pathPrevious} />
 				{/if}
-				<path d={path} />
+				<path d={pathCurrent} />
 			</g>
 		</svg>
+
+		{#if showFrameIndex}
+			<p class="frame">{frameIndex + 1}</p>
+		{/if}
 
 		{#if message}
 			<p in:fade class="message"><small>{message}</small></p>
@@ -232,6 +299,12 @@
 		cursor: crosshair;
 	}
 
+	svg.preview {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
 	svg path {
 		fill: none;
 		stroke: var(--color-fg);
@@ -262,5 +335,19 @@
 		opacity: 0.9;
 		pointer-events: none;
 		font-size: 1em;
+	}
+
+	p.frame {
+		position: absolute;
+		top: 8px;
+		left: 8px;
+		margin: 0;
+		z-index: 1;
+		text-align: center;
+		font-weight: var(--fw-bold);
+		color: var(--color-bg);
+		opacity: 0.75;
+		pointer-events: none;
+		font-size: 16px;
 	}
 </style>

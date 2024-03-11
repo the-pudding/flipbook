@@ -32,7 +32,6 @@
 	async function getAllAnimations() {
 		try {
 			const response = await supabase.from("animation").select();
-
 			if (response.error) {
 				console.log(response.error);
 				throw new Error("getAllAnimations failed");
@@ -108,6 +107,7 @@
 			.subscribe();
 
 		animations = await getAllAnimations();
+		animations.sort((a, b) => a.id - b.id);
 		for (const a of animations) {
 			const drawing = await loadDrawing(a);
 			a.drawing = drawing;
