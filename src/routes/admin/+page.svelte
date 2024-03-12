@@ -2,9 +2,11 @@
 	import { onMount } from "svelte";
 	import { fade } from "svelte/transition";
 	import { createClient } from "@supabase/supabase-js";
+	import { groups } from "d3";
 	import dataS3 from "data-s3";
 	import version from "$utils/version.js";
 	import Canvas from "$components/Canvas.svelte";
+	import Drawing from "$components/Drawing.svelte";
 	export let data;
 
 	version();
@@ -15,6 +17,7 @@
 
 	let supabase;
 	let animations = [];
+	let frames = [];
 	let path;
 	let created;
 
@@ -54,6 +57,27 @@
 				throw new Error("onPause failed");
 			} else if (response) return;
 			return undefined;
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
+	async function getRecentFrames(count) {
+		try {
+			const response = await supabase
+				.from("frame")
+				.select()
+				.order("frame_index", { ascending: false })
+				.limit(count * animations.length);
+			if (response.error) {
+				console.log(response.error);
+				throw new Error("getRecentFrames failed");
+			} else if (response.data) {
+				const grouped = groups(response.data, (d) => d.animation_id);
+				grouped.sort((a, b) => a[0] - b[0]);
+				frames = [...grouped];
+			}
+			throw new Error("no frames");
 		} catch (err) {
 			console.log(err);
 		}
@@ -123,7 +147,9 @@
 	<h1>Admin Dashboard</h1>
 
 	<p>last public update: {updated}</p>
+</section>
 
+<section>
 	<h2>Current</h2>
 	<table id="animations">
 		<thead>
@@ -152,7 +178,9 @@
 			{/each}
 		</tbody>
 	</table>
+</section>
 
+<section>
 	<h2>Previous</h2>
 	<div class="previous">
 		{#each animations as animation}
@@ -166,14 +194,45 @@
 			</div>
 		{/each}
 	</div>
+</section>
 
+<section>
+	<h2>Recent Frames</h2>
+	<p>
+		<button on:click={() => getRecentFrames(10)}>10</button>
+		<button on:click={() => getRecentFrames(20)}>20</button>
+		<button on:click={() => getRecentFrames(30)}>30</button>
+		<button on:click={() => getRecentFrames(30)}>40</button>
+	</p>
+
+	<div class="frames">
+		{#each frames as [animation, f]}
+			<div class="animation">
+				<p>
+					<mark>animation: {animation}</mark>
+				</p>
+				<ul>
+					{#each f as { shortcode, frame_index, animation_id }}
+						<li>
+							<Drawing {shortcode} {animation_id} {frame_index}></Drawing>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/each}
+	</div>
+</section>
+
+<section>
 	<h2>Public Data</h2>
 	<pre>
 		<code>
 {JSON.stringify(publicData, null, 2)}
 	</code>
 	</pre>
+</section>
 
+<section>
 	<h2>New Animation</h2>
 	{#if created}
 		<p>Animation Created!</p>
@@ -197,6 +256,11 @@
 		padding: 0 16px;
 		max-width: 1200px;
 		width: 90%;
+		margin-bottom: 64px;
+	}
+
+	h2 {
+		margin: 8px 0;
 	}
 
 	tr {
@@ -218,9 +282,11 @@
 	}
 
 	svg {
+		display: block;
 		width: 320px;
 		height: 320px;
 		background: #fff;
+		border: 2px dashed var(--color-fg);
 	}
 
 	path {
@@ -252,5 +318,15 @@
 	}
 	.animation {
 		margin-right: 16px;
+	}
+
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 0;
+	}
+
+	li {
+		list-style-type: none;
 	}
 </style>
