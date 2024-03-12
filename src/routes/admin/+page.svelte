@@ -254,7 +254,7 @@
 
 	section {
 		padding: 0 16px;
-		max-width: 1200px;
+		max-width: 1600px;
 		width: 90%;
 		margin-bottom: 64px;
 	}
