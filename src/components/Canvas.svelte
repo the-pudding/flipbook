@@ -24,6 +24,7 @@
 	let pathPrevious = "";
 	let pathPreview = "";
 	let valid = true;
+	let attempts = 0;
 
 	export const addFrame = add;
 	export const clearFrame = clear;
@@ -77,11 +78,13 @@
 		}
 
 		if (shouldValidate) {
+			attempts += 1;
 			valid = validateLine({
 				cur: path,
 				prev: pathPrevious,
 				canvasSize: W,
-				strokeWidth: STROKE_W
+				strokeWidth: STROKE_W,
+				attempts
 			});
 
 			dispatch("validate", valid);
@@ -116,6 +119,7 @@
 	}
 
 	onMount(() => {
+		console.log("mount");
 		pathPrevious = preset || "";
 	});
 
@@ -124,8 +128,8 @@
 		valid === false
 			? "I think you can do better!"
 			: noInk
-			  ? "Out of ink"
-			  : null;
+				? "Out of ink"
+				: null;
 </script>
 
 <div
