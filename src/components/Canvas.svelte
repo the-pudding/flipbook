@@ -119,7 +119,6 @@
 	}
 
 	onMount(() => {
-		console.log("mount");
 		pathPrevious = preset || "";
 	});
 
