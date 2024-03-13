@@ -1,49 +1,78 @@
 <script>
-	import { page } from "$app/stores";
-	$: showHeader = $page?.route?.id !== "admin";
-	$: showFAQ = $page?.route?.id === "/";
-	import wordmark from "$svg/wordmark.svg";
-	import { showFaq } from "$stores/misc.js";
+	import { browser } from "$app/environment";
+	import { onMount } from "svelte";
+	import { Moon, Sun } from "lucide-svelte";
+	import mq from "$stores/mq.js";
+
+	let darkMode = false;
+
+	function setDarkMode(value, store) {
+		darkMode = value;
+		if (store) localStorage.setItem("darkMode", darkMode);
+		document.documentElement.classList.toggle("dark", darkMode);
+		document.documentElement.classList.toggle("light", !darkMode);
+	}
+
+	$: if (browser) setDarkMode($mq.darkMode);
+
+	onMount(() => {
+		const preset = localStorage.getItem("darkMode") === "true";
+		setDarkMode(preset);
+	});
 </script>
 
-{#if showHeader}
-	<header>
-		<!-- <div class="wordmark">
-			<a href="https://pudding.cool" aria-label="The Pudding" target="_self"
-				>{@html wordmark}</a
-			>
-		</div> -->
-		{#if showFAQ}
-			<div class="faq">
-				<button on:click={() => ($showFaq = true)}>FAQ</button>
-			</div>
+<header>
+	<button
+		class="icon"
+		on:click={() => setDarkMode(!darkMode, true)}
+		aria-label={darkMode ? "dark mode" : "light mode"}
+		data-before={darkMode ? "dark mode" : "light mode"}
+	>
+		{#if darkMode}
+			<Moon size="28" />
+		{:else}
+			<Sun size="28" />
 		{/if}
-	</header>
-{/if}
+	</button>
+</header>
 
 <style>
 	header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 16px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
 	}
-
-	.wordmark {
-		width: 10em;
-	}
-
-	.wordmark a {
+	button {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		background: none;
 		border: none;
-		display: block;
+		cursor: pointer;
 		color: var(--color-fg);
+		line-height: 1;
 	}
 
-	.wordmark a:hover {
-		background-color: transparent;
+	button.icon:before {
+		content: attr(data-before);
+		display: block;
+		position: absolute;
+		top: 50%;
+		right: calc(100%);
+		white-space: nowrap;
+		color: var(--color-button-bg);
+		transform: translate(0, 60%);
+		transition: all 0.25s ease-in-out;
+		opacity: 0;
+		pointer-events: none;
+		font-size: var(--14px);
 	}
 
-	:global(.wordmark svg path) {
-		fill: currentColor;
+	@media (hover: hover) and (pointer: fine) {
+		button.icon:hover:before {
+			opacity: 1;
+			transform: translate(0, -50%);
+		}
 	}
 </style>

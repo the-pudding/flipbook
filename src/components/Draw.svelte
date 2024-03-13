@@ -1,4 +1,5 @@
 <script>
+	import { dev } from "$app/environment";
 	import { createEventDispatcher, getContext, tick } from "svelte";
 	import Canvas from "$components/Canvas.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
@@ -39,7 +40,7 @@
 			if (detail) {
 				canvas.addMessage("submitting...");
 				let response;
-				if ($userData.neato)
+				if ($userData.neato || dev)
 					response = { status: 200, shortcode: "neato", message: "" };
 				else {
 					response = await server("submit", {
