@@ -183,7 +183,7 @@
 <section>
 	<h2>Previous</h2>
 	<div class="previous">
-		{#each animations as animation}
+		{#each animations.filter((d) => !d.paused) as animation}
 			<div class="animation">
 				<p>
 					<mark>animation: {animation.id} frame: {animation.frame_index}</mark>
