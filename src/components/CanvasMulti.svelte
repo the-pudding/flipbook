@@ -33,8 +33,13 @@
 
 	function arrToPath(arr) {
 		if (!arr.length) return "";
-		const str = coordinates.map((d) => d.join(" ")).join("L");
-		return `M${str}`;
+		const str = coordinates
+			.map((points) => {
+				const l = points.map((p) => p.join(" ")).join("L");
+				return `M${l}`;
+			})
+			.join(" ");
+		return str;
 	}
 
 	function point(e) {
@@ -44,21 +49,20 @@
 	}
 
 	function startDrawing(e) {
-		message = null;
-		noInk = false;
-		inkRem = 1;
 		drawing = true;
 		const newPoint = point(e);
-
-		coordinates = [newPoint];
+		coordinates = [...coordinates, [newPoint]];
 	}
 
 	function drawLine(e) {
 		if (!drawing || noInk) return;
 		const newPoint = point(e);
 
-		coordinates = [...coordinates, newPoint];
-		const len = lineLength(coordinates);
+		coordinates[coordinates.length - 1].push(newPoint);
+		coordinates = [...coordinates];
+
+		const lens = coordinates.map((d) => lineLength(d));
+		const len = lens.reduce((a, b) => a + b, 0);
 		if (len > MAX_LINE_LENGTH) noInk = true;
 		inkRem = Math.max(0, (MAX_LINE_LENGTH - len) / MAX_LINE_LENGTH);
 	}
@@ -103,9 +107,9 @@
 	function reset() {
 		coordinates = [];
 		inkRem = 1;
+		valid = true;
 		message = null;
 		noInk = false;
-		valid = true;
 	}
 
 	function add() {
