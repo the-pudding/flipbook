@@ -1,5 +1,5 @@
 <script>
-	import Canvas from "$components/Canvas.svelte";
+	import Canvas from "$components/CanvasArray.svelte";
 
 	import renderGif from "$utils/renderGif.js";
 
@@ -9,6 +9,7 @@
 	let canvas;
 	let paths;
 	let gif;
+	let gif2;
 	let rendering;
 	let previewing;
 
@@ -27,7 +28,8 @@
 
 	async function share() {
 		rendering = true;
-		gif = await renderGif({ frames: paths, width: 320, height: 320 });
+		gif = await renderGif({ frames: paths, width: 320, height: 320, fps: 8 });
+		gif2 = await renderGif({ frames: paths, width: 320, height: 320, fps: 12 });
 		rendering = false;
 	}
 </script>
@@ -60,6 +62,8 @@
 		<div class="share">
 			<a role="button" href={gif} download="animation.gif">Download</a>
 			<img src={gif} alt="animation" />
+			<a role="button" href={gif2} download="animation2.gif">Download</a>
+			<img src={gif2} alt="animation" />
 		</div>
 	{/if}
 </section>

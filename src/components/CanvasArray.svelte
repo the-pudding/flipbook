@@ -16,7 +16,7 @@
 	const W = 320;
 	const H = W;
 	const MAX_LINE_LENGTH = W * 5;
-	const FPS = 12;
+	const FPS = 8;
 	const MAX_FRAMES = FPS * 5;
 	const dispatch = createEventDispatcher();
 
@@ -181,8 +181,8 @@
 		valid === false
 			? "I think you can do better!"
 			: noInk
-			  ? "Out of ink"
-			  : null;
+				? "Out of ink"
+				: null;
 </script>
 
 <div
@@ -345,7 +345,7 @@
 		z-index: 1;
 		text-align: center;
 		font-weight: var(--fw-bold);
-		color: var(--color-bg);
+		color: var(--color-fg0);
 		opacity: 0.75;
 		pointer-events: none;
 		font-size: 16px;
