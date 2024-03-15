@@ -23,6 +23,7 @@
 
 	let publicData;
 	let updated;
+	let secondsAgo;
 
 	async function loadDrawing({ id, shortcode }) {
 		const root = "https://pudding.cool/projects/flipbook-data/drawings";
@@ -83,14 +84,21 @@
 		}
 	}
 
+	function tick() {
+		if (!publicData) secondsAgo = "?";
+		else
+			secondsAgo = Math.floor(
+				(Date.now() - new Date(publicData.updated)) / 1000
+			);
+	}
+
 	async function update() {
 		const url = "https://pudding.cool/projects/flipbook-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
 		publicData = await response.json();
 
 		updated = new Date(publicData.updated).toLocaleString();
-
-		setTimeout(update, 15000);
+		setTimeout(update, 5000);
 	}
 
 	onMount(async () => {
@@ -140,13 +148,16 @@
 		animations = animations;
 
 		update();
+
+		setInterval(tick, 1000);
 	});
 </script>
 
 <section>
 	<h1>Admin Dashboard</h1>
 
-	<p>last public update: {updated}</p>
+	<p>last public update: {secondsAgo} seconds ago</p>
+	<p><small>{updated}</small></p>
 </section>
 
 <section>
