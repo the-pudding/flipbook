@@ -40,7 +40,7 @@
 			if (detail) {
 				canvas.addMessage("submitting...");
 				let response;
-				if ($userData.neato || dev)
+				if ($userData.neato)
 					response = { status: 200, shortcode: "neato", message: "" };
 				else {
 					response = await server("submit", {

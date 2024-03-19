@@ -32,11 +32,8 @@ export default function validateLine({
 	if (lineLengthMax > 100) {
 		targetRatioLength = 0.6;
 	}
-	if (lineLengthMax > 200) {
-		targetRatioLength = 0.7;
-	}
 	if (lineLengthMax > 400) {
-		targetRatioLength = 0.8;
+		targetRatioLength = 0.7;
 		targetRatioOverlap = 0.6;
 		targetRatioExcess = 0.4;
 	}
