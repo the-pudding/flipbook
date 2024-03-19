@@ -24,8 +24,8 @@
 
 	async function loadStorage() {
 		const { isPrivate } = await detectIncognito();
-		// const reset = getParam("reset");
-		if (dev) storage.set("pudding_flipbook_data", {});
+		const reset = getParam("reset");
+		if (dev && reset) storage.set("pudding_flipbook_data", {});
 		$userData = storage.get("pudding_flipbook_data") || {};
 
 		if (!$userData?.id) {
