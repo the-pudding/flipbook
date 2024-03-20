@@ -2,6 +2,7 @@
 	import { dev } from "$app/environment";
 	import { createEventDispatcher, getContext, tick } from "svelte";
 	import Canvas from "$components/Canvas.svelte";
+	import CanvasMulti from "$components/CanvasMulti.svelte";
 	import ShareButton from "$components/helpers/ShareButton.svelte";
 	import server from "$utils/server.js";
 	import generateId from "$utils/generateId.js";
@@ -13,6 +14,7 @@
 
 	const copy = getContext("copy");
 
+	const MULTI = 25;
 	const base = "https://pudding.cool/projects/flipbook-data/drawings";
 	const buttonText = copy.spread;
 	const url = copy.url;
@@ -114,27 +116,46 @@
 			Instructions: {@html copy.draw.task}
 			<br />
 			<small
-				>{copy.draw.note}
+				>{animationId < MULTI ? copy.draw.note : ""}
 				<span class="ink" style="--ink: {inkRem * 100}%;">{copy.draw.ink}</span
 				></small
 			>
 		</p>
-		<Canvas
-			bind:this={canvas}
-			bind:path
-			bind:inkRem
-			{preset}
-			showFrameIndex={false}
-			{disabled}
-			on:validate={onValidate}
-		>
-			<div class="ui" slot="ui">
-				<div class="buttons">
-					<button {disabled} class="small" on:click={onSubmit}>Submit</button>
-					<button {disabled} class="small" on:click={onClear}>Clear</button>
+		{#if animationId < MULTI}
+			<Canvas
+				bind:this={canvas}
+				bind:path
+				bind:inkRem
+				{preset}
+				showFrameIndex={false}
+				{disabled}
+				on:validate={onValidate}
+			>
+				<div class="ui" slot="ui">
+					<div class="buttons">
+						<button {disabled} class="small" on:click={onSubmit}>Submit</button>
+						<button {disabled} class="small" on:click={onClear}>Clear</button>
+					</div>
 				</div>
-			</div>
-		</Canvas>
+			</Canvas>
+		{:else}
+			<CanvasMulti
+				bind:this={canvas}
+				bind:path
+				bind:inkRem
+				{preset}
+				showFrameIndex={false}
+				{disabled}
+				on:validate={onValidate}
+			>
+				<div class="ui" slot="ui">
+					<div class="buttons">
+						<button {disabled} class="small" on:click={onSubmit}>Submit</button>
+						<button {disabled} class="small" on:click={onClear}>Clear</button>
+					</div>
+				</div>
+			</CanvasMulti>
+		{/if}
 	{:else}
 		<div class="spacer"></div>
 	{/if}

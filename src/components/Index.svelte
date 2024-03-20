@@ -39,7 +39,7 @@
 		if (dev) console.log({ $userData });
 	}
 
-	async function loadData(refresh) {
+	async function loadData() {
 		submitted = false;
 		const url = "https://pudding.cool/projects/flipbook-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
@@ -88,7 +88,7 @@
 	}
 
 	async function onOther() {
-		await loadData(true);
+		await loadData();
 	}
 
 	$: if ($userData) storage.set("pudding_flipbook_data", $userData);
