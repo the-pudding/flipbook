@@ -13,7 +13,7 @@
 	const STROKE_W = 4;
 	const W = 320;
 	const H = W;
-	const MAX_LINE_LENGTH = W * 3.5;
+	const MAX_LINE_LENGTH = W * 4;
 	const dispatch = createEventDispatcher();
 
 	const shouldValidate = !!preset;

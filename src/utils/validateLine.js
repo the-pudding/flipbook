@@ -38,6 +38,7 @@ export default function validateLine({
 		targetRatioExcess = 0.4;
 	}
 	if (lineLengthMax > 600) {
+		targetRatioLength = 0.75;
 		targetRatioOverlap = 0.7;
 		targetRatioExcess = 0.3;
 	}
@@ -71,5 +72,6 @@ export default function validateLine({
 			valid
 		});
 
+	// if (dev) return true;
 	return valid;
 }
