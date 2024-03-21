@@ -15,6 +15,7 @@
 	const copy = getContext("copy");
 
 	const MULTI = 25;
+	const SPECIAL = 28;
 	const base = "https://pudding.cool/projects/flipbook-data/drawings";
 	const buttonText = copy.spread;
 	const url = copy.url;
@@ -116,18 +117,19 @@
 			Instructions: {@html copy.draw.task}
 			<br />
 			<small
-				>{animationId < MULTI ? copy.draw.note : ""}
+				>{animationId < MULTI || animationId === SPECIAL ? copy.draw.note : ""}
 				<span class="ink" style="--ink: {inkRem * 100}%;">{copy.draw.ink}</span
 				></small
 			>
 		</p>
-		{#if animationId < MULTI}
+		{#if animationId < MULTI || animationId === SPECIAL}
 			<Canvas
 				bind:this={canvas}
 				bind:path
 				bind:inkRem
 				{preset}
 				showFrameIndex={false}
+				{animationId}
 				{disabled}
 				on:validate={onValidate}
 			>

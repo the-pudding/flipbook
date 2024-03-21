@@ -5,6 +5,7 @@
 	import lineLength from "$utils/lineLength.js";
 	import validateLine from "$utils/validateLine.js";
 
+	export let animationId;
 	export let preset;
 	export let path;
 	export let disabled;
@@ -13,7 +14,7 @@
 	const STROKE_W = 4;
 	const W = 320;
 	const H = W;
-	const MAX_LINE_LENGTH = W * 5;
+	const MAX_LINE_LENGTH = W * (animationId === 28 ? 3 : 5);
 	const dispatch = createEventDispatcher();
 
 	const shouldValidate = !!preset;
