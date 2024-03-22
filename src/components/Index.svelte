@@ -21,6 +21,7 @@
 	let submitted;
 	let exhausted;
 	let reversed;
+	let availableCount = 1;
 
 	async function loadStorage() {
 		const { isPrivate } = await detectIncognito();
@@ -44,6 +45,8 @@
 		const url = "https://pudding.cool/projects/flipbook-data/meta.json";
 		const response = await fetch(`${url}?version=${Date.now()}`);
 		const data = await response.json();
+
+		availableCount = data.animations.length;
 
 		const withUser = data.animations.map((a) => {
 			const o = { ...a };
@@ -174,7 +177,7 @@
 				<p><button on:click={onSignup}>Add me</button></p>
 			{/if}
 		{/if}
-		{#if !exhausted}
+		{#if !exhausted && availableCount > 1}
 			<p>{@html copy.other}</p>
 			<p><button on:click={onOther}>Draw more</button></p>
 		{/if}
