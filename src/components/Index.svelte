@@ -164,7 +164,7 @@
 			{:else}
 				<!-- <p>{@html copy.signup}</p> -->
 				<p>Get notified when the flipbook animation is ready to view.</p>
-				<p><button on:click={onSignup}>Add me</button></p>
+				<p><button on:click={onSignup}>Notify me</button></p>
 			{/if}
 		{/if}
 	</section>
