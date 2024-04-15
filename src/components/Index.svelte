@@ -60,6 +60,7 @@
 		const available = withUser.filter((a) => a.available);
 
 		exhausted = available.length === 0;
+		exhausted = true;
 		if (!exhausted) {
 			const r = Math.floor(Math.random() * available.length);
 			const chosen = available[r];
@@ -154,13 +155,15 @@
 	<Draw {animationId} {prevShortcode} {prevFrameIndex} on:done={onDone}></Draw>
 {:else if exhausted}
 	<section>
-		<p>{@html copy.exhausted}</p>
+		<!-- <p>{@html copy.exhausted}</p> -->
+		<p>Submissions are closed! Please check back soon for the results.</p>
 		{#if !$userData?.human}
 			{#if $noCredit}
 				<p>{@html copy.signupNoCredit}</p>
 				<p><button on:click={onSignup}>Notify me</button></p>
 			{:else}
-				<p>{@html copy.signup}</p>
+				<!-- <p>{@html copy.signup}</p> -->
+				<p>Get notified when the flipbook animation is ready to view.</p>
 				<p><button on:click={onSignup}>Add me</button></p>
 			{/if}
 		{/if}
