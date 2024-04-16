@@ -43,17 +43,14 @@
 			if (detail) {
 				canvas.addMessage("submitting...");
 				let response;
-				if ($userData.neato)
-					response = { status: 200, shortcode: "neato", message: "" };
-				else {
-					response = await server("submit", {
-						userId: $userData.id,
-						animationId,
-						prevShortcode,
-						nextFrameIndex,
-						drawing: path
-					});
-				}
+
+				response = await server("submit", {
+					userId: $userData.id,
+					animationId,
+					prevShortcode,
+					nextFrameIndex,
+					drawing: path
+				});
 
 				const { status, message, shortcode } = response;
 				// store locally
