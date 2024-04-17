@@ -101,58 +101,59 @@
 		setTimeout(update, 5000);
 	}
 
-	onMount(async () => {
-		supabase = createClient(data.supabaseUrl, data.supabaseKey);
-		const { accessKeyId, secretAccessKey } = data;
-		await dataS3.init({ accessKeyId, secretAccessKey, region });
+	// onMount(async () => {
+	// 	supabase = createClient(data.supabaseUrl, data.supabaseKey);
+	// 	const { accessKeyId, secretAccessKey } = data;
+	// 	await dataS3.init({ accessKeyId, secretAccessKey, region });
 
-		const channels = supabase
-			.channel("custom-all-channel")
-			.on(
-				"postgres_changes",
-				{ event: "*", schema: "public", table: "animation" },
-				async (payload) => {
-					if (animations.length && payload.new) {
-						const i = animations.findIndex((d) => d.id === payload.new.id);
+	// 	const channels = supabase
+	// 		.channel("custom-all-channel")
+	// 		.on(
+	// 			"postgres_changes",
+	// 			{ event: "*", schema: "public", table: "animation" },
+	// 			async (payload) => {
+	// 				if (animations.length && payload.new) {
+	// 					const i = animations.findIndex((d) => d.id === payload.new.id);
 
-						if (i > -1) {
-							if (!animations[i]) animations[i] = {};
+	// 					if (i > -1) {
+	// 						if (!animations[i]) animations[i] = {};
 
-							animations[i] = {
-								...animations[i],
-								...payload.new,
-								updated: true
-							};
+	// 						animations[i] = {
+	// 							...animations[i],
+	// 							...payload.new,
+	// 							updated: true
+	// 						};
 
-							const drawing = await loadDrawing(animations[i]);
-							animations[i].drawing = drawing;
-						}
+	// 						const drawing = await loadDrawing(animations[i]);
+	// 						animations[i].drawing = drawing;
+	// 					}
 
-						animations = animations;
-						setTimeout(() => {
-							animations[i].updated = false;
-							animations = animations;
-						}, 2000);
-					}
-				}
-			)
-			.subscribe();
+	// 					animations = animations;
+	// 					setTimeout(() => {
+	// 						animations[i].updated = false;
+	// 						animations = animations;
+	// 					}, 2000);
+	// 				}
+	// 			}
+	// 		)
+	// 		.subscribe();
 
-		animations = await getAllAnimations();
-		animations.sort((a, b) => b.id - a.id);
-		for (const a of animations) {
-			const drawing = await loadDrawing(a);
-			a.drawing = drawing;
-		}
+	// 	animations = await getAllAnimations();
+	// 	animations.sort((a, b) => b.id - a.id);
+	// 	for (const a of animations) {
+	// 		const drawing = await loadDrawing(a);
+	// 		a.drawing = drawing;
+	// 	}
 
-		animations = animations;
+	// 	animations = animations;
 
-		update();
+	// 	update();
 
-		setInterval(tick, 1000);
-	});
+	// 	setInterval(tick, 1000);
+	// });
 </script>
 
+<!-- 
 <section>
 	<h1>Admin Dashboard</h1>
 
@@ -256,7 +257,7 @@
 			{path}
 		</code>
 	</details>
-</section>
+</section> -->
 
 <style>
 	h1 {
