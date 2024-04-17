@@ -57,7 +57,7 @@
 		{:else if type === "video"}
 			<figure>
 				<video></video>
-				<figcaption></figcaption>
+				<figcaption>VIDEO TK</figcaption>
 			</figure>
 		{:else if type === "component"}
 			<svelte:component this={components[value]} />
