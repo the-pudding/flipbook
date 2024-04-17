@@ -56,8 +56,18 @@
 			</figure>
 		{:else if type === "video"}
 			<figure>
-				<video></video>
-				<figcaption>VIDEO TK</figcaption>
+				<div class="yt">
+					<iframe
+						title="video"
+						width="320"
+						height="320"
+						src="https://www.youtube-nocookie.com/embed/{value.src}"
+						frameborder="0"
+						allow="autoplay; encrypted-media"
+						allowfullscreen
+					></iframe>
+				</div>
+				<figcaption>{value.alt}</figcaption>
 			</figure>
 		{:else if type === "component"}
 			<svelte:component this={components[value]} />
@@ -98,6 +108,23 @@
 	}
 
 	img {
+		border: 2px solid var(--color-fg);
+	}
+
+	.yt {
+		position: relative;
+		overflow: hidden;
+		/* padding-top: 56.25%; */
+		padding-top: 100%;
+		background: none;
+	}
+
+	.yt iframe {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 		border: 2px solid var(--color-fg);
 	}
 </style>
