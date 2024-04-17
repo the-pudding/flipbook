@@ -143,7 +143,7 @@ section {
 	width: 100%;
 	padding: 0 var(--section-padding);
 	margin: 0 auto;
-	max-width: calc(var(--canvas-size) + calc(var(--section-padding) * 2));
+	max-width: calc(var(--canvas-size) * 1.5);
 }
 
 strong {
@@ -215,7 +215,7 @@ input[type="checkbox"] {
 
 .hr {
 	height: 2px;
-	width: var(--canvas-size);
+	width: calc(var(--canvas-size) * 1.5);
 	margin: 32px auto;
 
 	background-image: repeating-linear-gradient(
@@ -264,6 +264,29 @@ input[type="checkbox"] {
 }
 
 
+#recap figure {
+	margin: 32px auto;
+}
+
+#recap img {
+	width: 100%;
+}
+
+#recap figure:first-of-type img {
+	border: 2px solid var(--color-fg);
+	padding: 32px;
+}
+
+#recap video {
+	min-height: 400px;
+	background: black;
+}
+
+figcaption {
+	font-size: var(--14px);
+	text-align: center;
+	margin: 8px auto;
+}
 
 @media (min-width: 800px) {
 	/* section {
