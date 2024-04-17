@@ -54,6 +54,7 @@
 
 	img {
 		display: block;
+		border: 2px solid var(--color-fg);
 	}
 
 	figure:before {
@@ -62,8 +63,8 @@
 		display: block;
 		border-top: 2px solid var(--color-bg);
 		top: 50%;
-		left: 0;
-		width: 100%;
+		left: 2px;
+		width: calc(100% - 4px);
 		height: 1px;
 		z-index: 1;
 	}
@@ -74,8 +75,8 @@
 		display: block;
 		border-right: 2px solid var(--color-bg);
 		left: 50%;
-		top: 0;
-		height: 100%;
+		top: 2px;
+		height: calc(100% - 4px);
 		width: 1px;
 		z-index: 1;
 	}

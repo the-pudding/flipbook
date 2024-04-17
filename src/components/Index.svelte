@@ -96,4 +96,8 @@
 	footer {
 		margin: 32px auto;
 	}
+
+	img {
+		border: 2px solid var(--color-fg);
+	}
 </style>

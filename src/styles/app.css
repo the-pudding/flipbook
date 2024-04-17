@@ -96,7 +96,7 @@
 
 h1, h2, h3, h4, h5, h6, p, li, button, input, textarea, select, label, form, details {
 	font-size: 1em;
-	line-height: 1.325;
+	line-height: 1.5;
 	font-weight: var(--fw-normal);
 }
 
