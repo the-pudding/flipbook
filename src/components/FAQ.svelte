@@ -19,10 +19,6 @@
 					<p>{@html a}</p>
 				</li>
 			{/each}
-			<li>
-				<h3><strong>How can I watch the final animation?</strong></h3>
-				<p><button on:click={onSignup}>Sign up</button> to get notified.</p>
-			</li>
 		</ul>
 	</div>
 	<div class="hr"></div>

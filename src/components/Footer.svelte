@@ -1,7 +1,6 @@
 <script>
 	import { onMount } from "svelte";
 	import inView from "$actions/inView.js";
-	import wordmark from "$svg/wordmark.svg";
 
 	let localURL;
 	let stories = [];
@@ -51,7 +50,7 @@
 
 	<section class="about">
 		<div class="wordmark">
-			{@html wordmark}
+			<img src="assets/wordmark.png" alt="The Pudding" />
 		</div>
 		<p>
 			<a href="https://pudding.cool" target="_self">The Pudding</a>

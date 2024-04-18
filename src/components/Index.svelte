@@ -3,6 +3,7 @@
 	import { onMount, getContext } from "svelte";
 	import FAQ from "$components/FAQ.svelte";
 	import Scrub from "$components/Scrub.svelte";
+	import Footer from "$components/Footer.svelte";
 	import { showFaq, showJoin } from "$stores/misc.js";
 
 	const copy = getContext("copy");
@@ -22,10 +23,8 @@
 
 <section id="intro">
 	<p>
-		<small
-			><a href="https://pudding.cool" target="_blank" rel="noreferer"
-				>The Pudding</a
-			> presents</small
+		<a href="https://pudding.cool" target="_blank" rel="noreferer"
+			><img src="assets/wordmark.png" alt="The Pudding" /></a
 		>
 	</p>
 
@@ -79,12 +78,11 @@
 
 <section class="hr"></section>
 
-<footer>
-	<section>
-		<FAQ />
-		<p>{@html copy.recirc}</p>
-	</section>
-</footer>
+<section id="qs">
+	<FAQ />
+</section>
+
+<Footer></Footer>
 
 <style>
 	#intro p {
@@ -103,7 +101,16 @@
 		margin: 0;
 	}
 
-	footer {
+	#intro a img {
+		border: none;
+		max-width: 8em;
+	}
+
+	#intro a {
+		border: none;
+	}
+
+	#qs {
 		margin: 32px auto;
 	}
 
