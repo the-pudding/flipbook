@@ -55,7 +55,7 @@
 			</figure>
 		{:else if type === "video"}
 			<figure>
-				<div class="yt">
+				<div class="yt" class:square={!!value.square}>
 					<iframe
 						title="video"
 						width="320"
@@ -121,9 +121,12 @@
 	.yt {
 		position: relative;
 		overflow: hidden;
-		/* padding-top: 56.25%; */
-		padding-top: 100%;
+		padding-top: 56.25%;
 		background: none;
+	}
+
+	.yt.square {
+		padding-top: 100%;
 	}
 
 	.yt iframe {
