@@ -215,7 +215,7 @@ input[type="checkbox"] {
 
 .hr {
 	height: 2px;
-	width: calc(var(--canvas-size) * 1.5);
+	width: calc(100% - 32px);
 	margin: 32px auto;
 
 	background-image: repeating-linear-gradient(
